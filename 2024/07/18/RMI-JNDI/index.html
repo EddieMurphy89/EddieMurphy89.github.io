@@ -22,7 +22,7 @@
 
   
 
-  <title>Hello World | EddieMurphy&#39;s blog</title>
+  <title>RMI &amp; JNDI | EddieMurphy&#39;s blog</title>
 
   
 
@@ -99,11 +99,11 @@
     <div class="header-content">
       <div class="post-text layout-block">
         <div class="layout-margin">
-          <h1 class="title-wrap">Hello World</h1>
+          <h1 class="title-wrap">RMI &amp; JNDI</h1>
           <h2 class="title-sub-wrap">
             <strong>EddieMurphy</strong>
             <span>发布于</span>
-            <time  class="article-date" datetime="2024-07-17T08:14:46.961Z" itemprop="datePublished">2024-07-17</time>
+            <time  class="article-date" datetime="2024-07-17T16:18:10.000Z" itemprop="datePublished">2024-07-18</time>
           </h2>
           
           
@@ -134,19 +134,9 @@
       
       
       <section class="article-entry markdown-body layout-margin content-padding--large soft-size--large soft-style--box">
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+        <h1 id="RMI-JNDI"><a href="#RMI-JNDI" class="headerlink" title="RMI &amp; JNDI"></a>RMI &amp; JNDI</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>基本上从java反序列化取经出来，遇到且绕不开的应该是各个CC链，而且很多的java反序列化非常具有缝合怪的风格，在前期学业压力下没办法系统归纳，知识也零零散散，这里就做一个系统化的复盘。</p>
+<p>但是CC链太具有代表性了，所以我想先写写我第一次打到java题的时候遇到的RMI&#x2F;JNDI问题，就是NCTF2023的logging签到题，那道log4j虽然很简单地打accept头就能RCE，但是起的工具也就是JNDI注入的工具，所以让我记忆犹新。</p>
+<p>然而光靠工具小子当然是不能解决问题的，大多是的EXP都是现场动调而手导手写，而且线下断网环境注定不能反弹shell而则必须使用内存马也使得java在web题内最少解的情况，国赛也遇到了触目惊心的零解。反射和类加载我就不再赘述，因为这算是最基本的java反序列化入门知识。</p>
 
       </section>
 
@@ -154,20 +144,20 @@
       
         <nav class="article-nav">
           
+          
             <div class="article-nav-item layout-padding">
   <article class="card-container article-nav-card content-padding--primary soft-size--large soft-style--box">
     
     <div class="card-text">
       
-        <a href="/2024/07/18/RMI-JNDI/" itemprop="url">
-          <h2 class="card-text--title text-ellipsis">RMI &amp; JNDI</h2>
+        <a href="/2024/07/17/hello-world/" itemprop="url">
+          <h2 class="card-text--title text-ellipsis">Hello World</h2>
         </a>
       
-      <div class="card-text--row">Newer</div>
+      <div class="card-text--row">Older</div>
     </div>
   </article>
 </div>
-          
           
         </nav>
       
