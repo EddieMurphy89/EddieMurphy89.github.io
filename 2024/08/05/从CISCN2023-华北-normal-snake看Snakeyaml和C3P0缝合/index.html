@@ -27,17 +27,16 @@
 <meta property="og:description" content="前言看标题就知道这次我要写什么，就是缝合怪。 除了Hessian这种独特的反序列化机制，以及AliyunChain17这种，很多java反序列化题目都是缝合。再加上搞心态的黑名单，缝合属性大爆发了属于是。 话不多说直接看题。 题目分析这道题我在博客园发过一次分析，这里也就浅浅贴个链接CV几下偷个懒~~ [CISCN 2023 华北]-normal_snake - Eddie_Murphy - 博客">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805005147709.png">
-<meta property="og:image" content="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426154915617-2053435429.png">
-<meta property="og:image" content="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155154019-1122902148.png">
-<meta property="og:image" content="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155341849-1964878351.png">
-<meta property="og:image" content="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155602116-239237126.png">
-<meta property="og:image" content="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155743984-1909246964.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805010542985.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805010609440.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805010633303.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805010651598.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805003817800.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805004855145.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805004832508.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805004825368.png">
 <meta property="article:published_time" content="2024-08-04T16:59:04.000Z">
-<meta property="article:modified_time" content="2024-08-04T16:56:27.459Z">
+<meta property="article:modified_time" content="2024-08-04T17:07:10.377Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
@@ -369,7 +368,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">java.beans.VetoableChangeSupport#fireVetoableChange(String propertyName, Object oldValue, Object newValue)<br>    -java.beans.VetoableChangeSupport#fireVetoableChange(PropertyChangeEvent event)<br>      -java.beans.VetoableChangeListener#vetoableChange()<br>        -C3P0ImplUtils#parseUserOverridesAsString()<br>          -com.mchange.v2.ser.SerializableUtils#fromByteArray(<span class="hljs-type">byte</span>[] bytes)<br>            -com.mchange.v2.ser.SerializableUtils#deserializeFromByteArray(<span class="hljs-type">byte</span>[] bytes)<br></code></pre></td></tr></table></figure>
 
 <p><code>C3P0ImplUtils#parseUserOverridesAsString</code>方法：从形参处截取掉HASM_HEADER：<code>HexAsciiSerializedMap</code>字符串然后进行hex解码为字节数组：</p>
-<p><a target="_blank" rel="noopener" href="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426154915617-2053435429.png"><img src="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426154915617-2053435429.png" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<p><img src="/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805010542985.png" srcset="/img/loading.gif" lazyload alt="image-20240805010542985"></p>
 <p>下一个栈调用<code>com.mchange.v2.ser.SerializableUtils#deserializeFromByteArray(byte[] bytes)</code>处理字节数组调用原生反序列化：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">deserializeFromByteArray</span><span class="hljs-params">(<span class="hljs-type">byte</span>[] bytes)</span> <span class="hljs-keyword">throws</span> IOException, ClassNotFoundException<br>&#123;<br>    <span class="hljs-type">ObjectInputStream</span> <span class="hljs-variable">in</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectInputStream</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayInputStream</span>(bytes));<br>    <span class="hljs-keyword">return</span> in.readObject();<br>&#125;<br></code></pre></td></tr></table></figure>
 
@@ -377,7 +376,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject()<br>  -IndirectlySerialized#getObject()<br>  -com.mchange.v2.naming.ReferenceIndirector#getObject()<br>    -InitialContext#lookup()<br></code></pre></td></tr></table></figure>
 
 <p><code>com.mchange.v2.naming.ReferenceIndirector#getObject()</code> 内部可以触发 JNDI 注入：</p>
-<p><a target="_blank" rel="noopener" href="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155154019-1122902148.png"><img src="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155154019-1122902148.png" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<p><img src="/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805010609440.png" srcset="/img/loading.gif" lazyload alt="image-20240805010609440"></p>
 <p>看到lookup基本就有谱了。</p>
 <h3 id="com-mchange-v2-c3p0-impl-PoolBackedDataSourceBase-readObject：远程类加载"><a href="#com-mchange-v2-c3p0-impl-PoolBackedDataSourceBase-readObject：远程类加载" class="headerlink" title="com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject：远程类加载"></a>com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject：远程类加载</h3><p>利用链可参考ysoserial：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java">com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject()<br>  -IndirectlySerialized#getObject()<br>  -com.mchange.v2.naming.ReferenceIndirector#getObject()<br>    -com.mchange.v2.naming.ReferenceableUtils#referenceToObject(Reference ref,Name name,Context nameCtx,Hashtable env)<br>     -URLClassLoader<br></code></pre></td></tr></table></figure>
@@ -385,17 +384,18 @@
 <p>对于最后一步<code>com.mchange.v2.naming.ReferenceableUtils#referenceToObject(Reference ref,Name name,Context nameCtx,Hashtable env)</code></p>
 <p>这里会获取通过 URLClassLoader 来加载远程的类并进行初始化和 getObjectInstance 方法的调用，</p>
 <p>因此可以直接在静态块里面放入恶意数据进行RCE：</p>
-<p><a target="_blank" rel="noopener" href="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155341849-1964878351.png"><img src="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155341849-1964878351.png" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<p><img src="/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805010633303.png" srcset="/img/loading.gif" lazyload alt="image-20240805010633303"></p>
 <p>对于前面一个jndi也有的PoolBackedDataSourceBase，这里一并讲了。</p>
 <p>com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject()：</p>
-<p><a target="_blank" rel="noopener" href="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155602116-239237126.png"><img src="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155602116-239237126.png" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<p><img src="/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805010651598.png" srcset="/img/loading.gif" lazyload alt="image-20240805010651598"></p>
 <p>红框中的 <code>ois.readObject()</code> 获取的是 IndirectlySerialized 对象，IndirectlySerialized 是一个接口，其的唯一子类是 ReferenceSerialized，</p>
 <p>但是 ReferenceSerialized 是 ReferenceIndirector 类内部的私有类，该类不能进行初始化操作。</p>
 <p>所以我们现在要看 writeObject 是如何将 ReferenceSerialized 写入到序列化流中的。</p>
 <p>从序列化角度来看：</p>
 <p><code>com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#writeObject()</code> 中，</p>
 <p>如果序列化的类是不可序列化的话(NotSerializableException)，将会在 catch 块中对 connectionPoolDataSource 属性用 ReferenceIndirector.indirectForm 方法处理后再进行序列化操作。(connectionPoolDataSource 属性是 ConnectionPoolDataSource 类的实例)</p>
-<p><a target="_blank" rel="noopener" href="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155743984-1909246964.png"><img src="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155743984-1909246964.png" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+
+
 <p><code>ReferenceIndirector.indirectForm</code> 方法中会取出参数 ConnectionPoolDataSource 实例中的 Reference 对象并构造出可序列化的 <code>ReferenceSerialized</code> 对象并返回：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> IndirectlySerialized <span class="hljs-title function_">indirectForm</span><span class="hljs-params">( Object orig )</span> <span class="hljs-keyword">throws</span> Exception<br>&#123; <br>    <span class="hljs-type">Reference</span> <span class="hljs-variable">ref</span> <span class="hljs-operator">=</span> ((Referenceable) orig).getReference();<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ReferenceSerialized</span>( ref, name, contextName, environmentProperties );<br>&#125;<br>ReferenceSerialized( Reference   reference,<br>                    Name        name,<br>                    Name        contextName,<br>                    Hashtable   env )<br>&#123;<br>    <span class="hljs-built_in">this</span>.reference = reference;<br>    <span class="hljs-built_in">this</span>.name = name;<br>    <span class="hljs-built_in">this</span>.contextName = contextName;<br>    <span class="hljs-built_in">this</span>.env = env;<br>&#125;<br></code></pre></td></tr></table></figure>
 
