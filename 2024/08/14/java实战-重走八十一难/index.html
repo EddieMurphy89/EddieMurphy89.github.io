@@ -19,12 +19,12 @@
   <meta name="author" content="EddieMurphy">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言以前java基础不牢，只能AWDP修一修，现在学的个七七八八了，还得刺刀见红。 以前做过几个java，但是基本都是抄exp，没有什么gadget的认知，这次重走八十一难，必证菩提金身。 CISCN 2023-DeserBug算我的java反序列化启蒙题之一。这道题是当年的初赛题目，现在看来难度不算太高。 hint： 1cn.hutool.json.JSONObject.put-&gt;com.">
+    <meta name="description" content="前言以前java基础不牢，只能AWDP修一修，现在学的个七七八八了，还得刺刀见红。 以前做过几个java，但是基本都是抄exp，没有什么gadget的认知，这次重走八十一难，必证菩提金身。 [CISCN2023 初赛]-DeserBug算我的java反序列化启蒙题之一。这道题是当年的初赛题目，现在看来难度不算太高。 hint： 1cn.hutool.json.JSONObject.put-&gt;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="java实战-重走八十一难">
-<meta property="og:url" content="https://eddiemurphy89.github.io/2024/08/12/java%E5%AE%9E%E6%88%98-%E9%87%8D%E8%B5%B0%E5%85%AB%E5%8D%81%E4%B8%80%E9%9A%BE/index.html">
+<meta property="og:url" content="https://eddiemurphy89.github.io/2024/08/14/java%E5%AE%9E%E6%88%98-%E9%87%8D%E8%B5%B0%E5%85%AB%E5%8D%81%E4%B8%80%E9%9A%BE/index.html">
 <meta property="og:site_name" content="EddieMurphy&#39;s blog">
-<meta property="og:description" content="前言以前java基础不牢，只能AWDP修一修，现在学的个七七八八了，还得刺刀见红。 以前做过几个java，但是基本都是抄exp，没有什么gadget的认知，这次重走八十一难，必证菩提金身。 CISCN 2023-DeserBug算我的java反序列化启蒙题之一。这道题是当年的初赛题目，现在看来难度不算太高。 hint： 1cn.hutool.json.JSONObject.put-&gt;com.">
+<meta property="og:description" content="前言以前java基础不牢，只能AWDP修一修，现在学的个七七八八了，还得刺刀见红。 以前做过几个java，但是基本都是抄exp，没有什么gadget的认知，这次重走八十一难，必证菩提金身。 [CISCN2023 初赛]-DeserBug算我的java反序列化启蒙题之一。这道题是当年的初赛题目，现在看来难度不算太高。 hint： 1cn.hutool.json.JSONObject.put-&gt;">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20240813000442240.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20240813002641896.png">
@@ -32,8 +32,8 @@
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20240813000748313.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20240813001032892.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20240813010828414.png">
-<meta property="article:published_time" content="2024-08-12T15:45:52.000Z">
-<meta property="article:modified_time" content="2024-08-12T17:15:51.403Z">
+<meta property="article:published_time" content="2024-08-14T15:45:52.000Z">
+<meta property="article:modified_time" content="2024-08-14T14:11:23.575Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="Java CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -218,8 +218,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-08-12 23:45" pubdate>
-          2024年8月12日 晚上
+        <time datetime="2024-08-14 23:45" pubdate>
+          2024年8月14日 晚上
         </time>
       </span>
     
@@ -285,7 +285,7 @@
                 
                 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>以前java基础不牢，只能AWDP修一修，现在学的个七七八八了，还得刺刀见红。</p>
 <p>以前做过几个java，但是基本都是抄exp，没有什么gadget的认知，这次重走八十一难，必证菩提金身。</p>
-<h2 id="CISCN-2023-DeserBug"><a href="#CISCN-2023-DeserBug" class="headerlink" title="CISCN 2023-DeserBug"></a>CISCN 2023-DeserBug</h2><p>算我的java反序列化启蒙题之一。这道题是当年的初赛题目，现在看来难度不算太高。</p>
+<h2 id="CISCN2023-初赛-DeserBug"><a href="#CISCN2023-初赛-DeserBug" class="headerlink" title="[CISCN2023 初赛]-DeserBug"></a>[CISCN2023 初赛]-DeserBug</h2><p>算我的java反序列化启蒙题之一。这道题是当年的初赛题目，现在看来难度不算太高。</p>
 <p>hint：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">cn.hutool.json.JSONObject.put-&gt;com.app.Myexpect#getAnyexcept<br></code></pre></td></tr></table></figure>
 
@@ -346,6 +346,7 @@
 
 <p>GET传参：</p>
 <p><img src="/2024/07/28/Commons-Collections/20240813010828414.png" srcset="/img/loading.gif" lazyload alt="image-20240813010828414"></p>
+<h2 id="CISCN2023-西南-seaclouds"><a href="#CISCN2023-西南-seaclouds" class="headerlink" title="[CISCN2023 西南]seaclouds"></a>[CISCN2023 西南]seaclouds</h2><p>这道题非常具有代表性，打的是Kyro反序列化和Hessian原生JDK的POC。</p>
 <p>（未完待续….）</p>
 
                 
@@ -372,7 +373,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>java实战-重走八十一难</div>
-      <div>https://eddiemurphy89.github.io/2024/08/12/java实战-重走八十一难/</div>
+      <div>https://eddiemurphy89.github.io/2024/08/14/java实战-重走八十一难/</div>
     </div>
     <div class="license-meta">
       
@@ -384,7 +385,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年8月12日</div>
+          <div>2024年8月14日</div>
         </div>
       
       
@@ -416,18 +417,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/08/13/JDBC/" title="JDBC">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">JDBC</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/08/12/Spring/" title="Spring">
-                        <span class="hidden-mobile">Spring</span>
+                      <a href="/2024/08/14/Kyro/" title="Kyro">
+                        <span class="hidden-mobile">Kyro</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
