@@ -22,7 +22,7 @@
     <meta name="description" content="前言以前java基础不牢，只能AWDP修一修，现在学的个七七八八了，还得刺刀见红。 以前做过几个java，但是基本都是抄exp，没有什么gadget的认知，这次重走八十一难，必证菩提金身。 [CISCN2023 初赛]-DeserBug算我的java反序列化启蒙题之一。这道题是当年的初赛题目，现在看来难度不算太高。 hint： 1cn.hutool.json.JSONObject.put-&gt;">
 <meta property="og:type" content="article">
 <meta property="og:title" content="java实战-重走八十一难">
-<meta property="og:url" content="https://eddiemurphy89.github.io/2024/08/14/java%E5%AE%9E%E6%88%98-%E9%87%8D%E8%B5%B0%E5%85%AB%E5%8D%81%E4%B8%80%E9%9A%BE/index.html">
+<meta property="og:url" content="https://eddiemurphy89.github.io/2024/08/16/java%E5%AE%9E%E6%88%98-%E9%87%8D%E8%B5%B0%E5%85%AB%E5%8D%81%E4%B8%80%E9%9A%BE/index.html">
 <meta property="og:site_name" content="EddieMurphy&#39;s blog">
 <meta property="og:description" content="前言以前java基础不牢，只能AWDP修一修，现在学的个七七八八了，还得刺刀见红。 以前做过几个java，但是基本都是抄exp，没有什么gadget的认知，这次重走八十一难，必证菩提金身。 [CISCN2023 初赛]-DeserBug算我的java反序列化启蒙题之一。这道题是当年的初赛题目，现在看来难度不算太高。 hint： 1cn.hutool.json.JSONObject.put-&gt;">
 <meta property="og:locale" content="zh_CN">
@@ -32,8 +32,8 @@
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20240813000748313.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20240813001032892.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20240813010828414.png">
-<meta property="article:published_time" content="2024-08-14T15:45:52.000Z">
-<meta property="article:modified_time" content="2024-08-14T14:11:23.575Z">
+<meta property="article:published_time" content="2024-08-16T15:45:52.000Z">
+<meta property="article:modified_time" content="2024-08-16T07:55:33.455Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="Java CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -218,8 +218,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-08-14 23:45" pubdate>
-          2024年8月14日 晚上
+        <time datetime="2024-08-16 23:45" pubdate>
+          2024年8月16日 晚上
         </time>
       </span>
     
@@ -230,7 +230,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          2.2k 字
         
       </span>
     
@@ -241,7 +241,7 @@
         
         
         
-          12 分钟
+          19 分钟
         
       </span>
     
@@ -347,6 +347,76 @@
 <p>GET传参：</p>
 <p><img src="/2024/07/28/Commons-Collections/20240813010828414.png" srcset="/img/loading.gif" lazyload alt="image-20240813010828414"></p>
 <h2 id="CISCN2023-西南-seaclouds"><a href="#CISCN2023-西南-seaclouds" class="headerlink" title="[CISCN2023 西南]seaclouds"></a>[CISCN2023 西南]seaclouds</h2><p>这道题非常具有代表性，打的是Kyro反序列化和Hessian原生JDK的POC。</p>
+<p>刚把Kyro和Hessian学了就再来重温一下这道题目。</p>
+<p>审计一下源码：</p>
+<p>MessageController.java:</p>
+
+
+<p>访问根路由传参message，</p>
+<p>那么它会解码一个硬编码的Base64字符串。如果<code>message</code>参数不为null，那么它会尝试解码该参数。如果解码失败，它会解码另一个硬编码的Base64字符串。</p>
+<p>解码后的字节数组被传递给<code>CodecMessageConverter</code>的<code>toMessage</code>方法，该方法将字节数组转换为<code>Message</code>对象。然后，该方法返回<code>Message</code>对象的有效负载。</p>
+<p>User.java：</p>
+
+
+<p>定义了一些setter和getter方法，</p>
+<p>依赖有Kyro：</p>
+
+
+<p>那入手点就是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">CodecMessageConverter</span> <span class="hljs-variable">codecMessageConverter</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CodecMessageConverter</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">MessageCodec</span>());<br>Message&lt;?&gt; messagecode = codecMessageConverter.toMessage(decodemsg, (MessageHeaders)<span class="hljs-literal">null</span>);<br><span class="hljs-keyword">return</span> messagecode.getPayload();<br></code></pre></td></tr></table></figure>
+
+<p>跟进toMessage方法：</p>
+
+
+<p>关键在decode，跟进decode方法：</p>
+
+
+<p>再跟进到deDecode方法：</p>
+
+
+<p>找到你了，Kryo</p>
+<p>这里指定了解码的类型<code>this.messageClass</code>（<code>GenericMessage</code>），</p>
+
+
+<p>最后<code>MessageCodec#decode</code>也返回了一个<code>Message</code>对象，所以后面构造的时候要用<code>GenericMessage</code>将payload封装起来，如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">GenericMessage</span> <span class="hljs-variable">genericMessage</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">GenericMessage</span>(hashMap);<br><span class="hljs-type">byte</span>[] decodemsg = (<span class="hljs-type">byte</span>[]) codecMessageConverter.fromMessage(genericMessage, <span class="hljs-literal">null</span>);<br>System.out.println(URLEncoder.encode(Base64.getEncoder().encodeToString(decodemsg), <span class="hljs-string">&quot;UTF-8&quot;</span>));<br></code></pre></td></tr></table></figure>
+
+<p>跟进<code>GenericMessage</code>：</p>
+
+
+<p>看到了前面最后返回的getPayload()，也可以说明我们反序列化得到的结果是个GenericMessage对象。</p>
+
+
+<p>几个老熟人了，基本上看到这些就能想到对应链子。</p>
+<p>在<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=Spring%E4%BE%9D%E8%B5%96&spm=1001.2101.3001.7020">Spring依赖</a>下，可以触发<code>jackson</code>的<code>BaseJsonNode#toString</code>，从而调用getter，而后为所欲为，至于如何调用<code>toString</code>，对于原生反序列化，走<code>BadAttributeValueExpException</code>最为方便，对于Field型的非原生反序列化，如果对于Map的反序列化过程有类似<code>HashMap#put</code>的实现，就可以考虑<code>HotSwappableTargetSource</code>利用链，这也是Kyro非原生反序列化链子的重要部分。</p>
+<p>但是直接用Kyro链子套肯定不行，因为网上Kryo相关的攻击都是在Dubbo下利用的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java">com.esotericsoftware.kryo#readClassAndObject -&gt;<br>    com.esotericsoftware.kryo.serializers#read -&gt;<br>        java.util.HashMap#put -&gt;<br>            org.springframework.aop.target.HotSwappableTargetSource#equals -&gt;<br>                com.sun.org.apache.xpath.internal.objects.XString -&gt;<br>                    com.alibaba.fastjson.JSON#toString -&gt; fastjson gadget <br>                            -&gt; TemplatesImpl to load evil class<br></code></pre></td></tr></table></figure>
+
+<p>用的是从<code>HotSwappableTargetSource</code>套一层然后触发到<code>fastjson#toString</code>的gadget。</p>
+<p>但fastjson是Dubbo自带的，本题没有这个依赖，也就是要找后半段链子来接上<code>toString</code>。</p>
+<p>根据题目提示用Hessian原生JDK去打（Hessian在那条链只充当<code>source</code>触发toString），这里用到的就是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">javax.activation.MimeTypeParameterList<br></code></pre></td></tr></table></figure>
+
+<p>整体链子是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">javax.activation.MimeTypeParameterList#toString<br>	UIDefaults#get<br>		UIDefaults#getFromHashTable<br>			UIDefaults$LazyValue#createValue<br>				SwingLazyValue#createValue<br>					sun.reflect.misc.MethodUtil#invoke<br></code></pre></td></tr></table></figure>
+
+<p>具体的Hessian分析就免了，可以看：<a target="_blank" rel="noopener" href="https://p4d0rn.gitbook.io/java/serial-journey/hessian_only_jdk#mimetypeparameterlist--methodutil">Hessian_Only_JDK | Java (gitbook.io)</a></p>
+<p>我们对<code>decode</code>方法进行调试，发现它会进到<code>kryo.readObject()</code>中，也就是说这里可以触发<code>kyro</code>反序列化的打法，<code>kyro</code>和<code>Hessian</code>是一类的，都是基于<code>Field</code>机制，会进入到<code>hashMap.put</code>中，因此可以用<code>Hessian</code>的链子来打。</p>
+<h3 id="开缝-Kyro反序列化-Spring-Hessian原生JDK"><a href="#开缝-Kyro反序列化-Spring-Hessian原生JDK" class="headerlink" title="开缝-Kyro反序列化 + Spring Hessian原生JDK"></a>开缝-Kyro反序列化 + Spring Hessian原生JDK</h3><p>这里还用到了SignObject来打二次反序列化绕过，整体调用链：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs java">CodecMessageConverter<br>    -&gt; toMessage(decodemsg, ...)<br>       <span class="hljs-built_in">this</span>.codec.decode(decodemsg, ...)<br><br>AbstractKryoCodec<br>    -&gt; decode(decodemsg, ...)<br><br>PojoCodec<br>    -&gt; doDecode(...)<br><br>Kryo<br>    -&gt; readObject(...)<br><br>MapSerializer<br>    -&gt; read(...)<br>       Map#put(hotSwappableTargetSource, ...)<br><br>HotSwappableTargetSource<br>    -&gt; equals(...)<br><br>XString<br>    -&gt; equals(pojoNode)<br><br>BaseJsonNode<br>    -&gt; toString()<br>       InternalNodeMapper#nodeToString(<span class="hljs-built_in">this</span>)<br><br>SignedObject<br>    -&gt; getObject()<br>       a.readObject()<br><br>BadAttributeValueExpException<br>    -&gt; readObject()<br>       valObj.toString()<br><br>BaseJsonNode<br>    -&gt; toString()<br>       InternalNodeMapper#nodeToString(<span class="hljs-built_in">this</span>)<br><br>TemplatesImpl<br>    -&gt; getOutputProperties()<br><br>...<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
 <p>（未完待续….）</p>
 
                 
@@ -373,7 +443,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>java实战-重走八十一难</div>
-      <div>https://eddiemurphy89.github.io/2024/08/14/java实战-重走八十一难/</div>
+      <div>https://eddiemurphy89.github.io/2024/08/16/java实战-重走八十一难/</div>
     </div>
     <div class="license-meta">
       
@@ -385,7 +455,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年8月14日</div>
+          <div>2024年8月16日</div>
         </div>
       
       
@@ -421,8 +491,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/08/14/Kyro/" title="Kyro">
-                        <span class="hidden-mobile">Kyro</span>
+                      <a href="/2024/08/14/Kyro/" title="Kryo">
+                        <span class="hidden-mobile">Kryo</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
