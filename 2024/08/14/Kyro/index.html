@@ -26,23 +26,23 @@
 <meta property="og:site_name" content="EddieMurphy&#39;s blog">
 <meta property="og:description" content="前言本来想缓两天再写Hessian的，但是被卷到了emmm。 讨厌卷狗。 Hessian太多了，一次写不完的，那我这次就写写Kryo吧，下次写表达式注入SSTI之类的，Hessian遥遥无期了hhhh。 Kryo 是一个快速序列化&#x2F;反序列化工具，依赖于字节码生成机制（底层使用了 ASM 库)，因此在序列化速度上有一定的优势，但正因如此，其使用也只能限制在基于 JVM 的语言上（Scala">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/15655799.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/15910090.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/15948131.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20004870.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20143706.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20215114.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20231804.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20247330.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20307247.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20339130.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/20600476.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/14/Kyro/image-20240814215655799.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/14/Kyro/image-20240814215910090.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/14/Kyro/image-20240814215948131.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/14/Kyro/image-20240814220004870.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/14/Kyro/image-20240814220143706.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/14/Kyro/image-20240814220215114.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/14/Kyro/image-20240814220231804.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/14/Kyro/image-20240814220247330.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/14/Kyro/image-20240814220307247.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/14/Kyro/image-20240814220339130.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/14/Kyro/image-20240814220600476.png">
 <meta property="article:published_time" content="2024-08-14T13:48:41.000Z">
 <meta property="article:modified_time" content="2024-08-16T07:57:15.806Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/15655799.png">
+<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/08/14/Kyro/image-20240814215655799.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -336,18 +336,18 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">kryo.register(SomeClass.class);<br></code></pre></td></tr></table></figure>
 
 <h3 id="序列化流程"><a href="#序列化流程" class="headerlink" title="序列化流程"></a>序列化流程</h3><p>跟进<code>writeClassAndObject</code>：</p>
-<p><img src="/2024/07/28/Commons-Collections/15655799.png" srcset="/img/loading.gif" lazyload alt="image-20240814215655799"></p>
+<p><img src="/2024/08/14/Kyro/image-20240814215655799.png" srcset="/img/loading.gif" lazyload alt="image-20240814215655799"></p>
 <h4 id="Registration获取"><a href="#Registration获取" class="headerlink" title="Registration获取"></a>Registration获取</h4><p><code>writeClass(output, object.getClass())</code>返回一个<code>object</code>类的<code>Registration</code></p>
 <p>若该类没有注册过（也就是没有上面的<code>kryo.register</code>指定一个类），会自动使用默认的序列化器注册，注册有两个目的：获取序列化器和类的唯一标识Id，方便后续的序列化和反序列化</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java">get:<span class="hljs-number">351</span>, ObjectMap (com.esotericsoftware.kryo.util)<br>getRegistration:<span class="hljs-number">79</span>, DefaultClassResolver (com.esotericsoftware.kryo.util)<br>getRegistration:<span class="hljs-number">488</span>, Kryo (com.esotericsoftware.kryo)<br>writeClass:<span class="hljs-number">97</span>, DefaultClassResolver (com.esotericsoftware.kryo.util)<br>writeClass:<span class="hljs-number">540</span>, Kryo (com.esotericsoftware.kryo)<br>writeClassAndObject:<span class="hljs-number">645</span>, Kryo (com.esotericsoftware.kryo)<br>main:<span class="hljs-number">16</span>, Test<br></code></pre></td></tr></table></figure>
 
 <p><code>com.esotericsoftware.kryo.util.ObjectMap</code>类维护了一个<code>Class</code>与<code>Registration</code>（含相对应的反序列化器）的对应表：</p>
-<p><img src="/2024/07/28/Commons-Collections/15910090.png" srcset="/img/loading.gif" lazyload alt="image-20240814215910090"></p>
+<p><img src="/2024/08/14/Kyro/image-20240814215910090.png" srcset="/img/loading.gif" lazyload alt="image-20240814215910090"></p>
 <p>当然我们自定义的类肯定在这个表中找不到，里面都是Java的基础类，<code>DefaultClassResolver#getRegistration</code>就返回null。</p>
 <p>接着进入<code>registerImplicit</code> -&gt; <code>getDefaultSerializer</code>继续找一些Java内置类是否和待序列化类对应</p>
-<p><img src="/2024/07/28/Commons-Collections/15948131.png" srcset="/img/loading.gif" lazyload alt="image-20240814215948131"></p>
+<p><img src="/2024/08/14/Kyro/image-20240814215948131.png" srcset="/img/loading.gif" lazyload alt="image-20240814215948131"></p>
 <p>继续跟进，发现<code>FieldSerializer</code>作为默认序列化器，并在<code>FieldSerializer#rebuildCachedFields</code>中获取序列化类的<code>Fields</code>，忽略静态成员。</p>
-<p><img src="/2024/07/28/Commons-Collections/20004870.png" srcset="/img/loading.gif" lazyload alt="image-20240814220004870"></p>
+<p><img src="/2024/08/14/Kyro/image-20240814220004870.png" srcset="/img/loading.gif" lazyload alt="image-20240814220004870"></p>
 <p>到此就获取到了自定义类的<code>Registration</code>。</p>
 <h4 id="Field序列化"><a href="#Field序列化" class="headerlink" title="Field序列化"></a>Field序列化</h4><p>接着进入<code>FieldSerializer.write(this, output, object);</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">CachedField[] fields = <span class="hljs-built_in">this</span>.fields;<br><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>, n = fields.length; i &lt; n; i++)<br>    fields[i].write(output, object);<br></code></pre></td></tr></table></figure>
@@ -358,23 +358,23 @@
 <p>在JVM中，对实例的Field进行了有规律的存储，通过一个偏移量可以从内存中找到相应的Field值</p>
 <p>unsafe实现了在内存层面，通过成员字段偏移量offset来获取对象的属性值</p>
 <p>接着获取成员的序列化器，步骤跟上面的一样（<code>getRegistration(type).getSerializer()</code>）</p>
-<p><img src="/2024/07/28/Commons-Collections/20143706.png" srcset="/img/loading.gif" lazyload alt="image-20240814220143706"></p>
+<p><img src="/2024/08/14/Kyro/image-20240814220143706.png" srcset="/img/loading.gif" lazyload alt="image-20240814220143706"></p>
 <p>剩下的就是继续递归所有成员，获取序列化器进行序列化。</p>
 <h3 id="反序列化流程"><a href="#反序列化流程" class="headerlink" title="反序列化流程"></a>反序列化流程</h3><p>同样也是先获取类的<code>Registration</code>，再从<code>Registration</code>拿序列化器。</p>
-<p><img src="/2024/07/28/Commons-Collections/20215114.png" srcset="/img/loading.gif" lazyload alt="image-20240814220215114"></p>
+<p><img src="/2024/08/14/Kyro/image-20240814220215114.png" srcset="/img/loading.gif" lazyload alt="image-20240814220215114"></p>
 <p><code>FieldSerializer#read</code>首先对类进行实例化，这里是使用了Kryo封装的<code>com.esotericsoftware.reflectasm#ConstructorAccess</code>去构造类对象，基于ASM，还没学过ASM，就不深入跟进去看了。</p>
-<p><img src="/2024/07/28/Commons-Collections/20231804.png" srcset="/img/loading.gif" lazyload alt="image-20240814220231804"></p>
+<p><img src="/2024/08/14/Kyro/image-20240814220231804.png" srcset="/img/loading.gif" lazyload alt="image-20240814220231804"></p>
 <p>同样是获取成员的序列化器，递归调用<code>readObject</code>：</p>
-<p><img src="/2024/07/28/Commons-Collections/20247330.png" srcset="/img/loading.gif" lazyload alt="image-20240814220247330"></p>
+<p><img src="/2024/08/14/Kyro/image-20240814220247330.png" srcset="/img/loading.gif" lazyload alt="image-20240814220247330"></p>
 <p>可以跟一下这里的<code>readObjectOrNull</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">object = (T)serializer.read(<span class="hljs-built_in">this</span>, input, type);<br></code></pre></td></tr></table></figure>
 
 <p>这里的序列化器是<code>StringSerializer</code>，直接从输入流input读取了，否则就继续调用上面的<code>FieldSerializer#read</code>了</p>
 <p>后面的<code>setField</code>也是用<code>unsafe</code>从内存层面往成员偏移量处填充值</p>
-<p><img src="/2024/07/28/Commons-Collections/20307247.png" srcset="/img/loading.gif" lazyload alt="image-20240814220307247"></p>
+<p><img src="/2024/08/14/Kyro/image-20240814220307247.png" srcset="/img/loading.gif" lazyload alt="image-20240814220307247"></p>
 <p>反序列化结束。</p>
 <p>可总结为：</p>
-<p><img src="/2024/07/28/Commons-Collections/20339130.png" srcset="/img/loading.gif" lazyload alt="image-20240814220339130"></p>
+<p><img src="/2024/08/14/Kyro/image-20240814220339130.png" srcset="/img/loading.gif" lazyload alt="image-20240814220339130"></p>
 <h2 id="Attack"><a href="#Attack" class="headerlink" title="Attack"></a>Attack</h2><p>网上找到的Kryo反序列化问题都是在Dubbo那块的。</p>
 <p>Dubbo默认的序列化协议是Hessian，但可以修改Dubbo协议数据包中的header，指定SerializationID，来确定Consumer和Provider通信使用的序列化协议，这里就不细讲Dubbo数据包的修改了，而是抽取其中关键的Kryo反序列化，Dubbo相关的具体可以看<a target="_blank" rel="noopener" href="https://p4d0rn.gitbook.io/java/serial-journey/dubbo">大佬写的</a>。</p>
 <p><strong>调用栈</strong></p>
@@ -402,7 +402,7 @@
 <p><code>MapSerializer</code>会将解析到的key和value都通过调用<code>map.put()</code>来放入HashMap对象中</p>
 <p>接着调用<code>putVal()</code>，<code>equals()</code>判断两个键是否相对</p>
 <p><code>com.sun.org.apache.xpath.internal.objects.XString#equals</code>会调用<code>toString</code></p>
-<p><img src="/2024/07/28/Commons-Collections/20600476.png" srcset="/img/loading.gif" lazyload alt="image-20240814220600476"></p>
+<p><img src="/2024/08/14/Kyro/image-20240814220600476.png" srcset="/img/loading.gif" lazyload alt="image-20240814220600476"></p>
 <p><code>org.springframework.aop.target.HotSwappableTargetSource#equals</code></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">equals</span><span class="hljs-params">(Object other)</span> &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span> == other || other <span class="hljs-keyword">instanceof</span> HotSwappableTargetSource &amp;&amp; <span class="hljs-built_in">this</span>.target.equals(((HotSwappableTargetSource)other).target);<br>&#125;<br></code></pre></td></tr></table></figure>
 
@@ -509,24 +509,6 @@
   
     <article id="comments" lazyload>
       
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    
-      <script>
-        Fluid.utils.loadComments('#disqus_thread', function() {
-          Fluid.utils.createCssLink('https://lib.baomitu.com/disqusjs/1.3.0/disqusjs.css');
-          Fluid.utils.createScript('https://lib.baomitu.com/disqusjs/1.3.0/disqus.js', function() {
-            new DisqusJS({
-              shortname: 'fluid',
-              apikey: 'YdcgVedHrqu2ioQd1eVoUrqG'
-            });
-          });
-        });
-      </script>
-    
-    <noscript>Please enable JavaScript to view the comments</noscript>
-  </div>
-
 
     </article>
   

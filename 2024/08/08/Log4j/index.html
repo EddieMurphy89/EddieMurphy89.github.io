@@ -26,16 +26,16 @@
 <meta property="og:site_name" content="EddieMurphy&#39;s blog">
 <meta property="og:description" content="前言Log4j漏洞被称为可载入史册的里程碑式顶级供应链漏洞。 2021年底，Log4j 漏洞横空出世，在安全圈引起了轩然大波，可以说是核弹级别的漏洞，无论是渗透、研发、安服、研究，所有人都在学习和复现这个漏洞，由于其覆盖面广，引用次数庞大，直接成为可以与永恒之蓝齐名的顶级可利用漏洞，官方 CVSS 评分更是直接顶到 10.0，国内有厂商将其命名为“毒日志”，国外将其命名为 Log4Shell。 A">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/190958652.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/191616225.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/191642961.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/191719075.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/08/Log4j/image-20240809190958652.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/08/Log4j/image-20240809191616225.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/08/Log4j/image-20240809191642961.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/08/Log4j/image-20240809191719075.png">
 <meta property="article:published_time" content="2024-08-08T00:14:39.000Z">
 <meta property="article:modified_time" content="2024-08-09T11:18:54.991Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/07/28/Commons-Collections/190958652.png">
+<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/08/08/Log4j/image-20240809190958652.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -324,15 +324,15 @@
 <li>判断是否有<code>$&#123;</code></li>
 <li>传入<code>StrSubstitutor</code>进行<code>replace</code></li>
 </ul>
-<p><img src="/2024/07/28/Commons-Collections/190958652.png" srcset="/img/loading.gif" lazyload alt="image-20240809190958652"></p>
+<p><img src="/2024/08/08/Log4j/image-20240809190958652.png" srcset="/img/loading.gif" lazyload alt="image-20240809190958652"></p>
 <p>把<code>$&#123;xxx&#125;</code>中间的内容提取出来，传入<code>resolveVariable</code>处理，在<code>Interpolator#lookup</code>，把第一个<code>:</code>前的内容提取出来，这里就是<code>jndi</code>，在<code>strLookupMap</code>找到对应的<code>Lookup</code>类，即找到<code>JndiLookup</code>类，用这个类去<code>lookup</code>后面的部分。</p>
-<p><img src="/2024/07/28/Commons-Collections/191616225.png" srcset="/img/loading.gif" lazyload alt="image-20240809191616225"></p>
+<p><img src="/2024/08/08/Log4j/image-20240809191616225.png" srcset="/img/loading.gif" lazyload alt="image-20240809191616225"></p>
 <p>上面是使用<code>logger.error()</code>触发的，日志等级默认200。</p>
 <p>一般情况下，如<code>logger.log(Level.INFO, &quot;$&#123;jndi:ldap://127.0.0.1:8099/666&#125;&quot;);</code></p>
 <p>会经过<code>logIfEnabled()</code>的判断。</p>
-<p><img src="/2024/07/28/Commons-Collections/191642961.png" srcset="/img/loading.gif" lazyload alt="image-20240809191642961"></p>
+<p><img src="/2024/08/08/Log4j/image-20240809191642961.png" srcset="/img/loading.gif" lazyload alt="image-20240809191642961"></p>
 <p>如果日志等级的值没有小于200（值越小等级越高），就不会进入<code>logMessage</code>来打印消息：</p>
-<p><img src="/2024/07/28/Commons-Collections/191719075.png" srcset="/img/loading.gif" lazyload alt="image-20240809191719075"></p>
+<p><img src="/2024/08/08/Log4j/image-20240809191719075.png" srcset="/img/loading.gif" lazyload alt="image-20240809191719075"></p>
 <p>所以只有<code>OFF(0)、FATAL(100)、ERROR(200)</code>才能利用</p>
 <p>代码中日志等级的优先级≥默认级别才可以成功，比如Struts2的默认日志等级为Info(400)，WARN(300)、ERROR、FATAL、OFF、INFO这几个级别的日志都可能被利用。</p>
 <p>更详细的利用过程及绕过可以看：<a target="_blank" rel="noopener" href="https://su18.org/post/log4j2/">Log4j2：里程碑式的顶级供应链漏洞 | 素十八 (su18.org)</a></p>
@@ -438,24 +438,6 @@
   
     <article id="comments" lazyload>
       
-  <div class="disqus" style="width:100%">
-    <div id="disqus_thread"></div>
-    
-      <script>
-        Fluid.utils.loadComments('#disqus_thread', function() {
-          Fluid.utils.createCssLink('https://lib.baomitu.com/disqusjs/1.3.0/disqusjs.css');
-          Fluid.utils.createScript('https://lib.baomitu.com/disqusjs/1.3.0/disqus.js', function() {
-            new DisqusJS({
-              shortname: 'fluid',
-              apikey: 'YdcgVedHrqu2ioQd1eVoUrqG'
-            });
-          });
-        });
-      </script>
-    
-    <noscript>Please enable JavaScript to view the comments</noscript>
-  </div>
-
 
     </article>
   
