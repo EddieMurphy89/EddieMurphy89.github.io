@@ -19,29 +19,24 @@
   <meta name="author" content="EddieMurphy">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言题目不难，但是为什么我要写这么一个小比赛，因为我爆零了。 对，致敬传奇爆零web手EddieMurphy。 路还很长，确实还很长。 浅析前面的绕过很简单，data伪协议就能进，php伪协议就能读sql_unlimited.php，然后是就是这个源码： 1234567891011121314151617181920212223242526272829303132&lt;?phpheader(&amp;q">
+    <meta name="description" content="这次本科组第二啦！！！（第一是我们天枢学长，tql呜呜呜，直接把靶场打穿ak了😭😭😭）   （这里不得不提一个7月份的sb比赛，我们打到全国总冠军都不给奖金和奖杯，主办方还装死……） 我不打算记final怎么打的，但也确实不好记，多网卡跳来跳去的，也没咋记录，有点难绷…… 所以记一下广州之旅吧~~ 上飞机喽  天气真的很好！！！！    下面赶到战场的是，天枢渗透真神F4（偷拍学长背影）：">
 <meta property="og:type" content="article">
-<meta property="og:title" content="京津冀攻防-array_slice绕过">
-<meta property="og:url" content="https://eddiemurphy89.github.io/2024/09/08/%E4%BA%AC%E6%B4%A5%E5%86%80%E6%94%BB%E9%98%B2-array-slice%E7%BB%95%E8%BF%87/index.html">
+<meta property="og:title" content="羊城杯Final-小记">
+<meta property="og:url" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/index.html">
 <meta property="og:site_name" content="EddieMurphy&#39;s blog">
-<meta property="og:description" content="前言题目不难，但是为什么我要写这么一个小比赛，因为我爆零了。 对，致敬传奇爆零web手EddieMurphy。 路还很长，确实还很长。 浅析前面的绕过很简单，data伪协议就能进，php伪协议就能读sql_unlimited.php，然后是就是这个源码： 1234567891011121314151617181920212223242526272829303132&lt;?phpheader(&amp;q">
+<meta property="og:description" content="这次本科组第二啦！！！（第一是我们天枢学长，tql呜呜呜，直接把靶场打穿ak了😭😭😭）   （这里不得不提一个7月份的sb比赛，我们打到全国总冠军都不给奖金和奖杯，主办方还装死……） 我不打算记final怎么打的，但也确实不好记，多网卡跳来跳去的，也没咋记录，有点难绷…… 所以记一下广州之旅吧~~ 上飞机喽  天气真的很好！！！！    下面赶到战场的是，天枢渗透真神F4（偷拍学长背影）：">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/slice%E7%BB%95%E8%BF%87/image-20240908003559993.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/slice%E7%BB%95%E8%BF%87/image-20240908003056564.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/slice%E7%BB%95%E8%BF%87/image-20240908003638173.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/slice%E7%BB%95%E8%BF%87/image-20240908003742077.png">
-<meta property="article:published_time" content="2024-09-07T16:29:28.000Z">
-<meta property="article:modified_time" content="2024-09-07T16:42:26.967Z">
+<meta property="article:published_time" content="2024-09-12T06:31:13.000Z">
+<meta property="article:modified_time" content="2024-09-15T06:41:00.582Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="比赛">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/slice%E7%BB%95%E8%BF%87/image-20240908003559993.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>京津冀攻防-array_slice绕过 - EddieMurphy&#39;s blog</title>
+  <title>羊城杯Final-小记 - EddieMurphy&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -207,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="京津冀攻防-array_slice绕过"></span>
+            <span id="subtitle" data-typed-text="羊城杯Final-小记"></span>
           
         </div>
 
@@ -218,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-09-08 00:29" pubdate>
-          2024年9月8日 凌晨
+        <time datetime="2024-09-12 14:31" pubdate>
+          2024年9月12日 下午
         </time>
       </span>
     
@@ -231,7 +226,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          398 字
+          192 字
         
       </span>
     
@@ -242,7 +237,7 @@
         
         
         
-          4 分钟
+          2 分钟
         
       </span>
     
@@ -288,30 +283,52 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">京津冀攻防-array_slice绕过</h1>
+            <h1 id="seo-header">羊城杯Final-小记</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>题目不难，但是为什么我要写这么一个小比赛，因为我爆零了。</p>
-<p>对，致敬传奇爆零web手<strong>EddieMurphy</strong>。</p>
-<p>路还很长，确实还很长。</p>
-<h2 id="浅析"><a href="#浅析" class="headerlink" title="浅析"></a>浅析</h2><p>前面的绕过很简单，data伪协议就能进，php伪协议就能读<code>sql_unlimited.php</code>，然后是就是这个源码：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-title function_ invoke__">header</span>(<span class="hljs-string">&quot;Content-type:text/html;charset=utf-8&quot;</span>);<br><span class="hljs-variable">$mysqli</span>=<span class="hljs-keyword">new</span> <span class="hljs-title function_ invoke__">mysqli</span>(<span class="hljs-string">&quot;localhost&quot;</span>,<span class="hljs-string">&quot;root&quot;</span>,<span class="hljs-string">&quot;toor&quot;</span>,<span class="hljs-string">&quot;unlimited&quot;</span>);<br><span class="hljs-keyword">if</span>(<span class="hljs-title function_ invoke__">mysqli_connect_error</span>())&#123;<br>	<span class="hljs-title function_ invoke__">printf</span>(<span class="hljs-string">&quot;connecte failed%s&lt;br&gt;&quot;</span>,<span class="hljs-title function_ invoke__">mysqli_connect_error</span>());<br>	<span class="hljs-keyword">exit</span>();<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">sql_sel</span>(<span class="hljs-params"><span class="hljs-variable">$id</span></span>)</span>&#123;<br>    <span class="hljs-keyword">if</span>(<span class="hljs-title function_ invoke__">is_array</span>(<span class="hljs-variable">$id</span>))&#123;<br>    	<span class="hljs-variable">$id</span> = <span class="hljs-title function_ invoke__">implode</span>(<span class="hljs-string">&quot;,&quot;</span>, <span class="hljs-variable">$id</span>);<br>	    <span class="hljs-variable">$result</span>=<span class="hljs-variable">$GLOBALS</span>[<span class="hljs-string">&#x27;mysqli&#x27;</span>]-&gt;<span class="hljs-title function_ invoke__">query</span>(<span class="hljs-string">&quot;select * from info where id in (<span class="hljs-subst">$id</span>)&quot;</span>);<br>	    <span class="hljs-keyword">while</span>(<span class="hljs-keyword">list</span>(<span class="hljs-variable">$id</span>,<span class="hljs-variable">$message</span>)=<span class="hljs-variable">$result</span>-&gt;<span class="hljs-title function_ invoke__">fetch_row</span>())&#123;<br>	    	<span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;&lt;li&gt;&#x27;</span>.<span class="hljs-variable">$id</span>.<span class="hljs-string">&#x27;ï¼&#x27;</span>.<span class="hljs-variable">$message</span>.<span class="hljs-string">&#x27;&lt;/li&gt;&#x27;</span>;<br>	    &#125;<br>	&#125;<br>    <br>&#125;<br><br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">do_co</span>(<span class="hljs-params"></span>) </span>&#123;<br>    <span class="hljs-keyword">if</span>(<span class="hljs-keyword">isset</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;id&#x27;</span>]))&#123;<br>    	<span class="hljs-variable">$post</span>=<span class="hljs-variable">$_POST</span>;<br>	    <span class="hljs-keyword">if</span> (@!<span class="hljs-title function_ invoke__">is_numeric</span>(<span class="hljs-variable">$post</span>[<span class="hljs-string">&#x27;id&#x27;</span>][<span class="hljs-number">0</span>]) || @!<span class="hljs-title function_ invoke__">is_numeric</span>(<span class="hljs-variable">$post</span>[<span class="hljs-string">&#x27;id&#x27;</span>][<span class="hljs-number">1</span>])) &#123;<br>	        <span class="hljs-keyword">die</span>(<span class="hljs-string">&quot;NO! NO! NO! The Parameters must be numeric&quot;</span>);<br>	    &#125;<br>	    <span class="hljs-title function_ invoke__">sql_sel</span>(<span class="hljs-title function_ invoke__">array_slice</span>(<span class="hljs-variable">$post</span>[<span class="hljs-string">&#x27;id&#x27;</span>],<span class="hljs-number">0</span>,<span class="hljs-number">2</span>));<br>    &#125;<br>    <span class="hljs-keyword">die</span>(<span class="hljs-string">&#x27;No Permissions&#x27;</span>);   <br>    <br>&#125;<br><span class="hljs-title function_ invoke__">do_co</span>();<br></code></pre></td></tr></table></figure>
+                <p>这次本科组第二啦！！！（第一是我们天枢学长，tql呜呜呜，直接把靶场打穿ak了😭😭😭）</p>
 
-<p>一开始傻傻的我还以为直接打十六进制，但是确实本地打不通，黔驴技穷。</p>
-<p>和赵哥一直交流也是，没有什么clues，以及那道tomcat的编码上传也是，没有过多接触这些题也让我疲于应付。</p>
-<p>但是SE学长一语道破（tql，这才是真正的赛棍），直接看到源码的<code>array_slice()</code>，来自：<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/2087">https://xz.aliyun.com/t/2087</a>:</p>
-<p><img src="/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/slice%E7%BB%95%E8%BF%87/image-20240908003559993.png" srcset="/img/loading.gif" lazyload alt="image-20240908003559993"></p>
-<p>结束了，一切都结束了。</p>
-<p><img src="/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/slice%E7%BB%95%E8%BF%87/image-20240908003056564.png" srcset="/img/loading.gif" lazyload alt="image-20240908003056564"></p>
-<p><img src="/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/slice%E7%BB%95%E8%BF%87/image-20240908003638173.png" srcset="/img/loading.gif" lazyload alt="image-20240908003638173"></p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>但是，晚了。</p>
-<p>队友把其他方向AK又如何，你的web爆零了。</p>
-<p>排名第一又如何，因为跟你无关。</p>
-<p>晚上出去drink了点🍺，独自骑行在回来的路上，路真的很长。</p>
-<p><img src="/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/slice%E7%BB%95%E8%BF%87/image-20240908003742077.png" srcset="/img/loading.gif" lazyload alt="image-20240908003742077"></p>
-<p><strong>蜀道难，难于上青天。</strong></p>
+
+<p>（这里不得不提一个7月份的sb比赛，我们打到全国总冠军都不给奖金和奖杯，主办方还装死……）</p>
+<p>我不打算记final怎么打的，但也确实不好记，多网卡跳来跳去的，也没咋记录，有点难绷……</p>
+<p>所以记一下广州之旅吧~~</p>
+<h2 id="上飞机喽"><a href="#上飞机喽" class="headerlink" title="上飞机喽"></a>上飞机喽</h2>
+
+<h2 id="天气真的很好！！！！"><a href="#天气真的很好！！！！" class="headerlink" title="天气真的很好！！！！"></a>天气真的很好！！！！</h2>
+
+
+
+<h2 id="下面赶到战场的是，天枢渗透真神F4（偷拍学长背影）："><a href="#下面赶到战场的是，天枢渗透真神F4（偷拍学长背影）：" class="headerlink" title="下面赶到战场的是，天枢渗透真神F4（偷拍学长背影）："></a>下面赶到战场的是，天枢渗透真神F4（偷拍学长背影）：</h2>
+
+<h2 id="比赛现场好气派！！！（比某个7月参加的sb比赛好太多了）"><a href="#比赛现场好气派！！！（比某个7月参加的sb比赛好太多了）" class="headerlink" title="比赛现场好气派！！！（比某个7月参加的sb比赛好太多了）"></a>比赛现场好气派！！！（比某个7月参加的sb比赛好太多了）</h2>
+
+
+
+
+
+
+
+
+
+<h2 id="参赛参赛！！！"><a href="#参赛参赛！！！" class="headerlink" title="参赛参赛！！！"></a>参赛参赛！！！</h2>
+
+
+
+
+
+<h2 id="下播！！！"><a href="#下播！！！" class="headerlink" title="下播！！！"></a>下播！！！</h2>
+
+<h2 id="上新闻喽！！！"><a href="#上新闻喽！！！" class="headerlink" title="上新闻喽！！！"></a>上新闻喽！！！</h2>
+
+<h2 id="北京上空"><a href="#北京上空" class="headerlink" title="北京上空"></a>北京上空</h2>
+
+
+
+
+
+<h2 id="故事还在续写，世界终将聚焦于你我！"><a href="#故事还在续写，世界终将聚焦于你我！" class="headerlink" title="故事还在续写，世界终将聚焦于你我！"></a>故事还在续写，世界终将聚焦于你我！</h2>
 
                 
               </div>
@@ -336,8 +353,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>京津冀攻防-array_slice绕过</div>
-      <div>https://eddiemurphy89.github.io/2024/09/08/京津冀攻防-array-slice绕过/</div>
+      <div>羊城杯Final-小记</div>
+      <div>https://eddiemurphy89.github.io/2024/09/12/羊城杯Final-小记/</div>
     </div>
     <div class="license-meta">
       
@@ -349,7 +366,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年9月8日</div>
+          <div>2024年9月12日</div>
         </div>
       
       
@@ -381,18 +398,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/" title="羊城杯Final-小记">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">羊城杯Final-小记</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/09/02/Dubbo/" title="Dubbo">
-                        <span class="hidden-mobile">Dubbo</span>
+                      <a href="/2024/09/08/%E4%BA%AC%E6%B4%A5%E5%86%80%E6%94%BB%E9%98%B2-array-slice%E7%BB%95%E8%BF%87/" title="京津冀攻防-array_slice绕过">
+                        <span class="hidden-mobile">京津冀攻防-array_slice绕过</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
