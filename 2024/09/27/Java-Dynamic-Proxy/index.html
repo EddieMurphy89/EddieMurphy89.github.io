@@ -27,7 +27,7 @@
 <meta property="og:description" content="前言复习一下Java动态代理。 正文为啥要用动态代理？ 我觉得我们不能从What开始学，直接学啥是动态代理直接能直接给人看懵逼。 我们从Why的角度开始学，为什么需要动态代理？ 动态代理其实就是一个动态生成子类的方法，看起来写出来一堆东西，但是针对Java这个静态语言，却是非常有用的。 试想，你有一个大的Java项目，现在你想改动一个类中的某个方法，如果不使用动态代理的方式，那你就会面临一个困境–">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-09-27T12:35:51.000Z">
-<meta property="article:modified_time" content="2024-10-05T15:14:08.438Z">
+<meta property="article:modified_time" content="2024-10-25T08:30:44.338Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
@@ -226,7 +226,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          472 字
+          698 字
         
       </span>
     
@@ -237,7 +237,7 @@
         
         
         
-          4 分钟
+          6 分钟
         
       </span>
     
@@ -297,8 +297,25 @@
 <p>但是如果你使用了动态代理，这个方法就是动态生成的，你就直接可以在不重新编译的情况下直接更改类中的方法然后应用到当前模块中，这对于整个项目来说效率都是非常高的，而且可变性可延展性都非常强大。配合反射的时候，往往你只需要更改一下类的输入或者配置文件就能一步到位。</p>
 <p>这里可以举一个例子来说明动态代理的实现：</p>
 <p><strong>就好比你建了一栋房子，但是你需要把你最底下的某个砖头换了，如果没用动态代理，你就必须把你的房子掀了再去找到这个砖头然后更换。但使用了动态代理后，就相当于它能自动帮你生成符合你需求的完美砖头并应用成功，根本就不需要你掀了整个房子。</strong></p>
-<p>来看代码。</p>
-<p>（未完待续…）</p>
+<p>这里直接引入Proxy。</p>
+<p>Proxy 是设计模式中的一种。当需要在已存在的 class 上添加或修改功能时，可以通过创建 proxy object 来实现</p>
+<p>通常 proxy object 和被代理对象拥有相同的方法，并且拥有被代理对象的引用，可以调用其方法。</p>
+<p>代理模式<a target="_blank" rel="noopener" href="https://javax0.wordpress.com/2016/01/20/java-dynamic-proxy">应用场景</a>包括</p>
+<ul>
+<li>在方法执行前后打印和记录日志</li>
+<li>认证、参数检查</li>
+<li>lazy instantiation (Hibernate, Mybatis)</li>
+<li>AOP (transaction)</li>
+<li>mocking</li>
+<li>…</li>
+</ul>
+<p>代理有两种实现方式</p>
+<ul>
+<li>静态代理：在编译时期，创建代理对象</li>
+<li>动态代理：在运行时期，动态创建</li>
+</ul>
+<p>对于重复性工作，如打印日志，静态代理需要为每个 class 都创建 proxy class，过程繁琐和低效，而动态代理通过使用反射在运行时生成 bytecode 的方式来实现，更加方便和强大</p>
+<p>后续可看<a target="_blank" rel="noopener" href="https://b1ngz.github.io/java-dynamic-proxy/">Java Dynamic Proxy | b1ngz</a>，总结的很不错，我就不再赘述了。</p>
 
                 
               </div>
