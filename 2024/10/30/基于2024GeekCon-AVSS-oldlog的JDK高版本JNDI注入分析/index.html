@@ -19,27 +19,24 @@
   <meta name="author" content="EddieMurphy">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言昨天有人让我帮看一个傻逼新生赛。 其实就是一个很简单的pickle反序列化绕过find_class。 看着很唬人： app.py： 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162from flask import">
+    <meta name="description" content="前言主要是从一些题目看到了这个的影子，所以想借此学习一下JDK17的原生和JDK21的JNDI等等，也算是做一个记录。而且好久都没更博客了，这学期实验太多导致的（ 正文">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pickle反序列化真得会手搓opcode吧">
-<meta property="og:url" content="https://eddiemurphy89.github.io/2024/10/10/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9C%9F%E5%BE%97%E4%BC%9A%E6%89%8B%E6%90%93opcode%E5%90%A7/index.html">
+<meta property="og:title" content="基于2024GeekCon_AVSS-oldlog的JDK高版本JNDI注入分析">
+<meta property="og:url" content="https://eddiemurphy89.github.io/2024/10/30/%E5%9F%BA%E4%BA%8E2024GeekCon-AVSS-oldlog%E7%9A%84JDK%E9%AB%98%E7%89%88%E6%9C%ACJNDI%E6%B3%A8%E5%85%A5%E5%88%86%E6%9E%90/index.html">
 <meta property="og:site_name" content="EddieMurphy&#39;s blog">
-<meta property="og:description" content="前言昨天有人让我帮看一个傻逼新生赛。 其实就是一个很简单的pickle反序列化绕过find_class。 看着很唬人： app.py： 1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162from flask import">
+<meta property="og:description" content="前言主要是从一些题目看到了这个的影子，所以想借此学习一下JDK17的原生和JDK21的JNDI等等，也算是做一个记录。而且好久都没更博客了，这学期实验太多导致的（ 正文">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/10/10/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9C%9F%E5%BE%97%E4%BC%9A%E6%89%8B%E6%90%93opcode%E5%90%A7/image-20241010161826331.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2024/10/10/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9C%9F%E5%BE%97%E4%BC%9A%E6%89%8B%E6%90%93opcode%E5%90%A7/image-20241010162045844.png">
-<meta property="article:published_time" content="2024-10-10T08:14:35.000Z">
-<meta property="article:modified_time" content="2024-10-10T08:22:13.502Z">
+<meta property="article:published_time" content="2024-10-30T08:52:19.000Z">
+<meta property="article:modified_time" content="2024-10-30T08:54:22.356Z">
 <meta property="article:author" content="EddieMurphy">
-<meta property="article:tag" content="娱乐向">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://eddiemurphy89.github.io/2024/10/10/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9C%9F%E5%BE%97%E4%BC%9A%E6%89%8B%E6%90%93opcode%E5%90%A7/image-20241010161826331.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>pickle反序列化真得会手搓opcode吧 - EddieMurphy&#39;s blog</title>
+  <title>基于2024GeekCon_AVSS-oldlog的JDK高版本JNDI注入分析 - EddieMurphy&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -205,7 +202,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="pickle反序列化真得会手搓opcode吧"></span>
+            <span id="subtitle" data-typed-text="基于2024GeekCon_AVSS-oldlog的JDK高版本JNDI注入分析"></span>
           
         </div>
 
@@ -216,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-10-10 16:14" pubdate>
-          2024年10月10日 下午
+        <time datetime="2024-10-30 16:52" pubdate>
+          2024年10月30日 下午
         </time>
       </span>
     
@@ -229,7 +226,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          844 字
+          65 字
         
       </span>
     
@@ -240,7 +237,7 @@
         
         
         
-          8 分钟
+          1 分钟
         
       </span>
     
@@ -286,29 +283,13 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">pickle反序列化真得会手搓opcode吧</h1>
+            <h1 id="seo-header">基于2024GeekCon_AVSS-oldlog的JDK高版本JNDI注入分析</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>昨天有人让我帮看一个傻逼新生赛。</p>
-<p>其实就是一个很简单的pickle反序列化绕过find_class。</p>
-<p>看着很唬人：</p>
-<p>app.py：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> Flask, request<br><span class="hljs-keyword">import</span> pickle<br><span class="hljs-keyword">import</span> base64<br><span class="hljs-keyword">import</span> io<br><br>BLACKLISTED_CLASSES = [<br>    <span class="hljs-string">&#x27;subprocess.check_output&#x27;</span>,<span class="hljs-string">&#x27;builtins.eval&#x27;</span>,<span class="hljs-string">&#x27;builtins.exec&#x27;</span>,<br>    <span class="hljs-string">&#x27;os.system&#x27;</span>, <span class="hljs-string">&#x27;os.popen&#x27;</span>, <span class="hljs-string">&#x27;os.popen2&#x27;</span>, <span class="hljs-string">&#x27;os.popen3&#x27;</span>, <span class="hljs-string">&#x27;os.popen4&#x27;</span>, <br>    <span class="hljs-string">&#x27;pickle.load&#x27;</span>, <span class="hljs-string">&#x27;pickle.loads&#x27;</span>, <span class="hljs-string">&#x27;cPickle.load&#x27;</span>, <span class="hljs-string">&#x27;cPickle.loads&#x27;</span>, <br>    <span class="hljs-string">&#x27;subprocess.call&#x27;</span>, <span class="hljs-string">&#x27;subprocess.check_call&#x27;</span>, <span class="hljs-string">&#x27;subprocess.Popen&#x27;</span>, <br>    <span class="hljs-string">&#x27;commands.getstatusoutput&#x27;</span>, <span class="hljs-string">&#x27;commands.getoutput&#x27;</span>, <span class="hljs-string">&#x27;commands.getstatus&#x27;</span>, <br>    <span class="hljs-string">&#x27;pty.spawn&#x27;</span>, <span class="hljs-string">&#x27;posixfile.open&#x27;</span>, <span class="hljs-string">&#x27;posixfile.fileopen&#x27;</span>,<br>    <span class="hljs-string">&#x27;__import__&#x27;</span>,<span class="hljs-string">&#x27;os.spawn*&#x27;</span>,<span class="hljs-string">&#x27;sh.Command&#x27;</span>,<span class="hljs-string">&#x27;imp.load_module&#x27;</span>,<span class="hljs-string">&#x27;builtins.compile&#x27;</span><br>    <span class="hljs-string">&#x27;eval&#x27;</span>, <span class="hljs-string">&#x27;builtins.execfile&#x27;</span>, <span class="hljs-string">&#x27;compile&#x27;</span>, <span class="hljs-string">&#x27;builtins.open&#x27;</span>, <span class="hljs-string">&#x27;builtins.file&#x27;</span>, <span class="hljs-string">&#x27;os.system&#x27;</span>, <br>    <span class="hljs-string">&#x27;os.fdopen&#x27;</span>, <span class="hljs-string">&#x27;os.tmpfile&#x27;</span>, <span class="hljs-string">&#x27;os.fchmod&#x27;</span>, <span class="hljs-string">&#x27;os.fchown&#x27;</span>, <span class="hljs-string">&#x27;os.open&#x27;</span>, <span class="hljs-string">&#x27;os.openpty&#x27;</span>, <span class="hljs-string">&#x27;os.read&#x27;</span>, <span class="hljs-string">&#x27;os.pipe&#x27;</span>,<br>    <span class="hljs-string">&#x27;os.chdir&#x27;</span>, <span class="hljs-string">&#x27;os.fchdir&#x27;</span>, <span class="hljs-string">&#x27;os.chroot&#x27;</span>, <span class="hljs-string">&#x27;os.chmod&#x27;</span>, <span class="hljs-string">&#x27;os.chown&#x27;</span>, <span class="hljs-string">&#x27;os.link&#x27;</span>, <span class="hljs-string">&#x27;os.lchown&#x27;</span>, <span class="hljs-string">&#x27;os.listdir&#x27;</span>,<br>    <span class="hljs-string">&#x27;os.lstat&#x27;</span>, <span class="hljs-string">&#x27;os.mkfifo&#x27;</span>, <span class="hljs-string">&#x27;os.mknod&#x27;</span>, <span class="hljs-string">&#x27;os.access&#x27;</span>, <span class="hljs-string">&#x27;os.mkdir&#x27;</span>, <span class="hljs-string">&#x27;os.makedirs&#x27;</span>, <span class="hljs-string">&#x27;os.readlink&#x27;</span>, <span class="hljs-string">&#x27;os.remove&#x27;</span>,<br>    <span class="hljs-string">&#x27;os.removedirs&#x27;</span>, <span class="hljs-string">&#x27;os.rename&#x27;</span>, <span class="hljs-string">&#x27;os.renames&#x27;</span>, <span class="hljs-string">&#x27;os.rmdir&#x27;</span>, <span class="hljs-string">&#x27;os.tempnam&#x27;</span>, <span class="hljs-string">&#x27;os.tmpnam&#x27;</span>, <span class="hljs-string">&#x27;os.unlink&#x27;</span>, <span class="hljs-string">&#x27;os.walk&#x27;</span>,<br>    <span class="hljs-string">&#x27;os.execl&#x27;</span>, <span class="hljs-string">&#x27;os.execle&#x27;</span>, <span class="hljs-string">&#x27;os.execlp&#x27;</span>, <span class="hljs-string">&#x27;os.execv&#x27;</span>, <span class="hljs-string">&#x27;os.execve&#x27;</span>, <span class="hljs-string">&#x27;os.dup&#x27;</span>, <span class="hljs-string">&#x27;os.dup2&#x27;</span>, <span class="hljs-string">&#x27;os.execvp&#x27;</span>, <span class="hljs-string">&#x27;os.execvpe&#x27;</span>,<br>    <span class="hljs-string">&#x27;os.fork&#x27;</span>, <span class="hljs-string">&#x27;os.forkpty&#x27;</span>, <span class="hljs-string">&#x27;os.kill&#x27;</span>, <span class="hljs-string">&#x27;os.spawnl&#x27;</span>, <span class="hljs-string">&#x27;os.spawnle&#x27;</span>, <span class="hljs-string">&#x27;os.spawnlp&#x27;</span>, <span class="hljs-string">&#x27;os.spawnlpe&#x27;</span>, <span class="hljs-string">&#x27;os.spawnv&#x27;</span>,<br>    <span class="hljs-string">&#x27;os.spawnve&#x27;</span>, <span class="hljs-string">&#x27;os.spawnvp&#x27;</span>, <span class="hljs-string">&#x27;os.spawnvpe&#x27;</span>, <span class="hljs-string">&#x27;pickle.load&#x27;</span>, <span class="hljs-string">&#x27;pickle.loads&#x27;</span>, <span class="hljs-string">&#x27;cPickle.load&#x27;</span>, <span class="hljs-string">&#x27;cPickle.loads&#x27;</span>,<br>    <span class="hljs-string">&#x27;subprocess.call&#x27;</span>, <span class="hljs-string">&#x27;subprocess.check_call&#x27;</span>, <span class="hljs-string">&#x27;subprocess.check_output&#x27;</span>, <span class="hljs-string">&#x27;subprocess.Popen&#x27;</span>,<br>    <span class="hljs-string">&#x27;commands.getstatusoutput&#x27;</span>, <span class="hljs-string">&#x27;commands.getoutput&#x27;</span>, <span class="hljs-string">&#x27;commands.getstatus&#x27;</span>, <span class="hljs-string">&#x27;glob.glob&#x27;</span>,<br>    <span class="hljs-string">&#x27;linecache.getline&#x27;</span>, <span class="hljs-string">&#x27;shutil.copyfileobj&#x27;</span>, <span class="hljs-string">&#x27;shutil.copyfile&#x27;</span>, <span class="hljs-string">&#x27;shutil.copy&#x27;</span>, <span class="hljs-string">&#x27;shutil.copy2&#x27;</span>, <span class="hljs-string">&#x27;shutil.move&#x27;</span>,<br>    <span class="hljs-string">&#x27;shutil.make_archive&#x27;</span>, <span class="hljs-string">&#x27;popen2.popen2&#x27;</span>, <span class="hljs-string">&#x27;popen2.popen3&#x27;</span>, <span class="hljs-string">&#x27;popen2.popen4&#x27;</span>, <span class="hljs-string">&#x27;timeit.timeit&#x27;</span>, <span class="hljs-string">&#x27;sys.call_tracing&#x27;</span>,<br>    <span class="hljs-string">&#x27;code.interact&#x27;</span>, <span class="hljs-string">&#x27;code.compile_command&#x27;</span>, <span class="hljs-string">&#x27;codeop.compile_command&#x27;</span>, <span class="hljs-string">&#x27;pty.spawn&#x27;</span>, <span class="hljs-string">&#x27;posixfile.open&#x27;</span>,<br>    <span class="hljs-string">&#x27;posixfile.fileopen&#x27;</span><br>]<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SafeUnpickler</span>(pickle.Unpickler):<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">find_class</span>(<span class="hljs-params">self, module, name</span>):<br>        <span class="hljs-keyword">if</span> <span class="hljs-string">f&quot;<span class="hljs-subst">&#123;module&#125;</span>.<span class="hljs-subst">&#123;name&#125;</span>&quot;</span> <span class="hljs-keyword">in</span> BLACKLISTED_CLASSES:<br>            <span class="hljs-keyword">raise</span> pickle.UnpicklingError(<span class="hljs-string">&quot;Forbidden class: %s.%s&quot;</span> % (module, name))<br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>().find_class(module, name)<br><br>app = Flask(__name__)<br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&quot;/&quot;</span>, methods=[<span class="hljs-string">&quot;GET&quot;</span>, <span class="hljs-string">&quot;POST&quot;</span>]</span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>():<br>    <span class="hljs-keyword">if</span> request.method == <span class="hljs-string">&quot;POST&quot;</span>:<br>        encoded_data = request.form[<span class="hljs-string">&quot;data&quot;</span>]<br>        decoded_data = base64.b64decode(encoded_data)<br>        <br>        <span class="hljs-keyword">try</span>:<br>            data_stream = io.BytesIO(decoded_data)<br>            unpickler = SafeUnpickler(data_stream)<br>            result = unpickler.load()<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;Deserialized data: <span class="hljs-subst">&#123;<span class="hljs-built_in">list</span>(result)&#125;</span>&quot;</span><br>        <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">f&quot;Error during deserialization: <span class="hljs-subst">&#123;<span class="hljs-built_in">str</span>(e)&#125;</span>&quot;</span><br>    <span class="hljs-keyword">else</span>:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        &lt;form method=&quot;post&quot;&gt;</span><br><span class="hljs-string">            &lt;label for=&quot;data&quot;&gt;Enter your serialized data:&lt;/label&gt;&lt;br&gt;</span><br><span class="hljs-string">            &lt;textarea id=&quot;data&quot; name=&quot;data&quot;&gt;&lt;/textarea&gt;&lt;br&gt;</span><br><span class="hljs-string">            &lt;input type=&quot;submit&quot; value=&quot;Submit&quot;&gt;</span><br><span class="hljs-string">        &lt;/form&gt;</span><br><span class="hljs-string">        &quot;&quot;&quot;</span><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    app.run(port=<span class="hljs-number">8080</span>)<br><br></code></pre></td></tr></table></figure>
-
-<p>直接开抄吧，我也懒得写了：</p>
-<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/14061?u_atoken=9d62d196c00e02f7285bab84cbb8f2c7&u_asig=0a472f9017285482695326969e0055">pickle反序列化漏洞基础知识与绕过简析 - 先知社区 (aliyun.com)</a></p>
-<p><a target="_blank" rel="noopener" href="https://dummykitty.github.io/python/2023/06/01/pickle-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%BB%95%E8%BF%87%E8%BF%87%E6%BB%A4.html#%E5%AF%BB%E6%89%BE%E6%9C%AA%E8%A2%AB%E9%99%90%E5%88%B6%E7%9A%84%E5%88%A9%E7%94%A8%E9%93%BE">Pickle 反序列化绕过 - DumKiy’s blog (dummykitty.github.io)</a></p>
-<p>然后用了一下pker这个工具，也挺好用：</p>
-<p><img src="/2024/10/10/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9C%9F%E5%BE%97%E4%BC%9A%E6%89%8B%E6%90%93opcode%E5%90%A7/image-20241010161826331.png" srcset="/img/loading.gif" lazyload alt="image-20241010161826331"></p>
-<p>开始还挺邪门，我说curl打不通，还猜是不出网…….</p>
-<p>本地调了一下，因为反序列化的是一个数字，但是我打的payload是一个可迭代的对象，所以他就会报错int is not iterable.</p>
-<p>而且后面都是报can’t find attribute module。</p>
-<p>那么其实可以猜测只有第一次能打进去，我开始想不出网，难道还要我打个内存马？新生赛都开始要这么手搓opcode了吗？</p>
-<p>结果是我傻逼了，他这机子没有curl，bash一把梭了，艹。</p>
-<p><img src="/2024/10/10/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9C%9F%E5%BE%97%E4%BC%9A%E6%89%8B%E6%90%93opcode%E5%90%A7/image-20241010162045844.png" srcset="/img/loading.gif" lazyload alt="image-20241010162045844"></p>
-
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>主要是从一些题目看到了这个的影子，所以想借此学习一下JDK17的原生和JDK21的JNDI等等，也算是做一个记录。而且好久都没更博客了，这学期实验太多导致的（</p>
+<h2 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h2>
                 
               </div>
             
@@ -320,7 +301,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%A8%B1%E4%B9%90%E5%90%91/" class="print-no-link">#娱乐向</a>
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
       
     </div>
   
@@ -332,8 +313,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>pickle反序列化真得会手搓opcode吧</div>
-      <div>https://eddiemurphy89.github.io/2024/10/10/pickle反序列化真得会手搓opcode吧/</div>
+      <div>基于2024GeekCon_AVSS-oldlog的JDK高版本JNDI注入分析</div>
+      <div>https://eddiemurphy89.github.io/2024/10/30/基于2024GeekCon-AVSS-oldlog的JDK高版本JNDI注入分析/</div>
     </div>
     <div class="license-meta">
       
@@ -345,7 +326,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年10月10日</div>
+          <div>2024年10月30日</div>
         </div>
       
       
@@ -377,9 +358,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/10/30/%E5%9F%BA%E4%BA%8E2024GeekCon-AVSS-oldlog%E7%9A%84JDK%E9%AB%98%E7%89%88%E6%9C%ACJNDI%E6%B3%A8%E5%85%A5%E5%88%86%E6%9E%90/" title="基于2024GeekCon_AVSS-oldlog的JDK高版本JNDI注入分析">
+                      <a href="/2024/11/13/2024%E9%B9%8F%E5%9F%8E%E6%9D%AF-web/" title="2024鹏城杯-web">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">基于2024GeekCon_AVSS-oldlog的JDK高版本JNDI注入分析</span>
+                        <span class="hidden-mobile">2024鹏城杯-web</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -387,8 +368,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/10/05/sctf-web-learning/" title="SCTF-WEB-Learning">
-                        <span class="hidden-mobile">SCTF-WEB-Learning</span>
+                      <a href="/2024/10/10/pickle%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9C%9F%E5%BE%97%E4%BC%9A%E6%89%8B%E6%90%93opcode%E5%90%A7/" title="pickle反序列化真得会手搓opcode吧">
+                        <span class="hidden-mobile">pickle反序列化真得会手搓opcode吧</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
