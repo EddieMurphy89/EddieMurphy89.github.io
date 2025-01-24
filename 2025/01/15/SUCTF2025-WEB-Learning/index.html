@@ -38,8 +38,10 @@
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/01/15/SUCTF2025-WEB-Learning/image-20250120185719395.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/01/15/SUCTF2025-WEB-Learning/image-20250120202000237.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/01/15/SUCTF2025-WEB-Learning/image-20250120201505921.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/01/15/SUCTF2025-WEB-Learning/image-20250124175516664.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/01/15/SUCTF2025-WEB-Learning/image-20250124175105749.png">
 <meta property="article:published_time" content="2025-01-15T11:12:24.000Z">
-<meta property="article:modified_time" content="2025-01-20T12:20:39.687Z">
+<meta property="article:modified_time" content="2025-01-24T09:55:21.302Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="比赛">
 <meta name="twitter:card" content="summary_large_image">
@@ -239,7 +241,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          8.2k 字
+          8.5k 字
         
       </span>
     
@@ -250,7 +252,7 @@
         
         
         
-          69 分钟
+          72 分钟
         
       </span>
     
@@ -516,7 +518,21 @@
 <p><img src="/2025/01/15/SUCTF2025-WEB-Learning/image-20250120202000237.png" srcset="/img/loading.gif" lazyload alt="image-20250120202000237"></p>
 <p>三折叠，怎么折都有面😋😋😋~~~</p>
 <p><img src="/2025/01/15/SUCTF2025-WEB-Learning/image-20250120201505921.png" srcset="/img/loading.gif" lazyload alt="image-20250120201505921"></p>
-<h2 id="SU-PWN"><a href="#SU-PWN" class="headerlink" title="SU_PWN"></a>SU_PWN</h2><p>未完待续…</p>
+<h2 id="SU-PWN"><a href="#SU-PWN" class="headerlink" title="SU_PWN"></a>SU_PWN</h2><p>注意到<code>xalan</code>依赖，且版本是 <code>2.7.2</code> 存在历史漏洞</p>
+<p>找到这个CVE，网上有现成payload:</p>
+<p>[Xalan-J XSLT整数截断漏洞利用构造(CVE-2022-34169)学习与扩展](<a target="_blank" rel="noopener" href="https://alter1125.github.io/2023/02/19/Xalan-J">https://alter1125.github.io/2023/02/19/Xalan-J</a> XSLT整数截断漏洞利用构造(CVE-2022-34169)学习与扩展&#x2F;#CheckList)</p>
+<p>但是直接打报错null,找到问题了,黑名单之后的问题在于他把我们传入的文件名进行了修改为null4位，但是项目给出的生成的文件都是6位的，</p>
+<ul>
+<li>由于文件名也会添加至常量池，为避免影响对其他常量位置造成变动，长度需保证一致(6)，<code>select -&gt; abcdef</code></li>
+<li>运行前最好删除已生成的 <code>.class</code> 文件(文件内容发生变动则不用)</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://blog.noah.360.net/xalan-j-integer-truncation-reproduce-cve-2022-34169/">Xalan-J XSLT整数截断漏洞利用构造(CVE-2022-34169)</a></p>
+<p>直接用这个师傅的github项目就能打，注意获取文件名设定为6位，filename是参数获取单独传参</p>
+<p>本地utf16直接绕过出了，远程不出网curl dns外带没限制。按照官方说法是本来想让我们自己弄个重打<code>xslt</code>的内存马。。。</p>
+<p>加上下面这个utf-16解析就可以绕过黑名单：</p>
+<p><img src="/2025/01/15/SUCTF2025-WEB-Learning/image-20250124175516664.png" srcset="/img/loading.gif" lazyload alt="image-20250124175516664"></p>
+<p><img src="/2025/01/15/SUCTF2025-WEB-Learning/image-20250124175105749.png" srcset="/img/loading.gif" lazyload alt="image-20250124175105749"></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>好题啊好题。学到很多。XCTF才是真正的归宿吧。</p>
 <p>参考：</p>
 <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/WAtpKN7lMzzr0pGUX07juA">2025 SUCTF wp</a></p>
 <p><a target="_blank" rel="noopener" href="https://quick-mascara-699.notion.site/Syclover-SUCTF-WP-177370c566a481ff9a01ebed7f0c87f8?pvs=25#6a5e720153af42299f8369cb52974b47">Syclover-SUCTF-WP</a></p>
