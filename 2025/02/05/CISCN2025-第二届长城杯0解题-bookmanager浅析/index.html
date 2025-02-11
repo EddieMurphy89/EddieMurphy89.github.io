@@ -19,12 +19,12 @@
   <meta name="author" content="EddieMurphy">
   <meta name="keywords" content="">
   
-    <meta name="description" content="前言当时期末复习去了没看国赛题，回头发现一道有意思的题。 又是solon框架，想起了全年我打国赛时的心情hhh 分析在ApiGateway中定义了路由，大概意思就是将BookServiceImpl这个类加入到book这个路径下，也就说访问的话就是&#x2F;api&#x2F;rest&#x2F;book&#x2F;xxx：  那我们就可以通过&#x2F;api&#x2F;rest&#x2F;book&#x2F;getBook，&#x2F;api&#x2F;rest&#x2F;book&#x2F;getAllBook">
+    <meta name="description" content="前言当时期末复习去了没看国赛题，回头发现一道有意思的题。 又是solon框架，想起了去年我打国赛时的心情hhh 分析在ApiGateway中定义了路由，大概意思就是将BookServiceImpl这个类加入到book这个路径下，也就说访问的话就是&#x2F;api&#x2F;rest&#x2F;book&#x2F;xxx：  那我们就可以通过&#x2F;api&#x2F;rest&#x2F;book&#x2F;getBook，&#x2F;api&#x2F;rest&#x2F;book&#x2F;getAllBook">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CISCN2025&#x2F;第二届长城杯1解题-bookmanager浅析">
 <meta property="og:url" content="https://eddiemurphy89.github.io/2025/02/05/CISCN2025-%E7%AC%AC%E4%BA%8C%E5%B1%8A%E9%95%BF%E5%9F%8E%E6%9D%AF0%E8%A7%A3%E9%A2%98-bookmanager%E6%B5%85%E6%9E%90/index.html">
 <meta property="og:site_name" content="EddieMurphy&#39;s blog">
-<meta property="og:description" content="前言当时期末复习去了没看国赛题，回头发现一道有意思的题。 又是solon框架，想起了全年我打国赛时的心情hhh 分析在ApiGateway中定义了路由，大概意思就是将BookServiceImpl这个类加入到book这个路径下，也就说访问的话就是&#x2F;api&#x2F;rest&#x2F;book&#x2F;xxx：  那我们就可以通过&#x2F;api&#x2F;rest&#x2F;book&#x2F;getBook，&#x2F;api&#x2F;rest&#x2F;book&#x2F;getAllBook">
+<meta property="og:description" content="前言当时期末复习去了没看国赛题，回头发现一道有意思的题。 又是solon框架，想起了去年我打国赛时的心情hhh 分析在ApiGateway中定义了路由，大概意思就是将BookServiceImpl这个类加入到book这个路径下，也就说访问的话就是&#x2F;api&#x2F;rest&#x2F;book&#x2F;xxx：  那我们就可以通过&#x2F;api&#x2F;rest&#x2F;book&#x2F;getBook，&#x2F;api&#x2F;rest&#x2F;book&#x2F;getAllBook">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/05/CISCN2025-%E7%AC%AC%E4%BA%8C%E5%B1%8A%E9%95%BF%E5%9F%8E%E6%9D%AF0%E8%A7%A3%E9%A2%98-bookmanager%E6%B5%85%E6%9E%90/image-20250205163149854.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/05/CISCN2025-%E7%AC%AC%E4%BA%8C%E5%B1%8A%E9%95%BF%E5%9F%8E%E6%9D%AF0%E8%A7%A3%E9%A2%98-bookmanager%E6%B5%85%E6%9E%90/image-20250205163412584.png">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/05/CISCN2025-%E7%AC%AC%E4%BA%8C%E5%B1%8A%E9%95%BF%E5%9F%8E%E6%9D%AF0%E8%A7%A3%E9%A2%98-bookmanager%E6%B5%85%E6%9E%90/image-20250205164350440.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/05/CISCN2025-%E7%AC%AC%E4%BA%8C%E5%B1%8A%E9%95%BF%E5%9F%8E%E6%9D%AF0%E8%A7%A3%E9%A2%98-bookmanager%E6%B5%85%E6%9E%90/image-20250205165508392.png">
 <meta property="article:published_time" content="2025-02-05T08:29:39.000Z">
-<meta property="article:modified_time" content="2025-02-11T09:46:24.282Z">
+<meta property="article:modified_time" content="2025-02-11T09:47:16.301Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
@@ -296,7 +296,7 @@
               <div class="markdown-body">
                 
                 <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>当时期末复习去了没看国赛题，回头发现一道有意思的题。</p>
-<p>又是solon框架，想起了全年我打国赛时的心情hhh</p>
+<p>又是solon框架，想起了去年我打国赛时的心情hhh</p>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>在<code>ApiGateway</code>中定义了路由，大概意思就是将<code>BookServiceImpl</code>这个类加入到book这个路径下，也就说访问的话就是<code>/api/rest/book/xxx</code>：</p>
 <p><img src="/2025/02/05/CISCN2025-%E7%AC%AC%E4%BA%8C%E5%B1%8A%E9%95%BF%E5%9F%8E%E6%9D%AF0%E8%A7%A3%E9%A2%98-bookmanager%E6%B5%85%E6%9E%90/image-20250205163149854.png" srcset="/img/loading.gif" lazyload alt="image-20250205163149854"></p>
 <p>那我们就可以通过<code>/api/rest/book/getBook</code>，<code>/api/rest/book/getAllBooks</code>等来访问路由。</p>
