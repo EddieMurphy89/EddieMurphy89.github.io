@@ -34,7 +34,7 @@
 <meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/2025-JTools%E5%88%86%E6%9E%90/image-20250301200949465.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/2025-JTools%E5%88%86%E6%9E%90/image-20250301201205535.png">
 <meta property="article:published_time" content="2025-03-01T11:43:23.000Z">
-<meta property="article:modified_time" content="2025-03-01T12:16:08.733Z">
+<meta property="article:modified_time" content="2025-03-01T12:19:18.226Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
@@ -234,7 +234,7 @@
         <i class="iconfont icon-chart"></i>
         
           <!-- compatible with older versions-->
-          966 字
+          1.1k 字
         
       </span>
     
@@ -245,7 +245,7 @@
         
         
         
-          9 分钟
+          10 分钟
         
       </span>
     
@@ -323,7 +323,11 @@
 <p>题目是不出网的，这里由于没spring啥的依赖所以打内存马有点困难，但是题目贴心的给了一个读取<code>/tmp/desc.txt</code>的文件，那么直接覆盖读文件就可以了：</p>
 <p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/2025-JTools%E5%88%86%E6%9E%90/image-20250301201205535.png" srcset="/img/loading.gif" lazyload alt="image-20250301201205535"></p>
 <h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>最后，还是期望国赛华北那道fury有高手能看看怎么做，或者patch的方法也可以交流一下。</p>
-<p>每年的AliyunCTF都会让后面大大小小的CTF有所借鉴，或许对于fury反序列化的研究即将成为众矢之的。</p>
+<p>逻辑是这样的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ApiController</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">ApiController</span><span class="hljs-params">()</span> &#123;<br>    &#125;<br><br>    <span class="hljs-meta">@RequestMapping(&#123;&quot;/&quot;&#125;)</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">api</span><span class="hljs-params">(<span class="hljs-meta">@RequestParam(value = &quot;apistr&quot;,required = false,defaultValue = &quot;&quot;)</span> String apistr, Model model)</span> &#123;<br>        <span class="hljs-keyword">if</span> (apistr.equals(<span class="hljs-string">&quot;&quot;</span>)) &#123;<br>            model.addAttribute(<span class="hljs-string">&quot;msg&quot;</span>, <span class="hljs-string">&quot;&#123; \&quot;id\&quot;: 1, \&quot;name\&quot;: \&quot;admin\&quot;, \&quot;age\&quot;: 21, \&quot;phone\&quot;: \&quot;13300000000\&quot; &#125;&quot;</span>);<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-type">Fury</span> <span class="hljs-variable">fury</span> <span class="hljs-operator">=</span> Fury.builder().withLanguage(Language.JAVA).requireClassRegistration(<span class="hljs-literal">false</span>).build();<br>                <span class="hljs-type">byte</span>[] decode = Base64.getDecoder().decode(apistr);<br>                <span class="hljs-type">Object</span> <span class="hljs-variable">person</span> <span class="hljs-operator">=</span> fury.deserialize(decode);<br>                <span class="hljs-type">JSONObject</span> <span class="hljs-variable">entries</span> <span class="hljs-operator">=</span> JSONUtil.parseObj(person);<br>                model.addAttribute(<span class="hljs-string">&quot;msg&quot;</span>, entries.toString());<br>            &#125; <span class="hljs-keyword">catch</span> (Exception var7) &#123;<br>                model.addAttribute(<span class="hljs-string">&quot;msg&quot;</span>, <span class="hljs-string">&quot;error apistr&quot;</span>);<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;index&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>依赖也是hutool，多了spring、jackson、thymeleaf、snakeyaml这些。</p>
+<p>而每年的AliyunCTF都会让后面大大小小的CTF有所借鉴，或许对于fury反序列化的研究是即将成为众矢之的了。</p>
 
                 
               </div>
