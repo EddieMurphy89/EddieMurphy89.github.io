@@ -20,3 +20,5 @@ Fluid.boot.refresh = function() {
 document.addEventListener('DOMContentLoaded', function() {
   Fluid.boot.registerEvents();
 });
+
+Fluid.utils.createScript('/js/cyberpunk.js');

@@ -1,3 +1,5 @@
+@import url('/css/cyberpunk.css');
+
 .anchorjs-link {
   text-decoration: none !important;
   transition: opacity 0.2s ease-in-out;
