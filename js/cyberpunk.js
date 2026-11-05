@@ -276,107 +276,218 @@
   function initBreach() {
     const panel = document.querySelector('.nc-breach');
     const matrix = document.getElementById('nc-code-matrix');
-    const required = document.getElementById('nc-required');
+    const daemonList = document.getElementById('nc-daemons');
     const buffer = document.getElementById('nc-buffer');
     const status = document.getElementById('nc-breach-status');
     const resetButton = document.getElementById('nc-breach-reset');
-    if (!panel || !matrix || !required || !buffer || !status || !resetButton) return;
+    const shuffleButton = document.getElementById('nc-breach-shuffle');
+    const timer = document.getElementById('nc-breach-timer');
+    const stateLabel = document.getElementById('nc-breach-state');
+    const pathLabel = document.getElementById('nc-breach-path');
+    const hero = document.querySelector('.nc-hero');
+    if (!panel || !matrix || !daemonList || !buffer || !status || !resetButton || !shuffleButton || !timer || !stateLabel || !pathLabel) return;
 
-    const rows = [
+    const baseRows = [
       ['55', '1C', 'BD', 'E9', '7A'],
       ['BD', 'E9', '55', '1C', 'FF'],
       ['E9', '7A', 'BD', '55', '1C'],
       ['1C', 'FF', 'E9', 'BD', '55'],
       ['7A', '55', '1C', 'FF', 'BD']
     ];
-    const sequence = ['1C', 'BD', '55'];
-    let progress = 0;
-    let entries = [];
-    let locked = false;
+    let rows = baseRows.map((row) => [...row]);
+    const daemons = [
+      { name: 'DATAMINE_V1', sequence: ['BD', '1C', 'BD'] },
+      { name: 'DATAMINE_V2', sequence: ['1C', 'BD', '55'] },
+      { name: 'DATAMINE_V3', sequence: ['BD', '55', 'FF'] }
+    ];
+    const capacity = 5;
+    const duration = 90000;
+    let state;
+    let timerId = null;
+
+    function shuffledIndices() {
+      const order = [0, 1, 2, 3, 4];
+      for (let index = order.length - 1; index > 0; index -= 1) {
+        const target = Math.floor(Math.random() * (index + 1));
+        [order[index], order[target]] = [order[target], order[index]];
+      }
+      return order;
+    }
+
+    function shuffledRows() {
+      let rowOrder;
+      let columnOrder;
+      do {
+        rowOrder = shuffledIndices();
+        columnOrder = shuffledIndices();
+      } while (rowOrder.every((value, index) => value === index) && columnOrder.every((value, index) => value === index));
+      return rowOrder.map((row) => columnOrder.map((column) => baseRows[row][column]));
+    }
 
     matrix.innerHTML = rows.flatMap((row, rowIndex) => row.map((value, columnIndex) => (
-      `<button type="button" data-value="${value}" data-row="${rowIndex}" data-column="${columnIndex}" aria-label="Hex code ${value}">${value}</button>`
+      `<button type="button" data-row="${rowIndex}" data-column="${columnIndex}" aria-describedby="nc-breach-path nc-breach-status">${value}</button>`
     ))).join('');
-    buffer.innerHTML = `<span>BUFFER // 05</span>${Array.from({ length: 5 }, () => '<i></i>').join('')}`;
+    buffer.innerHTML = Array.from({ length: capacity }, () => '<li></li>').join('');
+    daemonList.innerHTML = daemons.map((daemon) => (
+      `<li><strong>${daemon.name}</strong><span class="nc-daemon-code">${daemon.sequence.map((value) => `<span>${value}</span>`).join('')}</span><small>WAITING</small></li>`
+    )).join('');
     const buttons = Array.from(matrix.querySelectorAll('button'));
-    const slots = Array.from(buffer.querySelectorAll('i'));
+    const slots = Array.from(buffer.querySelectorAll('li'));
+    const daemonRows = Array.from(daemonList.querySelectorAll('li'));
 
-    function renderSequence() {
-      required.innerHTML = sequence.map((value, index) => {
-        const className = index < progress ? 'is-done' : index === progress ? 'is-next' : '';
-        return `<span class="${className}">${value}</span>`;
-      }).join('');
+    function isFinished() {
+      return state.phase !== 'ready' && state.phase !== 'running';
     }
 
-    function renderBuffer() {
-      slots.forEach((slot, index) => {
-        slot.textContent = entries[index] || '';
-        slot.classList.toggle('is-filled', index < entries.length);
+    // Each daemon can match at any offset, including overlapping other daemons.
+    function daemonProgress(sequence) {
+      const uploaded = state.entries.some((_, start) => (
+        sequence.every((value, offset) => state.entries[start + offset] === value)
+      ));
+      if (uploaded) return sequence.length;
+      for (let length = Math.min(sequence.length - 1, state.entries.length); length > 0; length -= 1) {
+        if (sequence.slice(0, length).every((value, offset) => (
+          state.entries[state.entries.length - length + offset] === value
+        ))) return length;
+      }
+      return 0;
+    }
+
+    function completedCount() {
+      return daemons.filter((daemon) => daemonProgress(daemon.sequence) === daemon.sequence.length).length;
+    }
+
+    function isLegal(index) {
+      const row = Math.floor(index / rows[0].length);
+      const column = index % rows[0].length;
+      return !isFinished() && !state.used.has(index) && (state.axis === 'row' ? row : column) === state.line;
+    }
+
+    function renderTimer() {
+      const seconds = Math.ceil(state.remaining / 1000);
+      const minutes = Math.floor(seconds / 60);
+      const remainder = seconds % 60;
+      timer.textContent = `${String(minutes).padStart(2, '0')}:${String(remainder).padStart(2, '0')}`;
+      timer.setAttribute('aria-label', `${seconds} seconds remaining`);
+      timer.classList.toggle('is-urgent', seconds <= 10);
+    }
+
+    function render() {
+      const finished = isFinished();
+      panel.dataset.state = state.phase;
+      stateLabel.textContent = `ICE // ${state.phase.toUpperCase()}`;
+      pathLabel.textContent = finished ? 'SESSION ENDED // REINITIALIZE TO RETRY' : `${state.phase === 'ready' ? 'START' : 'NEXT'} // ${state.axis.toUpperCase()} ${state.line + 1}`;
+      buttons.forEach((button, index) => {
+        const used = state.used.has(index);
+        const legal = isLegal(index);
+        button.classList.toggle('is-axis', legal);
+        button.classList.toggle('is-used', used);
+        button.classList.toggle('is-selected', index === state.lastCell);
+        // Keep native buttons focusable/clickable so rejected moves explain why.
+        button.setAttribute('aria-disabled', String(!legal));
+        const reason = finished ? 'session ended; reinitialize to retry' : used ? 'already used' : legal ? 'available' : `choose ${state.axis} ${state.line + 1}`;
+        button.setAttribute('aria-label', `Row ${Math.floor(index / 5) + 1}, column ${index % 5 + 1}: ${rows[Math.floor(index / 5)][index % 5]}, ${reason}`);
       });
+      slots.forEach((slot, index) => {
+        slot.textContent = state.entries[index] || '—';
+        slot.classList.toggle('is-filled', index < state.entries.length);
+        slot.setAttribute('aria-label', `Slot ${index + 1}: ${state.entries[index] || 'empty'}`);
+      });
+      daemonRows.forEach((row, index) => {
+        const progress = daemonProgress(daemons[index].sequence);
+        const uploaded = progress === daemons[index].sequence.length;
+        row.classList.toggle('is-uploaded', uploaded);
+        row.querySelector('small').textContent = uploaded ? 'UPLOADED' : finished ? 'MISSED' : progress ? `${progress}/3` : 'WAITING';
+        row.querySelectorAll('.nc-daemon-code > span').forEach((code, offset) => {
+          code.classList.toggle('is-done', offset < progress);
+        });
+      });
+      renderTimer();
     }
 
-    function clearAxis() {
-      buttons.forEach((button) => button.classList.remove('is-axis'));
+    function stopTimer() {
+      window.clearInterval(timerId);
+      timerId = null;
     }
 
     function reset() {
-      progress = 0;
-      entries = [];
-      locked = false;
-      panel.classList.remove('is-error', 'is-success');
-      status.textContent = 'AWAITING INPUT // 3 DAEMONS';
-      buttons.forEach((button) => {
-        button.disabled = false;
-        button.classList.remove('is-used', 'is-selected', 'is-axis');
+      stopTimer();
+      state = { phase: 'ready', entries: [], used: new Set(), lastCell: null, axis: 'row', line: 0, deadline: null, remaining: duration };
+      buttons.forEach((button, index) => {
+        button.textContent = rows[Math.floor(index / 5)][index % 5];
       });
-      renderSequence();
-      renderBuffer();
+      panel.classList.remove('is-invalid', 'is-error', 'is-success', 'is-partial');
+      hero?.classList.remove('nc-access-granted');
+      status.textContent = 'AWAITING INPUT // 0/3 DAEMONS';
+      render();
     }
 
-    function fail() {
-      locked = true;
-      panel.classList.add('is-error');
-      status.textContent = 'ACCESS DENIED // TRACE DETECTED';
-      buttons.forEach((button) => { button.disabled = true; });
-
+    function finish(reason) {
+      if (isFinished()) return;
+      const count = completedCount();
+      state.phase = count === daemons.length ? 'complete' : count > 0 ? 'partial' : 'failure';
+      stopTimer();
+      panel.classList.remove('is-invalid');
+      panel.classList.toggle('is-success', state.phase === 'complete');
+      panel.classList.toggle('is-partial', state.phase === 'partial');
+      panel.classList.toggle('is-error', state.phase === 'failure');
+      hero?.classList.toggle('nc-access-granted', state.phase === 'complete');
+      status.textContent = `${state.phase.toUpperCase()} // ${count}/3 UPLOADED // ${reason}`;
+      render();
     }
 
-    function succeed() {
-      locked = true;
-      panel.classList.remove('is-error');
-      panel.classList.add('is-success');
-      status.textContent = 'ACCESS GRANTED // SHARD DECRYPTED';
-      buttons.forEach((button) => { button.disabled = true; });
-      document.querySelector('.nc-hero')?.classList.add('nc-access-granted');
+    function tick() {
+      if (state.phase !== 'running') return;
+      state.remaining = Math.max(0, state.deadline - Date.now());
+      renderTimer();
+      if (state.remaining === 0) finish('TIME EXPIRED');
     }
 
-    buttons.forEach((button) => {
-      button.addEventListener('pointerenter', () => {
-        clearAxis();
-        buttons.forEach((other) => {
-          if (other.dataset.row === button.dataset.row || other.dataset.column === button.dataset.column) other.classList.add('is-axis');
-        });
-      });
+    buttons.forEach((button, index) => {
       button.addEventListener('click', () => {
-        if (locked || button.classList.contains('is-used')) return;
-        buttons.forEach((item) => item.classList.remove('is-selected'));
-        button.classList.add('is-selected', 'is-used');
-        entries.push(button.dataset.value);
-        if (button.dataset.value === sequence[progress]) {
-          progress += 1;
-          status.textContent = `DAEMON UPLOAD // ${progress} OF ${sequence.length}`;
-          renderSequence();
-          renderBuffer();
-          if (progress === sequence.length) succeed();
-          else if (entries.length >= slots.length) fail();
-        } else {
-          renderBuffer();
-          fail();
+        // Check the deadline on input too: background tabs may delay timer ticks.
+        tick();
+        if (isFinished()) return;
+        if (!isLegal(index)) {
+          panel.classList.add('is-invalid');
+          status.textContent = state.used.has(index)
+            ? 'CELL ALREADY USED // CHOOSE A HIGHLIGHTED CELL'
+            : `OFF AXIS // CHOOSE ${state.axis.toUpperCase()} ${state.line + 1}`;
+          return;
+        }
+        if (state.phase === 'ready') {
+          state.phase = 'running';
+          state.deadline = Date.now() + duration;
+          timerId = window.setInterval(tick, 100);
+        }
+        const row = Math.floor(index / rows[0].length);
+        const column = index % rows[0].length;
+        state.entries.push(rows[row][column]);
+        state.used.add(index);
+        state.lastCell = index;
+        state.axis = state.axis === 'row' ? 'column' : 'row';
+        state.line = state.axis === 'row' ? row : column;
+        panel.classList.remove('is-invalid');
+        if (completedCount() === daemons.length) finish('ACCESS GRANTED');
+        else if (state.entries.length === capacity) finish('BUFFER FULL');
+        else {
+          status.textContent = `UPLOADING // ${completedCount()}/3 DAEMONS`;
+          render();
         }
       });
     });
-    matrix.addEventListener('pointerleave', clearAxis);
+
+    function shuffle() {
+      rows = shuffledRows();
+      reset();
+      status.textContent = 'NEW MATRIX GENERATED // 0/3 DAEMONS';
+      matrix.classList.remove('is-shuffling');
+      void matrix.offsetWidth;
+      matrix.classList.add('is-shuffling');
+    }
+
     resetButton.addEventListener('click', reset);
+    shuffleButton.addEventListener('click', shuffle);
     reset();
   }
 

@@ -215,17 +215,21 @@
       </div>
     </div>
 
-    <aside class="nc-breach" aria-label="Breach Protocol interactive module">
+    <aside class="nc-breach" data-state="ready" aria-label="Breach Protocol interactive module">
       <div class="nc-breach-header">BREACH PROTOCOL <span>v2.31 // MILITECH</span></div>
-      <div class="nc-breach-meta"><span>DAEMON: DATAMINE</span><b>ICE // ACTIVE</b></div>
-      <div class="nc-code-matrix" id="nc-code-matrix" aria-label="Hexadecimal code matrix"></div>
-      <p class="nc-breach-section-label">REQUIRED SEQUENCE // INPUT IN ORDER</p>
-      <div class="nc-required" id="nc-required" aria-label="Required sequence"></div>
-      <div class="nc-buffer" id="nc-buffer" aria-label="Input buffer"></div>
-      <p class="nc-breach-note">SELECT HEX CODES TO BREACH THE SHARD.</p>
+      <div class="nc-breach-meta"><b id="nc-breach-state">ICE // READY</b><span>TIME LEFT <b id="nc-breach-timer" role="timer" aria-label="Time remaining" aria-live="off">01:30</b></span></div>
+      <p class="nc-breach-path" id="nc-breach-path">START // ROW 1</p>
+      <div class="nc-code-matrix" id="nc-code-matrix" role="group" aria-label="Hexadecimal code matrix" aria-describedby="nc-breach-path nc-breach-note nc-breach-status"></div>
+      <p class="nc-breach-section-label">DAEMONS // MATCH CONTIGUOUS CODES IN BUFFER</p>
+      <ul class="nc-daemons" id="nc-daemons" aria-label="Daemon sequences"></ul>
+      <div class="nc-buffer"><span>BUFFER // 05</span><ol id="nc-buffer" aria-label="Input buffer"></ol></div>
+      <p class="nc-breach-note" id="nc-breach-note">Start in row 1, then alternate column / row. No cell reuse. 90s from first move. Shuffle for a new solvable layout.</p>
       <div class="nc-breach-footer">
-        <span id="nc-breach-status" aria-live="polite">AWAITING INPUT</span>
-        <button id="nc-breach-reset" type="button">REINITIALIZE</button>
+        <span id="nc-breach-status" role="status" aria-live="polite" aria-atomic="true">AWAITING INPUT // 0/3 DAEMONS</span>
+        <div class="nc-breach-controls">
+          <button id="nc-breach-shuffle" type="button" aria-label="Shuffle matrix and generate a new puzzle">SHUFFLE MATRIX</button>
+          <button id="nc-breach-reset" type="button">RESET</button>
+        </div>
       </div>
     </aside>
   </div>
