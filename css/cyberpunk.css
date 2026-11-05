@@ -348,6 +348,12 @@ body #banner.nc-hero { height: auto; min-height: 100vh; isolation: isolate; back
 .nc-code-matrix button[aria-disabled="true"] { cursor: not-allowed; }
 .nc-code-matrix button.is-used { color: #68848a; text-decoration: line-through; }
 .nc-code-matrix button.is-selected { border-color: var(--nc-cyan); background: rgba(84,232,242,.2); color: var(--nc-cyan); }
+.nc-code-matrix button { position: relative; overflow: hidden; transition: color .15s ease,background .15s ease,border-color .15s ease,transform .15s ease,box-shadow .15s ease; }
+.nc-code-matrix button.is-row-axis,.nc-code-matrix button.is-col-axis { border-color: rgba(84,232,242,.35); background: rgba(84,232,242,.1); color: var(--nc-cyan); }
+.nc-code-matrix button.is-hovered { z-index: 2; border-color: var(--nc-yellow); background: rgba(243,230,0,.22); color: var(--nc-yellow); transform: scale(1.06); box-shadow: 0 0 16px rgba(243,230,0,.18); }
+.nc-code-matrix button.is-hovered::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg,transparent,var(--nc-yellow),transparent); animation: nc-cell-scan .65s linear infinite; }
+@keyframes nc-cell-scan { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+@media (prefers-reduced-motion: reduce) { .nc-code-matrix button.is-hovered { transform: none; }.nc-code-matrix button.is-hovered::after { animation: none; } }
 .nc-breach button:focus-visible { outline: 2px solid #fff; outline-offset: 1px; }
 .nc-breach-section-label { position: relative; z-index: 2; margin: 2px 14px 5px; color: #94b7bc; font: 500 9px/1.4 ui-monospace,monospace; letter-spacing: .04em; }
 .nc-daemons { position: relative; z-index: 2; display: grid; gap: 3px; margin: 0 14px 8px; padding: 0; list-style: none; }

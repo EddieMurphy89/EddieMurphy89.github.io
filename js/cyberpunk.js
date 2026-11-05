@@ -412,6 +412,7 @@
 
     function reset() {
       stopTimer();
+      clearHover();
       state = { phase: 'ready', entries: [], used: new Set(), lastCell: null, axis: 'row', line: 0, deadline: null, remaining: duration };
       buttons.forEach((button, index) => {
         button.textContent = rows[Math.floor(index / 5)][index % 5];
@@ -443,7 +444,32 @@
       if (state.remaining === 0) finish('TIME EXPIRED');
     }
 
+    function clearHover() {
+      buttons.forEach((button) => button.classList.remove('is-hovered', 'is-row-axis', 'is-col-axis'));
+    }
+
+    function previewCell(index) {
+      clearHover();
+      if (isFinished()) return;
+      const row = Math.floor(index / rows[0].length);
+      const column = index % rows[0].length;
+      buttons.forEach((button, otherIndex) => {
+        if (otherIndex === index) return;
+        const otherRow = Math.floor(otherIndex / rows[0].length);
+        const otherColumn = otherIndex % rows[0].length;
+        button.classList.toggle('is-row-axis', otherRow === row);
+        button.classList.toggle('is-col-axis', otherColumn === column);
+      });
+      buttons[index].classList.add('is-hovered');
+    }
+
     buttons.forEach((button, index) => {
+      button.addEventListener('pointerenter', () => previewCell(index));
+      button.addEventListener('focus', () => previewCell(index));
+      button.addEventListener('pointerleave', () => {
+        if (document.activeElement !== button) clearHover();
+      });
+      button.addEventListener('blur', clearHover);
       button.addEventListener('click', () => {
         // Check the deadline on input too: background tabs may delay timer ticks.
         tick();
